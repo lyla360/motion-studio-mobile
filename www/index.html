@@ -110,9 +110,9 @@
           <span>تثبيت التطبيق</span>
         </button>
 
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-sm shadow-emerald-500/10">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          Free-is AI Online
+          <span>Model: <strong id="headerModelBadge" class="font-bold text-white">Ok</strong></span>
         </span>
 
                 <button id="btnOpenSettings" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-psycho-700/80 hover:bg-purple-900/40 text-purple-300 border border-psycho-600 transition flex items-center gap-1.5" title="إعدادات OmniRoute API">
@@ -126,15 +126,33 @@
       </div>
     </div>
   </header>
+  <!-- MOBILE VIEW NAVIGATION (Visible on Mobile/Tablet) -->
+  <nav id="mobileNavBar" class="lg:hidden max-w-7xl mx-auto px-4 pt-3 pb-1 w-full" aria-label="Mobile Navigation">
+    <div class="flex items-center bg-psycho-950/90 p-1.5 rounded-2xl border border-psycho-700/80 shadow-lg gap-1">
+      <button id="tabBtnStudio" class="mobile-nav-btn flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30" data-view="studio">
+        <i class="fa-solid fa-film"></i>
+        <span>الاستوديو والعرض</span>
+      </button>
+      <button id="tabBtnScript" class="mobile-nav-btn flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200" data-view="script">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>السكريبت</span>
+      </button>
+      <button id="tabBtnChat" class="mobile-nav-btn flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200" data-view="chat">
+        <i class="fa-solid fa-comments"></i>
+        <span>الدردشة AI</span>
+      </button>
+    </div>
+  </nav>
+
 
   <!-- MAIN VIEW -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
     <!-- LEFT COLUMN: SCRIPT HUB, AI CHAT ASSISTANT & SCENE CONTROLS -->
-    <div class="lg:col-span-7 flex flex-col gap-4 order-2 lg:order-1">
+    <div id="colLeft" class="lg:col-span-7 flex flex-col gap-4 order-2 lg:order-1">
       
       <!-- 1. FULL SCRIPT GENERATOR & 1-CLICK COPY BOX -->
-      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl">
+      <div id="boxScript" class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
           <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
             <i class="fa-solid fa-file-lines text-amber-400"></i>
@@ -164,7 +182,7 @@
             class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md flex items-center gap-1.5 whitespace-nowrap transition active:scale-95"
           >
             <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
-            <span>توليد السكريبت بـ Free-is</span>
+            <span>توليد السكريبت بـ Ok</span>
           </button>
         </div>
 
@@ -177,11 +195,11 @@
       </div>
 
       <!-- 2. INTERACTIVE AI CHAT SCENE BUILDER (دردشة الذكاء الاصطناعي لبناء المشهد) -->
-      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl flex flex-col flex-1">
+      <div id="boxChat" class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl flex flex-col flex-1">
         <div class="flex items-center justify-between pb-2.5 border-b border-psycho-700/60 mb-3">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-comments text-cyan-400"></i>
-            <h2 class="font-bold text-xs text-slate-200">دردشة الذكاء الاصطناعي لتخصيص المشهد الحالي (Free-is Chat)</h2>
+            <h2 class="font-bold text-xs text-slate-200">دردشة الذكاء الاصطناعي لتخصيص المشهد (OmniRoute - Ok)</h2>
           </div>
           <span class="text-[10px] text-slate-400 bg-psycho-900 px-2 py-0.5 rounded border border-psycho-700">تعديل فوري للمشهد والكود</span>
         </div>
@@ -190,7 +208,7 @@
         <div id="aiChatStream" class="flex-1 min-h-[160px] max-h-[220px] overflow-y-auto space-y-2.5 p-2 bg-psycho-900/80 rounded-xl border border-psycho-700/60 mb-3 text-xs">
           <!-- Initial Welcome Message from AI -->
           <div class="chat-bubble-ai p-3 rounded-xl rounded-tr-none text-slate-200 leading-relaxed">
-            <span class="font-bold text-purple-400 block mb-1">🤖 مخرج الموشن غرافيك (Free-is):</span>
+            <span class="font-bold text-purple-400 block mb-1">🤖 مخرج الموشن غرافيك (Ok):</span>
             مرحباً بك! أنا جاهز لبناء وتعديل مشهدك الحالي. يمكنك أن تطلب مني أي شيء:
             "اجعل الشخصية تسير بحزن"، "أضف دوامة تفكير باللون الأحمر"، "اجعل الحركة أسرع"، أو "اكتب لي كود JS مخصص".
           </div>
@@ -223,7 +241,7 @@
       </div>
 
       <!-- 3. ACTIVE SCENE SETTINGS & CODE INSPECTOR (تحكم وتخصيص المشهد النشط) -->
-      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl space-y-3">
+      <div id="boxActiveScene" class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl space-y-3">
         <div class="flex items-center justify-between pb-2 border-b border-psycho-700/60">
           <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
             <i class="fa-solid fa-sliders text-purple-400"></i>
@@ -268,7 +286,7 @@
     </div>
 
     <!-- RIGHT COLUMN: 9:16 LIVE MONITOR & INSTANT 1-CLICK EXPORT -->
-    <div class="lg:col-span-5 flex flex-col gap-4 order-1 lg:order-2">
+    <div id="colRight" class="lg:col-span-5 flex flex-col gap-4 order-1 lg:order-2">
       
       <!-- MONITOR (9:16 VERTICAL CANVAS) -->
       <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-2xl flex flex-col items-center">
@@ -375,12 +393,12 @@
           </button>
 
           <button 
-            id="btnExportActiveScene" 
+            id="btnExportWebCodecs" 
             class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-xs shadow-lg flex items-center justify-center gap-1.5 transition active:scale-95"
-            title="تصدير فائق الدقة من السيرفر بـ FFmpeg"
+            title="تصدير فائق الدقة MP4 60FPS عبر WebCodecs"
           >
             <i class="fa-solid fa-film"></i>
-            <span id="exportBtnText">🎬 تصدير من السيرفر (FFmpeg)</span>
+            <span id="exportBtnText">🎬 تصدير MP4 (WebCodecs)</span>
           </button>
         </div>
 
@@ -430,6 +448,10 @@
     <div class="bg-[#0e1224] border border-cyan-500/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col gap-4 text-right">
       <div class="flex items-center justify-between border-b border-psycho-700/80 pb-3">
         <div class="flex items-center gap-2">
+          <button id="btnBackCodeModal" class="px-2.5 py-1.5 rounded-lg bg-psycho-700 hover:bg-psycho-600 text-slate-200 text-xs flex items-center gap-1.5 border border-psycho-600 transition" title="رجوع">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span>رجوع</span>
+          </button>
           <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm">
             <i class="fa-solid fa-code"></i>
           </div>
@@ -440,7 +462,7 @@
         </div>
         <button id="btnAiGenerateSceneCode" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 transition">
           <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
-          <span>توليد كود بـ Free-is</span>
+          <span>توليد كود بـ Ok</span>
         </button>
       </div>
 
@@ -470,13 +492,24 @@
 
   <!-- VIDEO READY DOWNLOAD MODAL -->
   <div id="videoReadyModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-psycho-800 border border-purple-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl flex flex-col items-center gap-4 text-center">
-      <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-2xl">
+    <div class="bg-psycho-800 border border-purple-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl flex flex-col items-center gap-3 text-center">
+      <div class="w-full flex items-center justify-between pb-2 border-b border-psycho-700/60">
+        <button id="btnBackVideoModal" class="px-2.5 py-1 rounded-lg bg-psycho-700 hover:bg-psycho-600 text-slate-200 text-xs flex items-center gap-1.5 border border-psycho-600 transition" title="رجوع">
+          <i class="fa-solid fa-arrow-right"></i>
+          <span>رجوع</span>
+        </button>
+        <span class="text-xs font-bold text-emerald-400 flex items-center gap-1">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>جاهز للتحميل</span>
+        </span>
+        <div class="w-10"></div>
+      </div>
+      <div class="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl">
         <i class="fa-solid fa-circle-check"></i>
       </div>
       <div>
         <h3 class="text-base font-bold text-white">تم تجهيز الفيديو بنجاح!</h3>
-        <p class="text-xs text-slate-400 mt-1">الفيديو جاهز بجودة عالية وصوت ومؤثرات 60FPS.</p>
+        <p class="text-xs text-slate-400 mt-0.5">الفيديو جاهز بجودة عالية وصوت ومؤثرات 60FPS.</p>
       </div>
 
       <div class="w-full aspect-[9/16] max-h-[300px] bg-black rounded-xl overflow-hidden border border-psycho-700">
@@ -524,16 +557,23 @@
     };
 
     const DEFAULT_AI_CONFIG = {
-      endpoint: 'https://information-helps-renaissance-recipe.trycloudflare.com/v1',
-      apiKey: 'sk-97a9d81b5d3c4a0b-3b6992-b24ddd92',
-      model: 'free-is'
+      endpoint: 'https://omniroute-production-f9e9.up.railway.app/v1',
+      apiKey: 'sk-bb256057cc02a0fd-8fa6d3-1ede0f29',
+      model: 'Ok'
     };
 
     let AI_CONFIG = { ...DEFAULT_AI_CONFIG };
     try {
       const savedConfig = localStorage.getItem('psychomotion_ai_config');
       if (savedConfig) {
-        AI_CONFIG = Object.assign(AI_CONFIG, JSON.parse(savedConfig));
+        const parsed = JSON.parse(savedConfig);
+        // Clean out any stale/expired Cloudflare tunnels or localhost urls
+        if (!parsed.endpoint || parsed.endpoint.includes('trycloudflare.com') || parsed.endpoint.includes('localhost:20128') || !parsed.apiKey || parsed.apiKey.includes('reda')) {
+          AI_CONFIG = { ...DEFAULT_AI_CONFIG };
+          localStorage.setItem('psychomotion_ai_config', JSON.stringify(AI_CONFIG));
+        } else {
+          AI_CONFIG = Object.assign(AI_CONFIG, parsed);
+        }
       }
     } catch(e) {}
 
@@ -547,7 +587,7 @@
         headers['Authorization'] = `Bearer ${AI_CONFIG.apiKey}`;
       }
       const payload = {
-        model: AI_CONFIG.model || 'free-is',
+        model: AI_CONFIG.model || 'Ok',
         messages: messages,
         temperature: temperature
       };
@@ -1649,7 +1689,7 @@ Output raw JSON only.`;
           dlLink.href = url;
           dlLink.download = filename;
 
-          modal.classList.remove('hidden');
+          openModal('videoReadyModal');
           progressBar.style.width = '100%';
           exportPercentMsg.innerText = '100%';
           exportBtn.disabled = false;
@@ -1920,7 +1960,7 @@ Output raw JSON only.`;
         dlLink.href = url;
         dlLink.download = filename;
 
-        modal.classList.remove('hidden');
+        openModal('videoReadyModal');
         progressBar.style.width = '100%';
         exportPercentMsg.innerText = '100%';
         exportStatusMsg.innerText = 'اكتمل التصدير بنجاح!';
@@ -1939,6 +1979,135 @@ Output raw JSON only.`;
     }
 
 
+
+    // --- MODAL & BACK NAVIGATION STACK MANAGER ---
+    const modalStack = [];
+    let currentMobileView = 'studio';
+
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      if (!modalStack.includes(modalId)) {
+        modalStack.push(modalId);
+      }
+      // Push history state so Android hardware/gesture back or browser back cleanly closes modal
+      history.pushState({ modalId: modalId, stackLength: modalStack.length }, '');
+    }
+
+    function closeModal(modalId, triggeredFromPopState = false) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.add('hidden');
+        if (modalId === 'videoReadyModal') {
+          const v = document.getElementById('modalVideoPlayer');
+          if (v) v.pause();
+        }
+      }
+      const idx = modalStack.lastIndexOf(modalId);
+      if (idx !== -1) modalStack.splice(idx, 1);
+
+      if (!triggeredFromPopState && history.state && history.state.modalId === modalId) {
+        history.back();
+      }
+    }
+
+    function closeTopModal(triggeredFromPopState = false) {
+      if (modalStack.length === 0) return false;
+      const topModalId = modalStack.pop();
+      const modal = document.getElementById(topModalId);
+      if (modal) {
+        modal.classList.add('hidden');
+        if (topModalId === 'videoReadyModal') {
+          const v = document.getElementById('modalVideoPlayer');
+          if (v) v.pause();
+        }
+      }
+      if (!triggeredFromPopState && history.state?.modalId === topModalId) {
+        history.back();
+      }
+      return true;
+    }
+
+    function switchMobileView(viewName, pushHistory = true) {
+      currentMobileView = viewName;
+      const colLeft = document.getElementById('colLeft');
+      const colRight = document.getElementById('colRight');
+      const boxScript = document.getElementById('boxScript');
+      const boxChat = document.getElementById('boxChat');
+      const boxActiveScene = document.getElementById('boxActiveScene');
+      const navBtns = document.querySelectorAll('.mobile-nav-btn');
+
+      navBtns.forEach(btn => {
+        const v = btn.getAttribute('data-view');
+        if (v === viewName) {
+          btn.className = "mobile-nav-btn flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30";
+        } else {
+          btn.className = "mobile-nav-btn flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200";
+        }
+      });
+
+      if (window.innerWidth < 1024) {
+        if (viewName === 'studio') {
+          if (colRight) colRight.classList.remove('hidden');
+          if (colLeft) colLeft.classList.remove('hidden');
+          if (boxScript) boxScript.classList.add('hidden');
+          if (boxChat) boxChat.classList.add('hidden');
+          if (boxActiveScene) boxActiveScene.classList.remove('hidden');
+        } else if (viewName === 'script') {
+          if (colRight) colRight.classList.add('hidden');
+          if (colLeft) colLeft.classList.remove('hidden');
+          if (boxScript) boxScript.classList.remove('hidden');
+          if (boxChat) boxChat.classList.add('hidden');
+          if (boxActiveScene) boxActiveScene.classList.add('hidden');
+        } else if (viewName === 'chat') {
+          if (colRight) colRight.classList.add('hidden');
+          if (colLeft) colLeft.classList.remove('hidden');
+          if (boxScript) boxScript.classList.add('hidden');
+          if (boxChat) boxChat.classList.remove('hidden');
+          if (boxActiveScene) boxActiveScene.classList.add('hidden');
+        }
+      } else {
+        if (colRight) colRight.classList.remove('hidden');
+        if (colLeft) colLeft.classList.remove('hidden');
+        if (boxScript) boxScript.classList.remove('hidden');
+        if (boxChat) boxChat.classList.remove('hidden');
+        if (boxActiveScene) boxActiveScene.classList.remove('hidden');
+      }
+
+      if (pushHistory && viewName !== 'studio') {
+        history.pushState({ mobileView: viewName }, '');
+      }
+    }
+
+    // Window popstate handler (Hardware Back, Swipe Gesture Back, Browser Back)
+    window.addEventListener('popstate', (e) => {
+      if (modalStack.length > 0) {
+        closeTopModal(true);
+        return;
+      }
+      if (currentMobileView !== 'studio') {
+        switchMobileView('studio', false);
+        return;
+      }
+    });
+
+    // Capacitor Native Android Back Button Listener
+    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+      window.Capacitor.Plugins.App.addListener('backButton', ({ canGoBack }) => {
+        if (modalStack.length > 0) {
+          closeTopModal(false);
+        } else if (currentMobileView !== 'studio') {
+          switchMobileView('studio', false);
+        } else {
+          if (canGoBack) {
+            window.history.back();
+          } else {
+            window.Capacitor.Plugins.App.exitApp();
+          }
+        }
+      });
+    }
 
     // --- CODE MODAL ---
     function openCodeModal() {
@@ -1968,7 +2137,7 @@ function(ctx, t, progress, w, h, color, scene) {
   ctx.fill();
   ctx.restore();
 }`;
-      document.getElementById('codeEditorModal').classList.remove('hidden');
+      openModal('codeEditorModal');
     }
 
     function showToast(msg) {
@@ -2004,6 +2173,22 @@ function(ctx, t, progress, w, h, color, scene) {
 
       selectScene(0);
       requestAnimationFrame(gameLoop);
+
+      // Initialize UI Model Badge
+      const modelBadge = document.getElementById('headerModelBadge');
+      if (modelBadge) modelBadge.innerText = AI_CONFIG.model || 'Ok';
+
+      // Mobile Navigation Switcher
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const view = btn.getAttribute('data-view');
+          switchMobileView(view, true);
+        });
+      });
+      window.addEventListener('resize', () => {
+        switchMobileView(currentMobileView, false);
+      });
+      switchMobileView('studio', false);
 
       const unlockAudio = () => {
         audioEngine.initContext();
@@ -2147,11 +2332,13 @@ function(ctx, t, progress, w, h, color, scene) {
         }
       });
 
-      // Code Modal Events
+      // Code Modal Events & Back navigation
       document.getElementById('btnOpenCodeModal').addEventListener('click', openCodeModal);
-      document.getElementById('btnCloseCodeModal').addEventListener('click', () => {
-        document.getElementById('codeEditorModal').classList.add('hidden');
-      });
+      const closeCodeModalBtn = document.getElementById('btnCloseCodeModal');
+      if (closeCodeModalBtn) closeCodeModalBtn.addEventListener('click', () => closeModal('codeEditorModal'));
+      const backCodeModalBtn = document.getElementById('btnBackCodeModal');
+      if (backCodeModalBtn) backCodeModalBtn.addEventListener('click', () => closeModal('codeEditorModal'));
+
       document.getElementById('btnApplySceneCode').addEventListener('click', () => {
         const sc = STATE.scenes[STATE.activeSceneIndex];
         if (sc) {
@@ -2159,10 +2346,11 @@ function(ctx, t, progress, w, h, color, scene) {
           sc.compiledFn = null;
           sc.archetype = 'custom_code';
           renderFrame(0);
-          document.getElementById('codeEditorModal').classList.add('hidden');
+          closeModal('codeEditorModal');
           showToast("تم تطبيق الكود وتحديث شاشة العرض مباشرة!");
         }
       });
+
       document.getElementById('btnAiGenerateSceneCode').addEventListener('click', async () => {
         const sc = STATE.scenes[STATE.activeSceneIndex];
         if (!sc) return;
@@ -2207,45 +2395,66 @@ Rules:
           showToast("خطأ في توليد الكود: " + e.message);
         } finally {
           btn.disabled = false;
-          btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> <span>توليد كود بـ OmniRoute</span>`;
+          btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> <span>توليد كود بـ Ok</span>`;
         }
       });
 
-      // Export Active Scene Video
-      document.getElementById('btnExportCanvasDirect').addEventListener('click', recordCanvasDirectly);
-      document.getElementById('btnExportWebCodecs').addEventListener('click', exportActiveSceneWithWebCodecs);
-      
-      // OmniRoute Settings Modal Handlers
-      const settingsModal = document.getElementById('settingsModal');
+      // Export Active Scene Video Event Listeners (Canvas Direct & WebCodecs)
+      const btnDirect = document.getElementById('btnExportCanvasDirect');
+      if (btnDirect) btnDirect.addEventListener('click', recordCanvasDirectly);
+
+      const btnWebCodecs = document.getElementById('btnExportWebCodecs');
+      if (btnWebCodecs) btnWebCodecs.addEventListener('click', exportActiveSceneWithWebCodecs);
+
+      // Video Ready Modal Close & Back Events
+      const btnModalClose = document.getElementById('btnModalClose');
+      if (btnModalClose) btnModalClose.addEventListener('click', () => closeModal('videoReadyModal'));
+      const btnBackVideoModal = document.getElementById('btnBackVideoModal');
+      if (btnBackVideoModal) btnBackVideoModal.addEventListener('click', () => closeModal('videoReadyModal'));
+
+      // OmniRoute Settings Modal Handlers & Back Events
       const settingEndpointInp = document.getElementById('settingEndpoint');
       const settingApiKeyInp = document.getElementById('settingApiKey');
       const settingModelInp = document.getElementById('settingModel');
       const aiTestResultMsg = document.getElementById('aiTestResultMsg');
 
-      settingEndpointInp.value = AI_CONFIG.endpoint;
-      settingApiKeyInp.value = AI_CONFIG.apiKey;
-      settingModelInp.value = AI_CONFIG.model;
+      if (settingEndpointInp) settingEndpointInp.value = AI_CONFIG.endpoint;
+      if (settingApiKeyInp) settingApiKeyInp.value = AI_CONFIG.apiKey;
+      if (settingModelInp) settingModelInp.value = AI_CONFIG.model;
 
       document.getElementById('btnOpenSettings').addEventListener('click', () => {
-        settingEndpointInp.value = AI_CONFIG.endpoint;
-        settingApiKeyInp.value = AI_CONFIG.apiKey;
-        settingModelInp.value = AI_CONFIG.model;
-        aiTestResultMsg.classList.add('hidden');
-        settingsModal.classList.remove('hidden');
+        if (settingEndpointInp) settingEndpointInp.value = AI_CONFIG.endpoint;
+        if (settingApiKeyInp) settingApiKeyInp.value = AI_CONFIG.apiKey;
+        if (settingModelInp) settingModelInp.value = AI_CONFIG.model;
+        if (aiTestResultMsg) aiTestResultMsg.classList.add('hidden');
+        openModal('settingsModal');
       });
 
-      document.getElementById('btnCloseSettingsModal').addEventListener('click', () => {
-        settingsModal.classList.add('hidden');
+      const btnCloseSettings = document.getElementById('btnCloseSettingsModal');
+      if (btnCloseSettings) btnCloseSettings.addEventListener('click', () => closeModal('settingsModal'));
+      const btnBackSettings = document.getElementById('btnBackSettingsModal');
+      if (btnBackSettings) btnBackSettings.addEventListener('click', () => closeModal('settingsModal'));
+
+      // Backdrop modal close handlers
+      ['settingsModal', 'codeEditorModal', 'videoReadyModal'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('click', (e) => {
+            if (e.target === el) closeModal(id);
+          });
+        }
       });
 
       document.getElementById('btnSaveAISettings').addEventListener('click', () => {
         AI_CONFIG.endpoint = settingEndpointInp.value.trim();
         AI_CONFIG.apiKey = settingApiKeyInp.value.trim();
-        AI_CONFIG.model = settingModelInp.value.trim() || 'free-is';
+        AI_CONFIG.model = settingModelInp.value.trim() || 'Ok';
         try {
           localStorage.setItem('psychomotion_ai_config', JSON.stringify(AI_CONFIG));
         } catch(e) {}
-        settingsModal.classList.add('hidden');
+        const badge = document.getElementById('headerModelBadge');
+        if (badge) badge.innerText = AI_CONFIG.model;
+        closeModal('settingsModal');
         showToast("✨ تم حفظ إعدادات OmniRoute بنجاح!");
       });
 
@@ -2254,13 +2463,14 @@ Rules:
         btn.disabled = true;
         btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الاختبار...</span>`;
         aiTestResultMsg.classList.remove('hidden');
-        aiTestResultMsg.className = "text-center text-xs text-amber-300 py-1";
-        aiTestResultMsg.innerText = "جاري الاتصال بالخادم...";
+        aiTestResultMsg.className = "text-center text-xs text-amber-300 py-1.5 bg-amber-500/10 rounded-lg border border-amber-500/20";
+        aiTestResultMsg.innerHTML = '<i class="fa-solid fa-satellite-dish animate-pulse"></i> جاري الاتصال بالخادم وقياس الاستجابة...';
 
+        const startTime = Date.now();
         try {
           const testEndpoint = settingEndpointInp.value.trim();
           const testKey = settingApiKeyInp.value.trim();
-          const testModel = settingModelInp.value.trim() || 'free-is';
+          const testModel = settingModelInp.value.trim() || 'Ok';
 
           const res = await fetch(`${testEndpoint.replace(/\/+$/, '')}/chat/completions`, {
             method: 'POST',
@@ -2276,59 +2486,68 @@ Rules:
           });
 
           if (!res.ok) {
-            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            const errText = await res.text();
+            let errDetail = res.statusText;
+            try {
+              const errJson = JSON.parse(errText);
+              errDetail = errJson.error?.message || errJson.detail || errText;
+            } catch(e) { errDetail = errText; }
+            throw new Error(`HTTP ${res.status}: ${errDetail}`);
           }
           const data = await res.json();
-          aiTestResultMsg.className = "text-center text-xs text-emerald-400 font-bold py-1";
-          aiTestResultMsg.innerText = `✅ الاتصال ناجح ومستقر! (النموذج: ${testModel})`;
+          const latency = Date.now() - startTime;
+          aiTestResultMsg.className = "text-center text-xs text-emerald-400 font-bold py-1.5 bg-emerald-500/10 rounded-lg border border-emerald-500/30";
+          aiTestResultMsg.innerHTML = `<i class="fa-solid fa-circle-check"></i> الاتصال ناجح ومستقر (${latency}ms) - النموذج: ${testModel}`;
         } catch (e) {
-          aiTestResultMsg.className = "text-center text-xs text-rose-400 font-bold py-1";
-          aiTestResultMsg.innerText = `❌ فشل الاتصال: ${e.message}`;
+          aiTestResultMsg.className = "text-center text-xs text-rose-400 font-bold py-1.5 bg-rose-500/10 rounded-lg border border-rose-500/30";
+          aiTestResultMsg.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> فشل الاتصال: ${e.message}`;
         } finally {
           btn.disabled = false;
           btn.innerHTML = `<i class="fa-solid fa-bolt"></i> <span>اختبار الاتصال</span>`;
         }
       });
-
-      document.getElementById('btnModalClose').addEventListener('click', () => {
-        document.getElementById('modalVideoPlayer').pause();
-        document.getElementById('videoReadyModal').classList.add('hidden');
-      });
     };
   </script>
 
+
   <!-- OMNIROUTE SETTINGS MODAL -->
   <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-psycho-900 border border-psycho-600/80 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4">
+    <div class="bg-psycho-900 border border-psycho-600/80 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 text-right" dir="rtl">
       <div class="flex items-center justify-between border-b border-psycho-700/60 pb-3">
         <div class="flex items-center gap-2">
-          <i class="fa-solid fa-sliders text-purple-400"></i>
+          <button id="btnBackSettingsModal" class="px-2.5 py-1 rounded-lg bg-psycho-800 hover:bg-psycho-700 text-slate-200 text-xs flex items-center gap-1.5 border border-psycho-700 transition" title="رجوع">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span>رجوع</span>
+          </button>
+          <div class="w-7 h-7 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
           <h3 class="font-bold text-slate-100 text-sm">إعدادات مزود الذكاء الاصطناعي (OmniRoute)</h3>
         </div>
-        <button id="btnCloseSettingsModal" class="text-slate-400 hover:text-white transition">
+        <button id="btnCloseSettingsModal" class="text-slate-400 hover:text-white transition p-1" title="إغلاق">
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block text-slate-400 mb-1">OmniRoute API Endpoint (Cloudflare / Server):</label>
-          <input id="settingEndpoint" type="text" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="https://information-helps-renaissance-recipe.trycloudflare.com/v1">
+          <label class="block text-slate-400 mb-1">OmniRoute API Endpoint:</label>
+          <input id="settingEndpoint" type="text" dir="ltr" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="https://omniroute-production-f9e9.up.railway.app/v1">
         </div>
         <div>
           <label class="block text-slate-400 mb-1">API Key (Bearer Token):</label>
-          <input id="settingApiKey" type="password" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="sk-97a9d81b5d3c4a0b-3b6992-b24ddd92">
+          <input id="settingApiKey" type="password" dir="ltr" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="sk-bb256057cc02a0fd-8fa6d3-1ede0f29">
         </div>
         <div>
           <label class="block text-slate-400 mb-1">Model Name:</label>
-          <input id="settingModel" type="text" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="free-is">
+          <input id="settingModel" type="text" dir="ltr" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="Ok">
         </div>
       </div>
       <div class="flex items-center justify-between pt-2 border-t border-psycho-700/60">
-        <button id="btnTestAIConnection" class="px-3 py-1.5 rounded-lg bg-psycho-800 hover:bg-psycho-700 text-slate-300 font-bold text-xs border border-psycho-600 transition flex items-center gap-1.5">
+        <button id="btnTestAIConnection" class="px-3.5 py-2 rounded-xl bg-psycho-800 hover:bg-psycho-700 text-cyan-300 font-bold text-xs border border-cyan-500/30 transition flex items-center gap-1.5">
           <i class="fa-solid fa-bolt"></i>
           <span>اختبار الاتصال</span>
         </button>
-        <button id="btnSaveAISettings" class="px-4 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5">
+        <button id="btnSaveAISettings" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5">
           <i class="fa-solid fa-check"></i>
           <span>حفظ الإعدادات</span>
         </button>

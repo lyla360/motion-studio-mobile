@@ -25,9 +25,9 @@ Directly connected to the **OmniRoute AI Gateway** via Cloudflare Tunnel for ins
 
 4. **Direct OmniRoute AI Integration**:
    - Direct `fetch` calls to:
-     - **Endpoint**: `https://information-helps-renaissance-recipe.trycloudflare.com/v1`
-     - **API Key**: `sk-97a9d81b5d3c4a0b-3b6992-b24ddd92`
-     - **Model**: `free-is` (or customizable)
+     - **Endpoint**: `https://omniroute-production-f9e9.up.railway.app/v1`
+     - **API Key**: `sk-bb256057cc02a0fd-8fa6d3-1ede0f29`
+     - **Model**: `Ok` (or customizable)
    - Built-in Settings Modal (⚙️) to view, edit, or test the AI connection with live status pings.
    - Persists configuration seamlessly across reloads in `localStorage`.
 
