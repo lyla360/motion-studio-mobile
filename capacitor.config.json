@@ -1,0 +1,13 @@
+{
+  "appId": "com.lyla360.motionstudio",
+  "appName": "Motion Studio",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

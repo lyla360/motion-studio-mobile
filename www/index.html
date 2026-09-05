@@ -1,0 +1,2341 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PsychoMotion Studio - استوديو الموشن غرافيك والأنيميشن 60FPS</title>
+  
+  <!-- PWA Metadata -->
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#070913">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PsychoMotion">
+  <link rel="apple-touch-icon" href="/static/icon-192.png">
+
+  <!-- Tailwind & FontAwesome & Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+            tajawal: ['Tajawal', 'sans-serif'],
+            mono: ['Space Grotesk', 'monospace']
+          },
+          colors: {
+            psycho: {
+              950: '#04060c',
+              900: '#070913',
+              850: '#0b0f20',
+              800: '#0e1224',
+              750: '#131830',
+              700: '#161d36',
+              600: '#232d4f',
+              accent: '#8b5cf6',
+              cyan: '#06b6d4',
+              rose: '#f43f5e',
+              amber: '#f59e0b',
+              emerald: '#10b981'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Cairo', 'Tajawal', sans-serif;
+      background-color: #070913;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+    
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0e1224;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #232d4f;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8b5cf6;
+    }
+
+    .chat-bubble-ai {
+      background: linear-gradient(135deg, rgba(22, 29, 54, 0.95), rgba(14, 18, 36, 0.95));
+      border: 1px solid rgba(139, 92, 246, 0.25);
+    }
+    .chat-bubble-user {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    }
+  </style>
+  <!-- MP4-Muxer for WebCodecs H.264 offline encoding -->
+  <script src="vendor/mp4-muxer.min.js"></script>
+</head>
+
+<body class="bg-psycho-900 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-purple-600 selection:text-white">
+
+  <!-- HEADER -->
+  <header class="border-b border-psycho-700/60 bg-psycho-800/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
+          <i class="fa-solid fa-person-running text-lg animate-pulse"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-black tracking-wide bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent">
+            PsychoMotion Studio
+          </h1>
+          <p class="text-xs text-slate-400 font-medium">استوديو صناعة المشاهد مشهد بمشهد والدردشة مع الذكاء الاصطناعي</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- PWA Install Button -->
+        <button id="btnInstallPwa" class="hidden px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          <span>تثبيت التطبيق</span>
+        </button>
+
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          Free-is AI Online
+        </span>
+
+                <button id="btnOpenSettings" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-psycho-700/80 hover:bg-purple-900/40 text-purple-300 border border-psycho-600 transition flex items-center gap-1.5" title="إعدادات OmniRoute API">
+          <i class="fa-solid fa-gear"></i>
+          <span class="hidden sm:inline">الإعدادات</span>
+        </button>
+        <button id="btnNewBlankProject" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-psycho-700/80 hover:bg-rose-900/40 text-rose-300 border border-psycho-600 transition flex items-center gap-1.5" title="مسح البدء بمشروع نظيف">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span class="hidden sm:inline">مشروع جديد</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEW -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT COLUMN: SCRIPT HUB, AI CHAT ASSISTANT & SCENE CONTROLS -->
+    <div class="lg:col-span-7 flex flex-col gap-4 order-2 lg:order-1">
+      
+      <!-- 1. FULL SCRIPT GENERATOR & 1-CLICK COPY BOX -->
+      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+          <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-file-lines text-amber-400"></i>
+            <span>محرر ومنطقة السكريبت (توليد، نسخ، وتعديل):</span>
+          </span>
+          <div class="flex items-center gap-1.5">
+            <button id="btnCopyFullScript" class="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-lg font-bold text-xs flex items-center gap-1.5 transition active:scale-95">
+              <i class="fa-solid fa-copy"></i>
+              <span>نسخ السكريبت بالكامل</span>
+            </button>
+            <button id="btnDownloadScriptText" class="px-2.5 py-1 bg-psycho-700 hover:bg-psycho-600 text-slate-300 border border-psycho-600 rounded-lg text-xs transition" title="تحميل ملف .txt">
+              <i class="fa-solid fa-download"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mb-2">
+          <input 
+            type="text" 
+            id="scriptTopicInput" 
+            placeholder="اكتب موضوع السكريبت هنا، مثال: سيكولوجيا التفكير الزائد، كسر فخ التسويف..."
+            value="سيكولوجيا كسر التسويف والمماطلة"
+            class="flex-1 bg-psycho-900 border border-psycho-600 focus:border-purple-500 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-purple-500/30 transition"
+          >
+          <button 
+            id="btnGenerateScriptOnly" 
+            class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md flex items-center gap-1.5 whitespace-nowrap transition active:scale-95"
+          >
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+            <span>توليد السكريبت بـ Free-is</span>
+          </button>
+        </div>
+
+        <textarea 
+          id="fullScriptTextarea" 
+          rows="4" 
+          class="w-full bg-psycho-900 border border-psycho-700 focus:border-amber-400 rounded-xl p-3 text-xs text-slate-200 font-sans leading-relaxed focus:outline-none resize-y"
+          placeholder="سيظهر السكريبت الكامل هنا لتتمكن من نسخه أو تعديله في أي وقت..."
+        ></textarea>
+      </div>
+
+      <!-- 2. INTERACTIVE AI CHAT SCENE BUILDER (دردشة الذكاء الاصطناعي لبناء المشهد) -->
+      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl flex flex-col flex-1">
+        <div class="flex items-center justify-between pb-2.5 border-b border-psycho-700/60 mb-3">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-comments text-cyan-400"></i>
+            <h2 class="font-bold text-xs text-slate-200">دردشة الذكاء الاصطناعي لتخصيص المشهد الحالي (Free-is Chat)</h2>
+          </div>
+          <span class="text-[10px] text-slate-400 bg-psycho-900 px-2 py-0.5 rounded border border-psycho-700">تعديل فوري للمشهد والكود</span>
+        </div>
+
+        <!-- Chat Stream Window -->
+        <div id="aiChatStream" class="flex-1 min-h-[160px] max-h-[220px] overflow-y-auto space-y-2.5 p-2 bg-psycho-900/80 rounded-xl border border-psycho-700/60 mb-3 text-xs">
+          <!-- Initial Welcome Message from AI -->
+          <div class="chat-bubble-ai p-3 rounded-xl rounded-tr-none text-slate-200 leading-relaxed">
+            <span class="font-bold text-purple-400 block mb-1">🤖 مخرج الموشن غرافيك (Free-is):</span>
+            مرحباً بك! أنا جاهز لبناء وتعديل مشهدك الحالي. يمكنك أن تطلب مني أي شيء:
+            "اجعل الشخصية تسير بحزن"، "أضف دوامة تفكير باللون الأحمر"، "اجعل الحركة أسرع"، أو "اكتب لي كود JS مخصص".
+          </div>
+        </div>
+
+        <!-- Fast Prompt Chips -->
+        <div class="flex flex-wrap gap-1.5 mb-2.5 text-[11px]">
+          <button class="quick-chat-chip px-2.5 py-1 rounded-lg bg-psycho-900 hover:bg-purple-900/40 text-purple-300 border border-psycho-700 transition" data-msg="أنشئ لي مشهد بداية قوي عن مواجهة النفس">🚶 شخصية تسير بمشاعر</button>
+          <button class="quick-chat-chip px-2.5 py-1 rounded-lg bg-psycho-900 hover:bg-emerald-900/40 text-emerald-300 border border-psycho-700 transition" data-msg="حول المشهد إلى وضعية التأمل والسلام الداخلي مع شعلة ذهبية">🧘 وضعية التأمل والهدوء</button>
+          <button class="quick-chat-chip px-2.5 py-1 rounded-lg bg-psycho-900 hover:bg-rose-900/40 text-rose-300 border border-psycho-700 transition" data-msg="أضف دوامة التفكير المفرط باللون الوردي والأزرق">🤯 دوامة التفكير المفرط</button>
+          <button class="quick-chat-chip px-2.5 py-1 rounded-lg bg-psycho-900 hover:bg-amber-900/40 text-amber-300 border border-psycho-700 transition" data-msg="اجعل المشهد يمثل التحرر وكسر القيود بحماس">⚡ التحرر وكسر القيود</button>
+        </div>
+
+        <!-- Chat Input Form -->
+        <div class="flex gap-2">
+          <input 
+            type="text" 
+            id="chatUserInput" 
+            placeholder="اكتب طلبك لتعديل المشهد الحالي بالذكاء الاصطناعي..."
+            class="flex-1 bg-psycho-900 border border-psycho-600 focus:border-cyan-400 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30 transition"
+          >
+          <button 
+            id="btnSendChat" 
+            class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs shadow-md flex items-center gap-1.5 transition active:scale-95"
+          >
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>إرسال</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. ACTIVE SCENE SETTINGS & CODE INSPECTOR (تحكم وتخصيص المشهد النشط) -->
+      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-psycho-700/60">
+          <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-purple-400"></i>
+            <span>إعدادات المشهد النشط في شاشة العرض:</span>
+          </span>
+          <button id="btnOpenCodeModal" class="px-2.5 py-1 bg-psycho-700 hover:bg-cyan-600/30 text-cyan-300 rounded-lg text-xs font-mono border border-psycho-600 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-code text-[10px]"></i>
+            <span>كود JS الحركي</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-0.5">العنوان الرئيسي (Hook Title):</label>
+            <input type="text" id="activeSceneTitle" class="w-full bg-psycho-900 border border-psycho-700 focus:border-purple-500 rounded-lg px-2.5 py-1.5 text-slate-100 font-bold focus:outline-none" value="بداية الوعي">
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-0.5">الكابشن التوضيحي (Subtitle):</label>
+            <input type="text" id="activeSceneSubtitle" class="w-full bg-psycho-900 border border-psycho-700 focus:border-purple-500 rounded-lg px-2.5 py-1.5 text-slate-300 text-xs focus:outline-none" value="كل تغيير حقيقي يبدأ بمراقبة أفكارك بصمت">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-0.5">شخصية 2D أو الرمز الحركي:</label>
+            <select id="activeSceneArchetype" class="w-full bg-psycho-900 border border-psycho-700 rounded-lg px-2.5 py-1 text-slate-200 focus:outline-none focus:border-purple-500"></select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-0.5">المؤثر الصوتي:</label>
+            <select id="activeSceneSfx" class="w-full bg-psycho-900 border border-psycho-700 rounded-lg px-2.5 py-1 text-slate-200 focus:outline-none focus:border-purple-500"></select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-0.5">لون التوهج (Accent):</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="activeSceneColor" value="#8b5cf6" class="w-8 h-7 rounded bg-transparent border-0 cursor-pointer">
+              <span id="activeSceneColorHex" class="font-mono text-[11px] text-slate-400">#8b5cf6</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: 9:16 LIVE MONITOR & INSTANT 1-CLICK EXPORT -->
+    <div class="lg:col-span-5 flex flex-col gap-4 order-1 lg:order-2">
+      
+      <!-- MONITOR (9:16 VERTICAL CANVAS) -->
+      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-2xl flex flex-col items-center">
+        
+        <div class="w-full flex items-center justify-between pb-3 mb-2 border-b border-psycho-700/60 text-xs">
+          <div class="flex items-center gap-2 font-bold text-slate-300">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+            <span>شاشة العرض المباشرة (Live 60FPS)</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span id="timecodeDisplay" class="font-mono bg-psycho-900 px-2 py-0.5 rounded text-cyan-300 border border-psycho-700">00:00 / 00:03</span>
+          </div>
+        </div>
+
+        <!-- CANVAS WRAPPER -->
+        <div id="canvasWrapper" class="relative w-full max-w-[320px] aspect-[9/16] bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-purple-500/20 flex items-center justify-center group transition-all duration-200">
+          <canvas id="motionCanvas" class="w-full h-full block cursor-pointer"></canvas>
+
+          <!-- OVERLAY PLAY/PAUSE BIG ICON -->
+          <div id="canvasOverlayPlay" class="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="w-16 h-16 rounded-full bg-purple-600/90 text-white flex items-center justify-center text-2xl shadow-xl shadow-purple-600/50">
+              <i class="fa-solid fa-play pr-0.5"></i>
+            </div>
+          </div>
+
+          <!-- SCENE BADGE OVERLAY -->
+          <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-[10px] text-white/90 font-mono pointer-events-none">
+            <span id="currentSceneOverlayBadge">المشهد 1/1</span>
+          </div>
+
+          <!-- ACTIVE SCENE NAME OVERLAY -->
+          <div class="absolute top-3 left-3 bg-purple-900/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-purple-500/30 text-[10px] text-purple-200 pointer-events-none max-w-[150px] truncate">
+            <span id="currentSceneNameBadge">شخصية 2D</span>
+          </div>
+        </div>
+
+        <!-- TIMELINE SCRUBBER -->
+        <div class="w-full max-w-[320px] mt-3">
+          <div class="w-full bg-psycho-900 h-2 rounded-full overflow-hidden cursor-pointer relative" id="timelineBar">
+            <div id="timelineProgress" class="bg-gradient-to-r from-purple-500 to-cyan-400 h-full w-0 transition-all duration-75"></div>
+          </div>
+        </div>
+
+        <!-- PLAYER BUTTONS -->
+        <div class="w-full max-w-[320px] flex items-center justify-between mt-3 px-1">
+          <button id="btnPrevScene" title="المشهد السابق" class="w-9 h-9 rounded-xl bg-psycho-700 hover:bg-psycho-600 text-slate-200 flex items-center justify-center text-xs transition">
+            <i class="fa-solid fa-backward-step"></i>
+          </button>
+
+          <button id="btnPlayPause" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-600/30 flex items-center justify-center text-base transition active:scale-95">
+            <i class="fa-solid fa-play pr-0.5" id="playIcon"></i>
+          </button>
+
+          <button id="btnNextScene" title="المشهد التالي" class="w-9 h-9 rounded-xl bg-psycho-700 hover:bg-psycho-600 text-slate-200 flex items-center justify-center text-xs transition">
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+
+          <button id="btnRestart" title="إعادة تشغيل المشهد" class="w-9 h-9 rounded-xl bg-psycho-700 hover:bg-psycho-600 text-slate-200 flex items-center justify-center text-xs transition">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- INSTANT 1-CLICK SCENE EXPORT BOX -->
+      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl space-y-3">
+        <h3 class="font-bold text-xs text-slate-200 flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-download text-cyan-400"></i>
+            <span>تصدير وتحميل هذا المشهد كفيديو جاهز:</span>
+          </span>
+          <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-500/30">MP4 60FPS</span>
+        </h3>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <label class="block text-slate-400 text-[11px] mb-1">دقة الفيديو:</label>
+            <select id="exportResolutionSelect" class="w-full bg-psycho-900 border border-psycho-600 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+              <option value="1080">1080 x 1920 (Full HD 9:16)</option>
+              <option value="720" selected>720 x 1280 (HD قياسي 9:16)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[11px] mb-1">الموسيقى الخلفية:</label>
+            <select id="exportBgmSelect" class="w-full bg-psycho-900 border border-psycho-600 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+              <option value="ambient_drone" selected>أثيري هادئ (Ambient)</option>
+              <option value="lofi_chill">لوفاي هادئ (Lo-Fi)</option>
+              <option value="synthwave_pulse">سايبر سينث (Synthwave)</option>
+              <option value="emotional_piano">بيانو عاطفي (Piano)</option>
+              <option value="none">بدون موسيقى (صامت)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button 
+            id="btnExportCanvasDirect" 
+            class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg flex items-center justify-center gap-1.5 transition active:scale-95"
+            title="يسجل ما تراه على الشاشة بالضبط بدون أي اختلاف"
+          >
+            <i class="fa-solid fa-camera"></i>
+            <span>⚡ تسجيل فوري من الشاشة (Canvas)</span>
+          </button>
+
+          <button 
+            id="btnExportActiveScene" 
+            class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-xs shadow-lg flex items-center justify-center gap-1.5 transition active:scale-95"
+            title="تصدير فائق الدقة من السيرفر بـ FFmpeg"
+          >
+            <i class="fa-solid fa-film"></i>
+            <span id="exportBtnText">🎬 تصدير من السيرفر (FFmpeg)</span>
+          </button>
+        </div>
+
+        <div class="flex gap-2 pt-1">
+          <button id="btnSaveCurrentSceneToLibrary" class="flex-1 py-2 bg-psycho-700 hover:bg-emerald-600/30 text-emerald-300 border border-psycho-600 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-bookmark"></i>
+            <span>حفظ المشهد في مكتبتي</span>
+          </button>
+          <button id="btnAddNewSceneNext" class="flex-1 py-2 bg-psycho-700 hover:bg-purple-600/30 text-purple-300 border border-psycho-600 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-plus"></i>
+            <span>+ إنشاء مشهد تالي</span>
+          </button>
+        </div>
+
+        <!-- Progress bar -->
+        <div id="exportProgressWrapper" class="hidden space-y-1 pt-1">
+          <div class="flex justify-between text-[11px] text-slate-300">
+            <span id="exportStatusMsg">جاري تجهيز وتصدير الفيديو عبر السيرفر...</span>
+            <span id="exportPercentMsg">0%</span>
+          </div>
+          <div class="w-full bg-psycho-900 h-2 rounded-full overflow-hidden">
+            <div id="exportProgressBar" class="bg-gradient-to-r from-cyan-400 to-purple-500 h-full w-0 transition-all duration-100"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SAVED SCENES DRAWER / SELECTOR BAR -->
+      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-3 shadow-xl w-full">
+        <div class="flex items-center justify-between text-xs font-bold text-slate-300 mb-2">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-layer-group text-purple-400"></i>
+            <span>مشاهد المشروع (<span id="sceneCountBadgeText" class="text-cyan-400">1</span>):</span>
+          </span>
+          <span class="text-[10px] text-slate-500">اضغط على أي مشهد لعرضه وتحميله</span>
+        </div>
+        <div id="sceneThumbnailsList" class="flex gap-2 overflow-x-auto pb-1">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- CODE EDITOR & AI GENERATOR MODAL -->
+  <div id="codeEditorModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0e1224] border border-cyan-500/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col gap-4 text-right">
+      <div class="flex items-center justify-between border-b border-psycho-700/80 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm">
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white" id="codeEditorTitle">محرر كود JavaScript للمشهد</h3>
+            <p class="text-[11px] text-slate-400">Canvas 2D / 2D Character Kinematics Function</p>
+          </div>
+        </div>
+        <button id="btnAiGenerateSceneCode" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+          <span>توليد كود بـ Free-is</span>
+        </button>
+      </div>
+
+      <div class="space-y-1">
+        <label class="block text-xs font-semibold text-slate-300">دالة الرسم الحركية:</label>
+        <p class="text-[10px] text-slate-400 font-mono">المعاملات: (ctx, t, progress, w, h, color, scene)</p>
+        <textarea 
+          id="sceneCodeTextarea" 
+          rows="12" 
+          class="w-full bg-[#070913] border border-psycho-600 focus:border-cyan-400 rounded-xl p-3 text-xs font-mono text-cyan-300 focus:outline-none focus:ring-1 focus:ring-cyan-500/30 resize-y"
+          placeholder="// اكتب كود Canvas 2D هنا..."
+          dir="ltr"
+        ></textarea>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-psycho-700/60">
+        <button id="btnApplySceneCode" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs shadow-lg flex items-center gap-2">
+          <i class="fa-solid fa-check"></i>
+          <span>تطبيق الكود وتحديث شاشة العرض فوراً</span>
+        </button>
+        <button id="btnCloseCodeModal" class="px-4 py-2 rounded-xl bg-psycho-700 hover:bg-psycho-600 text-slate-300 text-xs">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO READY DOWNLOAD MODAL -->
+  <div id="videoReadyModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-psycho-800 border border-purple-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl flex flex-col items-center gap-4 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-2xl">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-white">تم تجهيز الفيديو بنجاح!</h3>
+        <p class="text-xs text-slate-400 mt-1">الفيديو جاهز بجودة عالية وصوت ومؤثرات 60FPS.</p>
+      </div>
+
+      <div class="w-full aspect-[9/16] max-h-[300px] bg-black rounded-xl overflow-hidden border border-psycho-700">
+        <video id="modalVideoPlayer" controls playsinline class="w-full h-full object-contain"></video>
+      </div>
+
+      <div class="flex flex-col gap-2 w-full">
+        <a id="btnModalDirectDownload" href="#" download class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs shadow-lg flex items-center justify-center gap-2">
+          <i class="fa-solid fa-download"></i>
+          <span>حفظ في الهاتف (Downloads)</span>
+        </a>
+
+        <button id="btnModalClose" class="text-xs text-slate-400 hover:text-slate-200 mt-1 py-1">
+          إغلاق
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotification" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-psycho-800 border border-purple-500/50 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl shadow-purple-900/50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-2">
+    <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+    <span id="toastMsg">تم التحديث بنجاح</span>
+  </div>
+
+  <!-- CORE SCRIPT LOGIC -->
+  <script>
+    const STATE = {
+      durationPerScene: 3.0,
+      scenes: [],
+      activeSceneIndex: 0,
+      savedLibraryScenes: [],
+      chatHistory: [],
+      currentTime: 0.0,
+      isPlaying: false,
+      isExporting: false,
+      voiceLang: 'ar',
+      bgTheme: 'deep_purple',
+      particleType: 'neurons',
+      enableAmbientMusic: true,
+      enableSfx: true,
+      canvasWidth: 720,
+      canvasHeight: 1280,
+      fps: 60
+    };
+
+    const DEFAULT_AI_CONFIG = {
+      endpoint: 'https://information-helps-renaissance-recipe.trycloudflare.com/v1',
+      apiKey: 'sk-97a9d81b5d3c4a0b-3b6992-b24ddd92',
+      model: 'free-is'
+    };
+
+    let AI_CONFIG = { ...DEFAULT_AI_CONFIG };
+    try {
+      const savedConfig = localStorage.getItem('psychomotion_ai_config');
+      if (savedConfig) {
+        AI_CONFIG = Object.assign(AI_CONFIG, JSON.parse(savedConfig));
+      }
+    } catch(e) {}
+
+    // OmniRoute direct API client
+    async function callOmniRouteAI(messages, temperature = 0.7) {
+      const url = `${AI_CONFIG.endpoint.replace(/\/+$/, '')}/chat/completions`;
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      if (AI_CONFIG.apiKey) {
+        headers['Authorization'] = `Bearer ${AI_CONFIG.apiKey}`;
+      }
+      const payload = {
+        model: AI_CONFIG.model || 'free-is',
+        messages: messages,
+        temperature: temperature
+      };
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        let errDetail = response.statusText;
+        try {
+          const errJson = JSON.parse(errText);
+          errDetail = errJson.error?.message || errJson.detail || errText;
+        } catch(e) {
+          errDetail = errText;
+        }
+        throw new Error(`OmniRoute Error (${response.status}): ${errDetail}`);
+      }
+
+      const data = await response.json();
+      const choice = data.choices && data.choices[0];
+      if (!choice || !choice.message) {
+        throw new Error('لم يتم استلام نص من نموذج الذكاء الاصطناعي');
+      }
+      return choice.message.content.trim();
+    }
+
+    function extractJsonFromAiResponse(text) {
+      let clean = text.trim();
+      if (clean.startsWith('```')) {
+        const lines = clean.split('\n');
+        if (lines[0].startsWith('```')) lines.shift();
+        if (lines.length > 0 && lines[lines.length - 1].startsWith('```')) lines.pop();
+        clean = lines.join('\n').trim();
+      }
+      try {
+        return JSON.parse(clean);
+      } catch (e) {
+        const match = clean.match(/\{[\s\S]*\}/);
+        if (match) return JSON.parse(match[0]);
+        throw new Error('تعذر تحليل مخرجات JSON من الذكاء الاصطناعي');
+      }
+    }
+
+    // --- 2D CHARACTERS & PROCEDURAL METAPHORS LIST ---
+    const ARCHETYPES = [
+      { id: 'character_walking', name: '🚶 شخصية تسير مع أفكار عائمة' },
+      { id: 'character_meditating', name: '🧘 شخصية في وضعية التأمل والشاكرات' },
+      { id: 'character_overthinking', name: '🤯 شخصية وسط دوامة التفكير المفرط' },
+      { id: 'character_breakthrough', name: '⚡ شخصية تكسر القيود وتتحرر' },
+      { id: 'character_digital_trap', name: '📱 شخصية مأسورة في فخ الشاشة' },
+      { id: 'character_reaching_star', name: '✨ شخصية تسعى نحو الهدف والنور' },
+      { id: 'floating_brain', name: '🧠 الدماغ النبضي والسيالات العصبية' },
+      { id: 'dopamine_gauge', name: '⏱️ عداد الدوبامين والهوس الرقمي' },
+      { id: 'dual_mask', name: '🎭 قناع الشخصية (الأنا والظل)' },
+      { id: 'eye_perception', name: '👁️ عين الإدراك البؤري والليزر' },
+      { id: 'maze_thought', name: '🌀 متاهة التفكير المفرط والشك' },
+      { id: 'hourglass_time', name: '⏳ ساعة الرمل وتسريب الوقت' },
+      { id: 'iceberg_theory', name: '🏔️ جبل الجليد النفسي واللاوعي' },
+      { id: 'magnetic_heart', name: '🧲 القلب الكهرومغناطيسي والجذب' },
+      { id: 'concentric_rings', name: '🪐 المدارات العصبية المتوسعة' },
+      { id: 'radial_breath', name: '☀️ النبض الإشعاعي والتنفس العميق' },
+      { id: 'noise_ripple', name: '🌊 تموجات التشويش والضوضاء' },
+      { id: 'mandala', name: '❄️ هندسة الماندالا والتناغم' },
+      { id: 'battery_depletion', name: '🔋 عداد استنزاف الطاقة' },
+      { id: 'neural_network_nodes', name: '🕸️ شبكة العقد والروابط' },
+      { id: 'fractured_barrier', name: '🛡️ تصدع الحواجز والتحرر' },
+      { id: 'oscillating_pendulum', name: '🕰️ بندول الساعة والتنويم' },
+      { id: 'custom_code', name: '💻 كود JavaScript مخصص' }
+    ];
+
+    const SFX_TYPES = [
+      { id: 'whoosh', name: 'اندفاع هوائي (Whoosh)' },
+      { id: 'sub_impact', name: 'صدمة باس (Sub Impact)' },
+      { id: 'glitch', name: 'وميض جليتش (Glitch Zap)' },
+      { id: 'heartbeat', name: 'نبضة قلب (Heartbeat)' },
+      { id: 'mystery', name: 'جرس غموض (Mystery Bell)' }
+    ];
+
+    // --- POPULATE DROPDOWNS ---
+    function populateDropdowns() {
+      const archSel = document.getElementById('activeSceneArchetype');
+      archSel.innerHTML = ARCHETYPES.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+
+      const sfxSel = document.getElementById('activeSceneSfx');
+      sfxSel.innerHTML = SFX_TYPES.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    }
+
+    // --- AUDIO SYNTHESIZER ---
+    class PsychoAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.ambientGain = null;
+        this.ambientOsc1 = null;
+        this.ambientOsc2 = null;
+        this.filter = null;
+        this.isSynthRunning = false;
+      }
+
+      initContext() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+      }
+
+      startAmbientDrone() {
+        if (!STATE.enableAmbientMusic || this.isSynthRunning) return;
+        try {
+          this.initContext();
+          const now = this.ctx.currentTime;
+          this.ambientGain = this.ctx.createGain();
+          this.ambientGain.gain.setValueAtTime(0.001, now);
+          this.ambientGain.gain.exponentialRampToValueAtTime(0.08, now + 1.5);
+          this.filter = this.ctx.createBiquadFilter();
+          this.filter.type = 'lowpass';
+          this.filter.frequency.setValueAtTime(320, now);
+
+          this.ambientOsc1 = this.ctx.createOscillator();
+          this.ambientOsc1.type = 'sine';
+          this.ambientOsc1.frequency.setValueAtTime(54, now);
+
+          this.ambientOsc2 = this.ctx.createOscillator();
+          this.ambientOsc2.type = 'triangle';
+          this.ambientOsc2.frequency.setValueAtTime(108.5, now);
+
+          this.ambientOsc1.connect(this.filter);
+          this.ambientOsc2.connect(this.filter);
+          this.filter.connect(this.ambientGain);
+          this.ambientGain.connect(this.ctx.destination);
+
+          this.ambientOsc1.start(now);
+          this.ambientOsc2.start(now);
+          this.isSynthRunning = true;
+        } catch (e) {}
+      }
+
+      stopAmbientDrone() {
+        if (!this.isSynthRunning || !this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          this.ambientGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+          setTimeout(() => {
+            if (this.ambientOsc1) { try { this.ambientOsc1.stop(); this.ambientOsc1.disconnect(); } catch(e){} }
+            if (this.ambientOsc2) { try { this.ambientOsc2.stop(); this.ambientOsc2.disconnect(); } catch(e){} }
+            this.isSynthRunning = false;
+          }, 550);
+        } catch (e) { this.isSynthRunning = false; }
+      }
+
+      playSfx(type = 'whoosh') {
+        if (!STATE.enableSfx) return;
+        try {
+          this.initContext();
+          const now = this.ctx.currentTime;
+          const dest = this.ctx.destination;
+
+          if (type === 'sub_impact') {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.exponentialRampToValueAtTime(32, now + 0.35);
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.4);
+          } else if (type === 'glitch') {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(450, now);
+            osc.frequency.setValueAtTime(180, now + 0.05);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.2);
+          } else if (type === 'mystery') {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(520, now);
+            osc.frequency.exponentialRampToValueAtTime(390, now + 0.5);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.6);
+          } else {
+            const bufferSize = this.ctx.sampleRate * 0.35;
+            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+            const noise = this.ctx.createBufferSource();
+            noise.buffer = buffer;
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(240, now);
+            filter.frequency.exponentialRampToValueAtTime(1800, now + 0.18);
+            filter.frequency.exponentialRampToValueAtTime(180, now + 0.35);
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.linearRampToValueAtTime(0.28, now + 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(dest);
+            noise.start(now);
+          }
+        } catch (e) {}
+      }
+          // --- OFFLINE AUDIO SYNTHESIS FOR WEBM / MP4 EXPORT ---
+      async renderOfflineAudio(duration, sfxType = 'whoosh') {
+        const sampleRate = 44100;
+        const length = Math.ceil(sampleRate * duration);
+        const OfflineCtxClass = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        if (!OfflineCtxClass) return null;
+        const offlineCtx = new OfflineCtxClass(2, length, sampleRate);
+
+        // 1. Synthesize Ambient Drone
+        if (STATE.enableAmbientMusic) {
+          try {
+            const ambientGain = offlineCtx.createGain();
+            ambientGain.gain.setValueAtTime(0.001, 0);
+            ambientGain.gain.exponentialRampToValueAtTime(0.08, 1.0);
+            if (duration > 1.2) {
+              ambientGain.gain.setValueAtTime(0.08, duration - 0.4);
+              ambientGain.gain.exponentialRampToValueAtTime(0.001, duration);
+            }
+
+            const filter = offlineCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(320, 0);
+
+            const osc1 = offlineCtx.createOscillator();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(54, 0);
+
+            const osc2 = offlineCtx.createOscillator();
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(108.5, 0);
+
+            osc1.connect(filter);
+            osc2.connect(filter);
+            filter.connect(ambientGain);
+            ambientGain.connect(offlineCtx.destination);
+
+            osc1.start(0);
+            osc2.start(0);
+            osc1.stop(duration);
+            osc2.stop(duration);
+          } catch(e) {}
+        }
+
+        // 2. Synthesize SFX Cue (at t = 0.05s)
+        if (STATE.enableSfx && sfxType) {
+          try {
+            const now = 0.05;
+            const dest = offlineCtx.destination;
+
+            if (sfxType === 'sub_impact') {
+              const osc = offlineCtx.createOscillator();
+              const gain = offlineCtx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(140, now);
+              osc.frequency.exponentialRampToValueAtTime(32, now + 0.35);
+              gain.gain.setValueAtTime(0.4, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+              osc.connect(gain);
+              gain.connect(dest);
+              osc.start(now);
+              osc.stop(now + 0.4);
+            } else if (sfxType === 'glitch') {
+              const osc = offlineCtx.createOscillator();
+              const gain = offlineCtx.createGain();
+              osc.type = 'sawtooth';
+              osc.frequency.setValueAtTime(450, now);
+              osc.frequency.setValueAtTime(180, now + 0.05);
+              gain.gain.setValueAtTime(0.25, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+              osc.connect(gain);
+              gain.connect(dest);
+              osc.start(now);
+              osc.stop(now + 0.2);
+            } else if (sfxType === 'mystery') {
+              const osc = offlineCtx.createOscillator();
+              const gain = offlineCtx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(520, now);
+              osc.frequency.exponentialRampToValueAtTime(390, now + 0.5);
+              gain.gain.setValueAtTime(0.3, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+              osc.connect(gain);
+              gain.connect(dest);
+              osc.start(now);
+              osc.stop(now + 0.6);
+            } else { // whoosh
+              const bufferSize = Math.floor(sampleRate * 0.35);
+              const noiseBuffer = offlineCtx.createBuffer(1, bufferSize, sampleRate);
+              const data = noiseBuffer.getChannelData(0);
+              for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+              const noise = offlineCtx.createBufferSource();
+              noise.buffer = noiseBuffer;
+              const filter = offlineCtx.createBiquadFilter();
+              filter.type = 'bandpass';
+              filter.frequency.setValueAtTime(240, now);
+              filter.frequency.exponentialRampToValueAtTime(1800, now + 0.18);
+              filter.frequency.exponentialRampToValueAtTime(180, now + 0.35);
+              const gain = offlineCtx.createGain();
+              gain.gain.setValueAtTime(0.01, now);
+              gain.gain.linearRampToValueAtTime(0.28, now + 0.15);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+              noise.connect(filter);
+              filter.connect(gain);
+              gain.connect(dest);
+              noise.start(now);
+              noise.stop(now + 0.35);
+            }
+          } catch(e) {}
+        }
+
+        try {
+          return await offlineCtx.startRendering();
+        } catch(e) {
+          return null;
+        }
+      }
+    }
+
+    const audioEngine = new PsychoAudioEngine();
+    const canvas = document.getElementById('motionCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 720;
+    canvas.height = 1280;
+
+    let backgroundParticles = [];
+    function initParticles(count = 45) {
+      backgroundParticles = [];
+      for (let i = 0; i < count; i++) {
+        backgroundParticles.push({
+          x: Math.random() * 720,
+          y: Math.random() * 1280,
+          radius: Math.random() * 2.5 + 1.2,
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: (Math.random() - 0.5) * 0.6,
+          alpha: Math.random() * 0.7 + 0.2
+        });
+      }
+    }
+    initParticles();
+
+    // --- 2D CHARACTER & PROCEDURAL VISUAL METAPHORS ENGINE ---
+    const CanvasVisuals = {
+      character_walking(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+        const legAngle = Math.sin(t * 8) * 0.5;
+        const armAngle = -legAngle * 0.6;
+        const bobY = Math.abs(Math.sin(t * 8)) * 6;
+
+        ctx.strokeStyle = color;
+        ctx.fillStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+
+        ctx.beginPath();
+        ctx.arc(0, -95 + bobY, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(0, -75 + bobY);
+        ctx.lineTo(0, -15 + bobY);
+        ctx.moveTo(0, -65 + bobY);
+        ctx.lineTo(Math.sin(armAngle) * 35, -30 + Math.cos(armAngle) * 35 + bobY);
+        ctx.moveTo(0, -65 + bobY);
+        ctx.lineTo(Math.sin(-armAngle) * 35, -30 + Math.cos(-armAngle) * 35 + bobY);
+        ctx.moveTo(0, -15 + bobY);
+        ctx.lineTo(Math.sin(legAngle) * 50, 45 + Math.cos(legAngle) * 10);
+        ctx.moveTo(0, -15 + bobY);
+        ctx.lineTo(Math.sin(-legAngle) * 50, 45 + Math.cos(-legAngle) * 10);
+        ctx.stroke();
+
+        for (let i = 0; i < 3; i++) {
+          const by = -120 - i * 22 + Math.sin(t * 4 + i) * 6;
+          const bx = Math.sin(t * 3 + i) * 20;
+          ctx.fillStyle = i === 2 ? color : '#38bdf8';
+          ctx.beginPath();
+          ctx.arc(bx, by, 6 + i * 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      },
+
+      character_meditating(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+        const breath = 1 + Math.sin(t * 3) * 0.06;
+        ctx.scale(breath, breath);
+
+        for (let i = 1; i <= 3; i++) {
+          const r = 80 + i * 35 + Math.sin(t * 4 + i) * 10;
+          ctx.strokeStyle = color;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 25;
+          ctx.lineWidth = 2;
+          ctx.globalAlpha = Math.max(0, 1 - (r / 200));
+          ctx.beginPath();
+          ctx.arc(0, -25, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1.0;
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.fillStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+
+        ctx.beginPath();
+        ctx.arc(0, -75, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(0, -55);
+        ctx.lineTo(0, 0);
+        ctx.arc(0, 5, 45, Math.PI * 0.1, Math.PI * 0.9);
+        ctx.stroke();
+
+        const chakraColors = ['#f43f5e', '#f59e0b', '#10b981', '#06b6d4', '#8b5cf6'];
+        for (let i = 0; i < chakraColors.length; i++) {
+          ctx.fillStyle = chakraColors[i];
+          ctx.shadowColor = chakraColors[i];
+          ctx.shadowBlur = 15;
+          ctx.beginPath();
+          ctx.arc(0, -65 + i * 16, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      },
+
+      character_overthinking(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.fillStyle = '#cbd5e1';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.arc(0, -35, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(0, -15);
+        ctx.lineTo(0, 45);
+        ctx.moveTo(0, -5);
+        ctx.lineTo(-28, -25);
+        ctx.lineTo(-15, -40);
+        ctx.moveTo(0, -5);
+        ctx.lineTo(28, -25);
+        ctx.lineTo(15, -40);
+        ctx.stroke();
+
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 25;
+        ctx.lineWidth = 3;
+        for (let i = 0; i < 4; i++) {
+          ctx.beginPath();
+          for (let a = 0; a < Math.PI * 4; a += 0.2) {
+            const r = a * 12 + Math.sin(t * 6 + a) * 8;
+            const x = Math.cos(a + t * 4 + i) * r;
+            const y = -100 + Math.sin(a + t * 4 + i) * (r * 0.45);
+            if (a === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        ctx.restore();
+      },
+
+      character_breakthrough(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+        const burst = progress * 60;
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 30;
+        ctx.lineWidth = 5;
+
+        for (let i = 0; i < 12; i++) {
+          const a = (i / 12) * Math.PI * 2;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(a) * 30, Math.sin(a) * 30);
+          ctx.lineTo(Math.cos(a) * (110 + burst), Math.sin(a) * (110 + burst));
+          ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.fillStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(0, -75, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(0, -55);
+        ctx.lineTo(0, 10);
+        ctx.moveTo(0, -45);
+        ctx.lineTo(-45, -95);
+        ctx.moveTo(0, -45);
+        ctx.lineTo(45, -95);
+        ctx.moveTo(0, 10);
+        ctx.lineTo(-35, 60);
+        ctx.moveTo(0, 10);
+        ctx.lineTo(35, 60);
+        ctx.stroke();
+        ctx.restore();
+      },
+
+      character_digital_trap(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.strokeStyle = '#64748b';
+        ctx.fillStyle = '#64748b';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.arc(-10, -55, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(-10, -35);
+        ctx.lineTo(-10, 35);
+        ctx.moveTo(-10, -25);
+        ctx.lineTo(25, -10);
+        ctx.stroke();
+
+        ctx.fillStyle = '#06b6d4';
+        ctx.shadowColor = '#06b6d4';
+        ctx.shadowBlur = 30;
+        ctx.fillRect(25, -25, 16, 28);
+
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+        ctx.lineWidth = 2.5;
+        for (let i = 0; i < 3; i++) {
+          const offset = Math.sin(t * 8 + i) * 6;
+          ctx.beginPath();
+          ctx.moveTo(30, -15 + offset);
+          ctx.lineTo(-5, -55);
+          ctx.stroke();
+        }
+        ctx.restore();
+      },
+
+      character_reaching_star(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.strokeStyle = '#ffffff';
+        ctx.fillStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.arc(-15, -45, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(-15, -25);
+        ctx.lineTo(-5, 45);
+        ctx.moveTo(-15, -15);
+        ctx.lineTo(25, -85);
+        ctx.stroke();
+
+        const starY = -115 + Math.sin(t * 4) * 8;
+        ctx.fillStyle = '#f59e0b';
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 30;
+        ctx.beginPath();
+        ctx.arc(38, starY, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      },
+
+      floating_brain(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.42;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.scale(1 + Math.sin(t * 4) * 0.04, 1 + Math.sin(t * 4) * 0.04);
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.arc(-45, -20, 55, Math.PI * 0.5, Math.PI * 1.6);
+        ctx.bezierCurveTo(-110, -50, -110, 50, -50, 70);
+        ctx.bezierCurveTo(-30, 80, -15, 60, -10, 30);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(45, -20, 55, Math.PI * 1.4, Math.PI * 0.5);
+        ctx.bezierCurveTo(110, -50, 110, 50, 50, 70);
+        ctx.bezierCurveTo(30, 80, 15, 60, 10, 30);
+        ctx.stroke();
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(0, 0, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      },
+
+      dopamine_gauge(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.42, radius = 130;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.lineWidth = 18;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, Math.PI * 0.8, Math.PI * 2.2);
+        ctx.stroke();
+        const targetPercent = Math.min(0.92, 0.2 + (progress * 0.8) + Math.sin(t * 10) * 0.05);
+        const startA = Math.PI * 0.8;
+        const endA = startA + targetPercent * (Math.PI * 1.4);
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 25;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, startA, endA);
+        ctx.stroke();
+        ctx.font = "900 38px 'Space Grotesk', sans-serif";
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${Math.floor(targetPercent * 100)}%`, 0, 20);
+        ctx.restore();
+      },
+
+      eye_perception(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.42;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = '#ffffff';
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.moveTo(-130, 0);
+        ctx.quadraticCurveTo(0, -90, 130, 0);
+        ctx.quadraticCurveTo(0, 90, -130, 0);
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(0, 0, 48, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#000000';
+        ctx.beginPath();
+        ctx.arc(0, 0, 18 + Math.sin(t * 6) * 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      },
+
+      concentric_rings(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.42;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.lineWidth = 3.5;
+        for (let i = 1; i <= 5; i++) {
+          const r = (t * 40 + i * 28) % 150;
+          ctx.strokeStyle = color;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 15;
+          ctx.globalAlpha = Math.max(0, 1 - r / 150);
+          ctx.beginPath();
+          ctx.arc(0, 0, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    };
+
+    function drawDynamicBackground(ctx, w, h, theme, t) {
+      const grad = ctx.createRadialGradient(w / 2, h * 0.45, 80, w / 2, h / 2, h * 0.85);
+      grad.addColorStop(0, '#221544');
+      grad.addColorStop(0.5, '#0e0b1d');
+      grad.addColorStop(1, '#05040a');
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.save();
+      for (let p of backgroundParticles) {
+        p.x = (p.x + p.vx + w) % w;
+        p.y = (p.y + p.vy + h) % h;
+        ctx.fillStyle = `rgba(168, 85, 247, ${p.alpha * 0.8})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // --- RENDER FRAME DISPATCHER ---
+    function renderFrame(timeInSeconds) {
+      if (STATE.scenes.length === 0) {
+        drawDynamicBackground(ctx, 720, 1280, STATE.bgTheme, timeInSeconds);
+        ctx.font = "700 24px 'Cairo', sans-serif";
+        ctx.fillStyle = "#64748b";
+        ctx.textAlign = "center";
+        ctx.fillText("استوديو جاهز. اكتب سكريبت أو ابدأ بمشهد بالذكاء الاصطناعي", 360, 640);
+        return;
+      }
+
+      const activeScene = STATE.scenes[STATE.activeSceneIndex] || STATE.scenes[0];
+      const dur = activeScene.duration || STATE.durationPerScene;
+      const progress = (timeInSeconds % dur) / dur;
+
+      const w = 720, h = 1280;
+      drawDynamicBackground(ctx, w, h, STATE.bgTheme, timeInSeconds);
+
+      ctx.save();
+      // Draw procedural or custom code visual
+      let drawer = null;
+      if (activeScene.customCode) {
+        try {
+          if (!activeScene.compiledFn) {
+            let codeStr = activeScene.customCode.trim();
+            if (!codeStr.startsWith('function') && !codeStr.startsWith('(')) {
+              codeStr = `function(ctx, t, progress, w, h, color, scene) { ${codeStr} }`;
+            }
+            activeScene.compiledFn = eval(`(${codeStr})`);
+          }
+          drawer = activeScene.compiledFn;
+        } catch (e) {
+          drawer = CanvasVisuals[activeScene.archetype] || CanvasVisuals.character_walking;
+        }
+      } else {
+        drawer = CanvasVisuals[activeScene.archetype] || CanvasVisuals.character_walking;
+      }
+
+      try {
+        drawer(ctx, timeInSeconds, progress, w, h, activeScene.accentColor || '#8b5cf6', activeScene);
+      } catch (e) {
+        CanvasVisuals.character_walking(ctx, timeInSeconds, progress, w, h, activeScene.accentColor || '#8b5cf6');
+      }
+
+      // Draw bottom progress bar
+      const barY = h * 0.94;
+      const barW = w * 0.65;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.beginPath();
+      ctx.roundRect((w - barW) / 2, barY, barW, 6, 3);
+      ctx.fill();
+
+      const activeW = barW * progress;
+      ctx.fillStyle = activeScene.accentColor || '#8b5cf6';
+      ctx.shadowColor = activeScene.accentColor || '#8b5cf6';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.roundRect((w - barW) / 2, barY, activeW, 6, 3);
+      ctx.fill();
+
+      ctx.restore();
+
+      // Update Timecode
+      const curS = Math.floor(timeInSeconds % dur).toString().padStart(2, '0');
+      const totS = Math.floor(dur).toString().padStart(2, '0');
+      document.getElementById('timecodeDisplay').innerText = `00:${curS} / 00:${totS}`;
+      document.getElementById('timelineProgress').style.width = `${progress * 100}%`;
+    }
+
+    let lastTimestamp = 0;
+    function gameLoop(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const deltaTime = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      if (STATE.isPlaying && STATE.scenes.length > 0) {
+        STATE.currentTime += deltaTime;
+        const curDur = (STATE.scenes[STATE.activeSceneIndex] || {}).duration || STATE.durationPerScene;
+        if (STATE.currentTime >= curDur) {
+          STATE.currentTime = 0;
+          const sc = STATE.scenes[STATE.activeSceneIndex];
+          if (sc) audioEngine.playSfx(sc.sfxType || 'whoosh');
+        }
+      }
+
+      renderFrame(STATE.currentTime);
+      requestAnimationFrame(gameLoop);
+    }
+
+    function togglePlayPause() {
+      if (STATE.scenes.length === 0) return;
+      STATE.isPlaying = !STATE.isPlaying;
+      const playIcon = document.getElementById('playIcon');
+      const canvasOverlay = document.getElementById('canvasOverlayPlay');
+
+      if (STATE.isPlaying) {
+        playIcon.classList.remove('fa-play');
+        playIcon.classList.add('fa-pause');
+        canvasOverlay.classList.remove('opacity-100');
+        canvasOverlay.classList.add('opacity-0');
+        audioEngine.startAmbientDrone();
+        const sc = STATE.scenes[STATE.activeSceneIndex];
+        if (sc) audioEngine.playSfx(sc.sfxType || 'whoosh');
+      } else {
+        playIcon.classList.remove('fa-pause');
+        playIcon.classList.add('fa-play');
+        canvasOverlay.classList.remove('opacity-0');
+        canvasOverlay.classList.add('opacity-100');
+        audioEngine.stopAmbientDrone();
+      }
+    }
+
+    function selectScene(index) {
+      if (index >= 0 && index < STATE.scenes.length) {
+        STATE.activeSceneIndex = index;
+        STATE.currentTime = 0;
+        const scene = STATE.scenes[index];
+
+        document.getElementById('activeSceneTitle').value = scene.title || '';
+        document.getElementById('activeSceneSubtitle').value = scene.subtitle || '';
+        document.getElementById('activeSceneArchetype').value = scene.archetype || 'character_walking';
+        document.getElementById('activeSceneSfx').value = scene.sfxType || 'whoosh';
+        document.getElementById('activeSceneColor').value = scene.accentColor || '#8b5cf6';
+        document.getElementById('activeSceneColorHex').innerText = scene.accentColor || '#8b5cf6';
+        document.getElementById('currentSceneOverlayBadge').innerText = `المشهد ${index + 1} / ${STATE.scenes.length}`;
+        document.getElementById('currentSceneNameBadge').innerText = scene.name || scene.title || 'مشهد حركي';
+
+        audioEngine.playSfx(scene.sfxType || 'whoosh');
+        renderThumbnails();
+        renderFrame(0);
+      }
+    }
+
+    function renderThumbnails() {
+      const container = document.getElementById('sceneThumbnailsList');
+      container.innerHTML = '';
+      document.getElementById('sceneCountBadgeText').innerText = STATE.scenes.length;
+
+      STATE.scenes.forEach((s, i) => {
+        const btn = document.createElement('button');
+        const isActive = i === STATE.activeSceneIndex;
+        btn.className = `px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 border ${
+          isActive 
+            ? 'bg-purple-600 text-white border-purple-400 shadow-md shadow-purple-600/30' 
+            : 'bg-psycho-900 text-slate-300 border-psycho-700 hover:bg-psycho-750'
+        }`;
+        btn.innerHTML = `<span class="w-4 h-4 rounded-full bg-black/40 text-[10px] flex items-center justify-center">${i + 1}</span> <span>${s.name || s.title}</span>`;
+        btn.onclick = () => selectScene(i);
+        container.appendChild(btn);
+      });
+    }
+
+    // --- AI CHAT ASSISTANT DISPATCHER ---
+    async function sendChatRequest(userMessage) {
+      if (!userMessage.trim()) return;
+
+      const chatStream = document.getElementById('aiChatStream');
+      const sendBtn = document.getElementById('btnSendChat');
+      const userInput = document.getElementById('chatUserInput');
+
+      // Append User message to stream
+      chatStream.innerHTML += `
+        <div class="chat-bubble-user p-2.5 rounded-xl rounded-tl-none text-white text-xs max-w-[85%] self-end mr-auto">
+          ${userMessage}
+        </div>
+      `;
+      chatStream.scrollTop = chatStream.scrollHeight;
+      userInput.value = '';
+
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+
+      const currentScene = STATE.scenes[STATE.activeSceneIndex] || null;
+      const topic = document.getElementById('scriptTopicInput').value.trim() || 'علم النفس';
+
+      const systemMsg = `You are an interactive AI Motion Graphics Director.
+The user is chatting with you to build, customize, or refine ONE single motion graphics scene at a time.
+You can adjust:
+- title: Short punchy hook title (3-5 words)
+- subtitle: Caption explanation (6-10 words)
+- archetype: "character_walking" | "character_meditating" | "character_overthinking" | "character_breakthrough" | "character_digital_trap" | "character_reaching_star" | "floating_brain" | "dopamine_gauge" | "dual_mask" | "eye_perception" | "maze_thought" | "hourglass_time" | "iceberg_theory" | "magnetic_heart" | "concentric_rings" | "radial_breath" | "noise_ripple" | "mandala" | "battery_depletion" | "neural_network_nodes" | "fractured_barrier" | "oscillating_pendulum"
+- accentColor: Hex color (e.g. #8b5cf6, #06b6d4, #f43f5e, #10b981, #f59e0b)
+- sfxType: "whoosh" | "sub_impact" | "glitch" | "heartbeat" | "mystery"
+- customCode: Optional custom JavaScript Canvas 2D drawing function expression if requested.
+
+You must return a valid JSON object:
+{
+  "reply": "رسالة رد قصيرة وودية بالعربية تشرح التعديل الذي قمت به...",
+  "scene": {
+    "id": 1,
+    "name": "اسم المشهد",
+    "title": "العنوان الرئيسي",
+    "subtitle": "الكابشن التوضيحي",
+    "archetype": "character_overthinking",
+    "accentColor": "#8b5cf6",
+    "sfxType": "whoosh",
+    "duration": 3.0,
+    "customCode": null
+  }
+}
+Output raw JSON only.`;
+
+      const messages = [{ role: 'system', content: systemMsg }];
+      if (STATE.chatHistory && STATE.chatHistory.length > 0) {
+        for (const msg of STATE.chatHistory.slice(-6)) {
+          messages.push({ role: msg.role || 'user', content: msg.content || '' });
+        }
+      }
+
+      messages.push({
+        role: 'user',
+        content: `Current Topic: "${topic}"\nCurrent Scene: ${JSON.stringify(currentScene || {})}\nUser Request: "${userMessage}"\n\nGenerate or update the scene according to the user request. Output JSON only.`
+      });
+
+      try {
+        const rawContent = await callOmniRouteAI(messages);
+        const data = extractJsonFromAiResponse(rawContent);
+        
+        chatStream.innerHTML += `
+          <div class="chat-bubble-ai p-3 rounded-xl rounded-tr-none text-slate-200 text-xs leading-relaxed">
+            <span class="font-bold text-purple-400 block mb-1">🤖 مخرج الموشن (OmniRoute):</span>
+            ${data.reply || 'تم تحديث وتخصيص المشهد بنجاح!'}
+          </div>
+        `;
+        chatStream.scrollTop = chatStream.scrollHeight;
+
+        if (data.scene) {
+          if (STATE.scenes.length === 0) {
+            STATE.scenes.push(data.scene);
+            STATE.activeSceneIndex = 0;
+          } else {
+            STATE.scenes[STATE.activeSceneIndex] = {
+              ...STATE.scenes[STATE.activeSceneIndex],
+              ...data.scene
+            };
+          }
+          selectScene(STATE.activeSceneIndex);
+          showToast("✨ تم تحديث المشهد في الكانفاس مباشرة!");
+        }
+      } catch (err) {
+        chatStream.innerHTML += `
+          <div class="chat-bubble-ai p-2.5 rounded-xl text-rose-300 text-xs">
+            ⚠️ تعذر الاتصال بالذكاء الاصطناعي: ${err.message}
+          </div>
+        `;
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>إرسال</span>`;
+      }
+    }
+
+    // --- SCRIPT GENERATOR DISPATCHER ---
+    async function generateScriptOnly() {
+      const topic = document.getElementById('scriptTopicInput').value.trim();
+      if (!topic) {
+        showToast("الرجاء إدخال فكرة أو موضوع أولاً!");
+        return;
+      }
+
+      const btn = document.getElementById('btnGenerateScriptOnly');
+      const origText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التوليد من OmniRoute...</span>`;
+
+      const systemMsg = `You are an elite short-form video scriptwriter specializing in psychology and personal growth Reels / Shorts.
+Write an engaging, insightful script divided into 5-8 punchy scenes.
+Return a valid JSON object:
+{
+  "topic": "الموضوع",
+  "title": "عنوان السكريبت",
+  "full_text": "النص الكامل المنسق والجاهز للنسخ والقراءة المباشرة...",
+  "scenes": [
+    {
+      "id": 1,
+      "title": "عنوان المشهد (3-5 كلمات)",
+      "subtitle": "الكابشن المركز (6-10 كلمات)",
+      "archetype": "character_overthinking" | "character_walking" | "character_meditating" | "character_breakthrough" | "character_digital_trap" | "character_reaching_star" | "floating_brain" | "dopamine_gauge" | "dual_mask" | "eye_perception" | "maze_thought" | "hourglass_time" | "iceberg_theory" | "magnetic_heart",
+      "accentColor": "#8b5cf6",
+      "sfxType": "whoosh" | "sub_impact" | "glitch" | "heartbeat" | "mystery"
+    }
+  ]
+}
+Output raw JSON only.`;
+
+      try {
+        const rawContent = await callOmniRouteAI([
+          { role: 'system', content: systemMsg },
+          { role: 'user', content: `Topic: ${topic}\nLanguage: Arabic (العربية الفصحى الجذابة المؤثرة)` }
+        ]);
+        const script = extractJsonFromAiResponse(rawContent);
+        if (script) {
+          document.getElementById('fullScriptTextarea').value = script.full_text || '';
+          if (Array.isArray(script.scenes) && script.scenes.length > 0) {
+            STATE.scenes = script.scenes.map((s, i) => ({
+              id: i + 1,
+              name: s.title || `مشهد ${i+1}`,
+              title: s.title || `مشهد ${i+1}`,
+              subtitle: s.subtitle || '',
+              archetype: s.archetype || 'character_walking',
+              accentColor: s.accentColor || '#8b5cf6',
+              sfxType: s.sfxType || 'whoosh',
+              duration: 3.0,
+              customCode: null,
+              compiledFn: null
+            }));
+            selectScene(0);
+            showToast(`✨ تم توليد السكريبت وبناء ${STATE.scenes.length} مشاهد بنجاح!`);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+        showToast("خطأ في توليد السكريبت: " + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origText;
+      }
+    }
+
+    // --- INSTANT CLIENT-SIDE CANVAS 60FPS RECORDING ---
+    async function recordCanvasDirectly() {
+      if (STATE.scenes.length === 0) {
+        showToast("الرجاء إنشاء مشهد أولاً!");
+        return;
+      }
+      if (STATE.isExporting) return;
+      STATE.isExporting = true;
+
+      const scene = STATE.scenes[STATE.activeSceneIndex];
+      const dur = (scene.duration || 3.0) * 1000;
+      const exportBtn = document.getElementById('btnExportCanvasDirect');
+      const progressWrapper = document.getElementById('exportProgressWrapper');
+      const progressBar = document.getElementById('exportProgressBar');
+      const exportPercentMsg = document.getElementById('exportPercentMsg');
+
+      exportBtn.disabled = true;
+      progressWrapper.classList.remove('hidden');
+      progressBar.style.width = '20%';
+      exportPercentMsg.innerText = '20%';
+
+      try {
+        STATE.currentTime = 0;
+        STATE.isPlaying = true;
+        audioEngine.startAmbientDrone();
+        audioEngine.playSfx(scene.sfxType || 'whoosh');
+
+        const stream = canvas.captureStream(60);
+        if (audioEngine.ctx) {
+          try {
+            const dest = audioEngine.ctx.createMediaStreamDestination();
+            if (audioEngine.ambientGain) audioEngine.ambientGain.connect(dest);
+            const audioTrack = dest.stream.getAudioTracks()[0];
+            if (audioTrack) stream.addTrack(audioTrack);
+          } catch(e){}
+        }
+
+        const mimeType = MediaRecorder.isTypeSupported('video/mp4;codecs=avc1') ? 'video/mp4' : (MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm');
+        const recorder = new MediaRecorder(stream, { mimeType: mimeType, videoBitsPerSecond: 8000000 });
+        const chunks = [];
+
+        recorder.ondataavailable = e => {
+          if (e.data.size > 0) chunks.push(e.data);
+        };
+
+        recorder.onstop = () => {
+          const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+          const blob = new Blob(chunks, { type: mimeType });
+          const filename = `scene_${STATE.activeSceneIndex + 1}_canvas.${ext}`;
+          const url = URL.createObjectURL(blob);
+
+          const modal = document.getElementById('videoReadyModal');
+          const videoPlayer = document.getElementById('modalVideoPlayer');
+          const dlLink = document.getElementById('btnModalDirectDownload');
+
+          videoPlayer.src = url;
+          videoPlayer.load();
+          dlLink.href = url;
+          dlLink.download = filename;
+
+          modal.classList.remove('hidden');
+          progressBar.style.width = '100%';
+          exportPercentMsg.innerText = '100%';
+          exportBtn.disabled = false;
+          progressWrapper.classList.add('hidden');
+          STATE.isExporting = false;
+          showToast("تم تسجيل المشهد من الشاشة مباشرة وتجهيز التحميل!");
+        };
+
+        recorder.start(100);
+        let elapsed = 0;
+        const interval = setInterval(() => {
+          elapsed += 200;
+          const pct = Math.min(95, Math.floor((elapsed / dur) * 100));
+          progressBar.style.width = `${pct}%`;
+          exportPercentMsg.innerText = `${pct}%`;
+          if (elapsed >= dur) {
+            clearInterval(interval);
+            recorder.stop();
+            STATE.isPlaying = false;
+            audioEngine.stopAmbientDrone();
+          }
+        }, 200);
+
+      } catch(e) {
+        showToast("خطأ في تسجيل الشاشة: " + e.message);
+        exportBtn.disabled = false;
+        progressWrapper.classList.add('hidden');
+        STATE.isExporting = false;
+      }
+    }
+
+    // --- SINGLE SCENE DIRECT MP4 EXPORT ---
+        // --- FRAME-BY-FRAME ZERO-DROP WEBCODECS & MP4-MUXER EXPORT ENGINE ---
+    async function renderFrameToContext(targetCtx, w, h, activeScene, timeInSeconds, progress) {
+      drawDynamicBackground(targetCtx, w, h, STATE.bgTheme, timeInSeconds);
+
+      targetCtx.save();
+      let drawer = null;
+      if (activeScene.customCode) {
+        try {
+          if (!activeScene.compiledFn) {
+            let codeStr = activeScene.customCode.trim();
+            if (!codeStr.startsWith('function') && !codeStr.startsWith('(')) {
+              codeStr = `function(ctx, t, progress, w, h, color, scene) { ${codeStr} }`;
+            }
+            activeScene.compiledFn = eval(`(${codeStr})`);
+          }
+          drawer = activeScene.compiledFn;
+        } catch (e) {
+          drawer = CanvasVisuals[activeScene.archetype] || CanvasVisuals.character_walking;
+        }
+      } else {
+        drawer = CanvasVisuals[activeScene.archetype] || CanvasVisuals.character_walking;
+      }
+
+      try {
+        drawer(targetCtx, timeInSeconds, progress, w, h, activeScene.accentColor || '#8b5cf6', activeScene);
+      } catch (e) {
+        CanvasVisuals.character_walking(targetCtx, timeInSeconds, progress, w, h, activeScene.accentColor || '#8b5cf6');
+      }
+
+      // Draw bottom progress bar
+      const barY = h * 0.94;
+      const barW = w * 0.65;
+      targetCtx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      targetCtx.beginPath();
+      targetCtx.roundRect((w - barW) / 2, barY, barW, 6, 3);
+      targetCtx.fill();
+
+      const activeW = barW * progress;
+      targetCtx.fillStyle = activeScene.accentColor || '#8b5cf6';
+      targetCtx.shadowColor = activeScene.accentColor || '#8b5cf6';
+      targetCtx.shadowBlur = 10;
+      targetCtx.beginPath();
+      targetCtx.roundRect((w - barW) / 2, barY, activeW, 6, 3);
+      targetCtx.fill();
+
+      targetCtx.restore();
+    }
+
+    async function exportActiveSceneWithWebCodecs() {
+      if (STATE.scenes.length === 0) {
+        showToast("الرجاء إنشاء مشهد أولاً!");
+        return;
+      }
+      if (STATE.isExporting) return;
+      STATE.isExporting = true;
+
+      const scene = STATE.scenes[STATE.activeSceneIndex];
+      const duration = scene.duration || 3.0;
+      const fps = 60;
+      const totalFrames = Math.round(duration * fps);
+
+      const resSelect = document.getElementById('exportResolutionSelect').value;
+      const targetW = resSelect === '1080' ? 1080 : 720;
+      const targetH = resSelect === '1080' ? 1920 : 1280;
+
+      const exportBtn = document.getElementById('btnExportWebCodecs');
+      const progressWrapper = document.getElementById('exportProgressWrapper');
+      const progressBar = document.getElementById('exportProgressBar');
+      const exportPercentMsg = document.getElementById('exportPercentMsg');
+      const exportStatusMsg = document.getElementById('exportStatusMsg');
+
+      exportBtn.disabled = true;
+      progressWrapper.classList.remove('hidden');
+      progressBar.style.width = '5%';
+      exportPercentMsg.innerText = '5%';
+      exportStatusMsg.innerText = 'تهيئة ترميز الفيديو H.264...';
+
+      // Check if WebCodecs VideoEncoder and Mp4Muxer are available
+      if (typeof VideoEncoder === 'undefined' || typeof Mp4Muxer === 'undefined') {
+        console.warn('WebCodecs VideoEncoder or Mp4Muxer not available, switching to MediaRecorder fallback.');
+        showToast('المتصفح لا يدعم WebCodecs بالكامل، جاري التبديل للمسجل المباشر...');
+        STATE.isExporting = false;
+        exportBtn.disabled = false;
+        recordCanvasDirectly();
+        return;
+      }
+
+      try {
+        // 1. Offscreen Canvas for rendering at crisp native resolution
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = targetW;
+        offCanvas.height = targetH;
+        const offCtx = offCanvas.getContext('2d');
+
+        // 2. Synthesize Audio offline from PsychoAudioEngine
+        exportStatusMsg.innerText = 'توليد مسارات الصوت (BGM & SFX)...';
+        let audioBuffer = null;
+        try {
+          audioBuffer = await audioEngine.renderOfflineAudio(duration, scene.sfxType || 'whoosh');
+        } catch(e) {
+          console.warn('Offline audio render failed:', e);
+        }
+
+        const hasAudio = audioBuffer && typeof AudioEncoder !== 'undefined';
+
+        // 3. Initialize Mp4Muxer
+        const muxer = new Mp4Muxer.Muxer({
+          target: new Mp4Muxer.ArrayBufferTarget(),
+          video: {
+            codec: 'avc',
+            width: targetW,
+            height: targetH
+          },
+          audio: hasAudio ? {
+            codec: 'aac',
+            numberOfChannels: 2,
+            sampleRate: 44100
+          } : undefined,
+          fastStart: 'in-memory',
+          firstTimestampBehavior: 'offset'
+        });
+
+        // 4. VideoEncoder
+        const videoEncoder = new VideoEncoder({
+          output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+          error: (e) => console.error('VideoEncoder error:', e)
+        });
+
+        const videoConfig = {
+          codec: 'avc1.42001f', // H.264 Baseline Level 3.1
+          width: targetW,
+          height: targetH,
+          bitrate: targetW >= 1080 ? 12_000_000 : 7_000_000,
+          framerate: fps,
+          hardwareAcceleration: 'prefer-hardware'
+        };
+
+        const support = await VideoEncoder.isConfigSupported(videoConfig);
+        if (!support.supported) {
+          videoConfig.codec = 'avc1.4d002a'; // Main Profile
+        }
+        videoEncoder.configure(videoConfig);
+
+        // 5. AudioEncoder (if supported)
+        let audioEncoder = null;
+        if (hasAudio) {
+          try {
+            audioEncoder = new AudioEncoder({
+              output: (chunk, meta) => muxer.addAudioChunk(chunk, meta),
+              error: (e) => console.error('AudioEncoder error:', e)
+            });
+            audioEncoder.configure({
+              codec: 'mp4a.40.2', // AAC-LC
+              numberOfChannels: 2,
+              sampleRate: 44100,
+              bitrate: 128000
+            });
+
+            const ch0 = audioBuffer.getChannelData(0);
+            const ch1 = audioBuffer.getChannelData(1);
+            const planarData = new Float32Array(ch0.length + ch1.length);
+            planarData.set(ch0, 0);
+            planarData.set(ch1, ch0.length);
+
+            const audioData = new AudioData({
+              format: 'f32-planar',
+              sampleRate: 44100,
+              numberOfFrames: audioBuffer.length,
+              numberOfChannels: 2,
+              timestamp: 0,
+              data: planarData
+            });
+            audioEncoder.encode(audioData);
+            audioData.close();
+          } catch (err) {
+            console.warn('AudioEncoder not available or failed:', err);
+            audioEncoder = null;
+          }
+        }
+
+        // 6. Offline frame-by-frame rendering loop (ZERO dropped frames)
+        exportStatusMsg.innerText = 'جاري رسم وتشفير الإطارات بدقة 60FPS...';
+        for (let i = 0; i < totalFrames; i++) {
+          const t = i / fps;
+          const progress = (t % duration) / duration;
+
+          await renderFrameToContext(offCtx, targetW, targetH, scene, t, progress);
+
+          const frameTimestampUs = Math.round(i * (1_000_000 / fps));
+          const videoFrame = new VideoFrame(offCanvas, {
+            timestamp: frameTimestampUs,
+            duration: Math.round(1_000_000 / fps)
+          });
+
+          const isKeyFrame = (i % (fps * 2)) === 0;
+          videoEncoder.encode(videoFrame, { keyFrame: isKeyFrame });
+          videoFrame.close();
+
+          const pct = Math.min(92, Math.floor((i / totalFrames) * 90) + 5);
+          progressBar.style.width = `${pct}%`;
+          exportPercentMsg.innerText = `${pct}%`;
+
+          // Yield every 5 frames to avoid freezing UI
+          if (i % 5 === 0) {
+            await new Promise(r => setTimeout(r, 0));
+          }
+        }
+
+        exportStatusMsg.innerText = 'إنهاء تشفير الفيديو والدمج (Muxing)...';
+        progressBar.style.width = '95%';
+        exportPercentMsg.innerText = '95%';
+
+        await videoEncoder.flush();
+        videoEncoder.close();
+
+        if (audioEncoder) {
+          try {
+            await audioEncoder.flush();
+            audioEncoder.close();
+          } catch(e) {}
+        }
+
+        muxer.finalize();
+        const mp4Buffer = muxer.target.buffer;
+        const blob = new Blob([mp4Buffer], { type: 'video/mp4' });
+        const url = URL.createObjectURL(blob);
+        const filename = `${scene.title ? scene.title.replace(/\s+/g, '_') : 'scene'}_${targetW}p.mp4`;
+
+        // Show download modal
+        const modal = document.getElementById('videoReadyModal');
+        const videoPlayer = document.getElementById('modalVideoPlayer');
+        const dlLink = document.getElementById('btnModalDirectDownload');
+
+        videoPlayer.src = url;
+        videoPlayer.load();
+        dlLink.href = url;
+        dlLink.download = filename;
+
+        modal.classList.remove('hidden');
+        progressBar.style.width = '100%';
+        exportPercentMsg.innerText = '100%';
+        exportStatusMsg.innerText = 'اكتمل التصدير بنجاح!';
+        exportBtn.disabled = false;
+        progressWrapper.classList.add('hidden');
+        STATE.isExporting = false;
+        showToast('✨ تم تصدير فيديو MP4 عالي الجودة بنجاح بدون سيرفر!');
+
+      } catch(err) {
+        console.error('WebCodecs export failed:', err);
+        showToast('خطأ أثناء تصدير WebCodecs: ' + err.message);
+        exportBtn.disabled = false;
+        progressWrapper.classList.add('hidden');
+        STATE.isExporting = false;
+      }
+    }
+
+
+
+    // --- CODE MODAL ---
+    function openCodeModal() {
+      const scene = STATE.scenes[STATE.activeSceneIndex];
+      if (!scene) return;
+      document.getElementById('codeEditorTitle').innerText = `كود JavaScript للمشهد: ${scene.name || scene.title}`;
+      document.getElementById('sceneCodeTextarea').value = scene.customCode || `// كود JavaScript الحركي للمشهد
+function(ctx, t, progress, w, h, color, scene) {
+  const cx = w / 2, cy = h * 0.42;
+  ctx.save();
+  ctx.translate(cx, cy);
+  const pulse = 1 + Math.sin(t * 5) * 0.08;
+  ctx.scale(pulse, pulse);
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 25;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 4;
+  for (let i = 1; i <= 4; i++) {
+    const r = i * 28 + Math.sin(t * 3 + i) * 8;
+    ctx.beginPath();
+    ctx.arc(0, 0, r, t * 0.4 + i * 0.5, t * 0.4 + i * 0.5 + Math.PI * 1.5);
+    ctx.stroke();
+  }
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(0, 0, 14, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}`;
+      document.getElementById('codeEditorModal').classList.remove('hidden');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    // --- INITIALIZATION ---
+    window.onload = function() {
+      populateDropdowns();
+
+      // Start with ONE initial scene ready for customization
+      STATE.scenes = [
+        {
+          id: 1,
+          name: "المشهد 1: نقطة الانطلاق",
+          title: "بداية الوعي",
+          subtitle: "كل تغيير حقيقي يبدأ بمراقبة أفكارك بصمت",
+          archetype: "character_walking",
+          accentColor: "#8b5cf6",
+          sfxType: "whoosh",
+          duration: 3.0,
+          customCode: null,
+          compiledFn: null
+        }
+      ];
+
+      selectScene(0);
+      requestAnimationFrame(gameLoop);
+
+      const unlockAudio = () => {
+        audioEngine.initContext();
+        document.removeEventListener('touchstart', unlockAudio);
+        document.removeEventListener('click', unlockAudio);
+      };
+      document.addEventListener('touchstart', unlockAudio, { once: true });
+      document.addEventListener('click', unlockAudio, { once: true });
+
+      document.getElementById('btnPlayPause').addEventListener('click', togglePlayPause);
+      document.getElementById('motionCanvas').addEventListener('click', togglePlayPause);
+      document.getElementById('btnRestart').addEventListener('click', () => {
+        STATE.currentTime = 0;
+        renderFrame(0);
+      });
+
+      document.getElementById('btnPrevScene').addEventListener('click', () => {
+        selectScene(Math.max(0, STATE.activeSceneIndex - 1));
+      });
+      document.getElementById('btnNextScene').addEventListener('click', () => {
+        selectScene(Math.min(STATE.scenes.length - 1, STATE.activeSceneIndex + 1));
+      });
+
+      // Active scene field bindings
+      document.getElementById('activeSceneTitle').addEventListener('input', (e) => {
+        if (STATE.scenes[STATE.activeSceneIndex]) {
+          STATE.scenes[STATE.activeSceneIndex].title = e.target.value;
+          renderFrame(STATE.currentTime);
+        }
+      });
+      document.getElementById('activeSceneSubtitle').addEventListener('input', (e) => {
+        if (STATE.scenes[STATE.activeSceneIndex]) {
+          STATE.scenes[STATE.activeSceneIndex].subtitle = e.target.value;
+          renderFrame(STATE.currentTime);
+        }
+      });
+      document.getElementById('activeSceneArchetype').addEventListener('change', (e) => {
+        if (STATE.scenes[STATE.activeSceneIndex]) {
+          STATE.scenes[STATE.activeSceneIndex].archetype = e.target.value;
+          STATE.scenes[STATE.activeSceneIndex].customCode = null;
+          STATE.scenes[STATE.activeSceneIndex].compiledFn = null;
+          renderFrame(STATE.currentTime);
+          showToast("تم تحديث نمط المشهد");
+        }
+      });
+      document.getElementById('activeSceneSfx').addEventListener('change', (e) => {
+        if (STATE.scenes[STATE.activeSceneIndex]) {
+          STATE.scenes[STATE.activeSceneIndex].sfxType = e.target.value;
+          audioEngine.playSfx(e.target.value);
+        }
+      });
+      document.getElementById('activeSceneColor').addEventListener('input', (e) => {
+        if (STATE.scenes[STATE.activeSceneIndex]) {
+          STATE.scenes[STATE.activeSceneIndex].accentColor = e.target.value;
+          document.getElementById('activeSceneColorHex').innerText = e.target.value;
+          renderFrame(STATE.currentTime);
+        }
+      });
+
+      // AI Chat Events
+      document.getElementById('btnSendChat').addEventListener('click', () => {
+        sendChatRequest(document.getElementById('chatUserInput').value);
+      });
+      document.getElementById('chatUserInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendChatRequest(e.target.value);
+      });
+      document.querySelectorAll('.quick-chat-chip').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          sendChatRequest(e.currentTarget.dataset.msg);
+        });
+      });
+
+      // Script buttons
+      document.getElementById('btnGenerateScriptOnly').addEventListener('click', generateScriptOnly);
+      document.getElementById('btnCopyFullScript').addEventListener('click', () => {
+        const text = document.getElementById('fullScriptTextarea').value;
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(() => {
+          showToast("تم نسخ السكريبت كاملاً إلى الحافظة بنجاح!");
+        });
+      });
+      document.getElementById('btnDownloadScriptText').addEventListener('click', () => {
+        const text = document.getElementById('fullScriptTextarea').value;
+        if (!text) return;
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'psychology_script.txt';
+        a.click();
+        showToast("تم تنزيل ملف السكريبت .txt");
+      });
+
+      // Add New Scene
+      document.getElementById('btnAddNewSceneNext').addEventListener('click', () => {
+        const nextId = STATE.scenes.length + 1;
+        STATE.scenes.push({
+          id: nextId,
+          name: `المشهد ${nextId}`,
+          title: `مشهد ${nextId}: عنوان فريد`,
+          subtitle: "اكتب هنا الكابشن والنص التوضيحي",
+          archetype: "character_meditating",
+          accentColor: "#06b6d4",
+          sfxType: "mystery",
+          duration: 3.0,
+          customCode: null,
+          compiledFn: null
+        });
+        selectScene(STATE.scenes.length - 1);
+        showToast(`تم إنشاء مشهد جديد رقم ${nextId}!`);
+      });
+
+      // Save to Library
+      document.getElementById('btnSaveCurrentSceneToLibrary').addEventListener('click', () => {
+        const sc = STATE.scenes[STATE.activeSceneIndex];
+        if (sc) {
+          STATE.savedLibraryScenes.push(JSON.parse(JSON.stringify(sc)));
+          showToast(`تم حفظ المشهد "${sc.name || sc.title}" في مكتبتك الخاصة!`);
+        }
+      });
+
+      // Clear & Blank project
+      document.getElementById('btnNewBlankProject').addEventListener('click', () => {
+        if (confirm("هل تريد بدء مشروع فارغ ونظيف؟")) {
+          STATE.scenes = [
+            {
+              id: 1,
+              name: "المشهد 1",
+              title: "مشهد البداية",
+              subtitle: "اكتب الفكرة أو اطلب من الذكاء الاصطناعي تخصيصها",
+              archetype: "character_walking",
+              accentColor: "#8b5cf6",
+              sfxType: "whoosh",
+              duration: 3.0,
+              customCode: null,
+              compiledFn: null
+            }
+          ];
+          selectScene(0);
+          showToast("تم تجهيز مشروع جديد ونظيف");
+        }
+      });
+
+      // Code Modal Events
+      document.getElementById('btnOpenCodeModal').addEventListener('click', openCodeModal);
+      document.getElementById('btnCloseCodeModal').addEventListener('click', () => {
+        document.getElementById('codeEditorModal').classList.add('hidden');
+      });
+      document.getElementById('btnApplySceneCode').addEventListener('click', () => {
+        const sc = STATE.scenes[STATE.activeSceneIndex];
+        if (sc) {
+          sc.customCode = document.getElementById('sceneCodeTextarea').value;
+          sc.compiledFn = null;
+          sc.archetype = 'custom_code';
+          renderFrame(0);
+          document.getElementById('codeEditorModal').classList.add('hidden');
+          showToast("تم تطبيق الكود وتحديث شاشة العرض مباشرة!");
+        }
+      });
+      document.getElementById('btnAiGenerateSceneCode').addEventListener('click', async () => {
+        const sc = STATE.scenes[STATE.activeSceneIndex];
+        if (!sc) return;
+        const btn = document.getElementById('btnAiGenerateSceneCode');
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التوليد...</span>`;
+
+        const prompt = `You are an expert Creative Coder and Motion Graphics Developer using HTML5 Canvas 2D.
+Write a JavaScript drawing function body for this specific motion graphics scene:
+Topic: "${document.getElementById('scriptTopicInput').value.trim() || 'علم النفس'}"
+Scene Title: "${sc.title || ''}"
+Scene Description: "${sc.subtitle || ''}"
+Visual Metaphor: "${sc.archetype || 'custom'}"
+
+You must output a single valid JavaScript function expression:
+function(ctx, t, progress, w, h, color, scene) {
+  // Custom mathematical curves, geometric symbols, particle arrays, or visual metaphors
+  // cx = w / 2, cy = h * 0.42
+}
+
+Rules:
+1. Draw using \`ctx\` (Canvas 2D context).
+2. Use \`progress\` (0.0 to 1.0) and \`t\` (seconds) to create smooth, organic motion graphics.
+3. Use \`color\` (hex color) and glowing shadows (\`ctx.shadowColor = color; ctx.shadowBlur = 25;\`).
+4. Output RAW JAVASCRIPT ONLY. No markdown fences, no explanations.`;
+
+        try {
+          const rawContent = await callOmniRouteAI([
+            { role: 'system', content: 'You are a JavaScript Creative Coding expert for Canvas 2D and Three.js.' },
+            { role: 'user', content: prompt }
+          ]);
+          let cleanCode = rawContent.trim();
+          if (cleanCode.startsWith('```')) {
+            const lines = cleanCode.split('\n');
+            if (lines[0].startsWith('```')) lines.shift();
+            if (lines.length > 0 && lines[lines.length - 1].startsWith('```')) lines.pop();
+            cleanCode = lines.join('\n').trim();
+          }
+          document.getElementById('sceneCodeTextarea').value = cleanCode;
+          showToast("✨ تم توليد كود JS حركي للمشهد بنجاح!");
+        } catch (e) {
+          showToast("خطأ في توليد الكود: " + e.message);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> <span>توليد كود بـ OmniRoute</span>`;
+        }
+      });
+
+      // Export Active Scene Video
+      document.getElementById('btnExportCanvasDirect').addEventListener('click', recordCanvasDirectly);
+      document.getElementById('btnExportWebCodecs').addEventListener('click', exportActiveSceneWithWebCodecs);
+      
+      // OmniRoute Settings Modal Handlers
+      const settingsModal = document.getElementById('settingsModal');
+      const settingEndpointInp = document.getElementById('settingEndpoint');
+      const settingApiKeyInp = document.getElementById('settingApiKey');
+      const settingModelInp = document.getElementById('settingModel');
+      const aiTestResultMsg = document.getElementById('aiTestResultMsg');
+
+      settingEndpointInp.value = AI_CONFIG.endpoint;
+      settingApiKeyInp.value = AI_CONFIG.apiKey;
+      settingModelInp.value = AI_CONFIG.model;
+
+      document.getElementById('btnOpenSettings').addEventListener('click', () => {
+        settingEndpointInp.value = AI_CONFIG.endpoint;
+        settingApiKeyInp.value = AI_CONFIG.apiKey;
+        settingModelInp.value = AI_CONFIG.model;
+        aiTestResultMsg.classList.add('hidden');
+        settingsModal.classList.remove('hidden');
+      });
+
+      document.getElementById('btnCloseSettingsModal').addEventListener('click', () => {
+        settingsModal.classList.add('hidden');
+      });
+
+      document.getElementById('btnSaveAISettings').addEventListener('click', () => {
+        AI_CONFIG.endpoint = settingEndpointInp.value.trim();
+        AI_CONFIG.apiKey = settingApiKeyInp.value.trim();
+        AI_CONFIG.model = settingModelInp.value.trim() || 'free-is';
+        try {
+          localStorage.setItem('psychomotion_ai_config', JSON.stringify(AI_CONFIG));
+        } catch(e) {}
+        settingsModal.classList.add('hidden');
+        showToast("✨ تم حفظ إعدادات OmniRoute بنجاح!");
+      });
+
+      document.getElementById('btnTestAIConnection').addEventListener('click', async () => {
+        const btn = document.getElementById('btnTestAIConnection');
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الاختبار...</span>`;
+        aiTestResultMsg.classList.remove('hidden');
+        aiTestResultMsg.className = "text-center text-xs text-amber-300 py-1";
+        aiTestResultMsg.innerText = "جاري الاتصال بالخادم...";
+
+        try {
+          const testEndpoint = settingEndpointInp.value.trim();
+          const testKey = settingApiKeyInp.value.trim();
+          const testModel = settingModelInp.value.trim() || 'free-is';
+
+          const res = await fetch(`${testEndpoint.replace(/\/+$/, '')}/chat/completions`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${testKey}`
+            },
+            body: JSON.stringify({
+              model: testModel,
+              messages: [{ role: 'user', content: 'Say OK' }],
+              max_tokens: 5
+            })
+          });
+
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+          }
+          const data = await res.json();
+          aiTestResultMsg.className = "text-center text-xs text-emerald-400 font-bold py-1";
+          aiTestResultMsg.innerText = `✅ الاتصال ناجح ومستقر! (النموذج: ${testModel})`;
+        } catch (e) {
+          aiTestResultMsg.className = "text-center text-xs text-rose-400 font-bold py-1";
+          aiTestResultMsg.innerText = `❌ فشل الاتصال: ${e.message}`;
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-bolt"></i> <span>اختبار الاتصال</span>`;
+        }
+      });
+
+      document.getElementById('btnModalClose').addEventListener('click', () => {
+        document.getElementById('modalVideoPlayer').pause();
+        document.getElementById('videoReadyModal').classList.add('hidden');
+      });
+    };
+  </script>
+
+  <!-- OMNIROUTE SETTINGS MODAL -->
+  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-psycho-900 border border-psycho-600/80 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between border-b border-psycho-700/60 pb-3">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-purple-400"></i>
+          <h3 class="font-bold text-slate-100 text-sm">إعدادات مزود الذكاء الاصطناعي (OmniRoute)</h3>
+        </div>
+        <button id="btnCloseSettingsModal" class="text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">OmniRoute API Endpoint (Cloudflare / Server):</label>
+          <input id="settingEndpoint" type="text" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="https://information-helps-renaissance-recipe.trycloudflare.com/v1">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">API Key (Bearer Token):</label>
+          <input id="settingApiKey" type="password" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="sk-97a9d81b5d3c4a0b-3b6992-b24ddd92">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Model Name:</label>
+          <input id="settingModel" type="text" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="free-is">
+        </div>
+      </div>
+      <div class="flex items-center justify-between pt-2 border-t border-psycho-700/60">
+        <button id="btnTestAIConnection" class="px-3 py-1.5 rounded-lg bg-psycho-800 hover:bg-psycho-700 text-slate-300 font-bold text-xs border border-psycho-600 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-bolt"></i>
+          <span>اختبار الاتصال</span>
+        </button>
+        <button id="btnSaveAISettings" class="px-4 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5">
+          <i class="fa-solid fa-check"></i>
+          <span>حفظ الإعدادات</span>
+        </button>
+      </div>
+      <div id="aiTestResultMsg" class="text-center text-xs hidden"></div>
+    </div>
+  </div>
+
+</body>
+</html>

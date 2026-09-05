@@ -1,0 +1,26 @@
+{
+  "name": "motion-studio-mobile",
+  "version": "1.0.0",
+  "description": "Scene-by-Scene Motion Graphics Studio for Mobile (WebCodecs & Capacitor)",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Static web assets ready in www'",
+    "cap:sync": "cap sync android",
+    "cap:open": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.1",
+    "@capacitor/cli": "^7.0.1",
+    "@capacitor/core": "^7.0.1",
+    "mp4-muxer": "^5.2.2"
+  },
+  "keywords": [
+    "motion-graphics",
+    "webcodecs",
+    "mp4-muxer",
+    "capacitor",
+    "android"
+  ],
+  "author": "lyla360",
+  "license": "MIT"
+}
