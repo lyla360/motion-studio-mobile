@@ -1,15 +1,19 @@
-name: Build Android APK (Capacitor)
+name: Build & Release Android APK (Capacitor)
 
 on:
   push:
     branches: [ "main", "master" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
-    name: Build Android APK
+    name: Build & Release Android APK
     runs-on: ubuntu-latest
 
     steps:
@@ -43,7 +47,6 @@ jobs:
 
       - name: Configure Android Permissions & Hardware Acceleration
         run: |
-          # Ensure cleartextTraffic and hardwareAccelerated are enabled in AndroidManifest
           MANIFEST="android/app/src/main/AndroidManifest.xml"
           if [ -f "$MANIFEST" ]; then
             sed -i 's/<application/<application android:usesCleartextTraffic="true" android:hardwareAccelerated="true"/g' "$MANIFEST" || true
@@ -67,3 +70,16 @@ jobs:
           name: MotionStudio-Android-APK
           path: build-artifacts/*.apk
           retention-days: 14
+
+      - name: Publish to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        with:
+          files: build-artifacts/*.apk
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v1.0.0' }}
+          name: "Motion Studio App ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v1.0.0' }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
