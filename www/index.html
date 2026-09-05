@@ -1,18 +1,25 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="dark">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PsychoMotion Studio v3 - GSAP 3 Kinetic Typography & Smart Script Engine</title>
-
-  <!-- PWA & Mobile Metadata -->
-  <meta name="theme-color" content="#000000">
+  <title>PsychoMotion Studio - استوديو الموشن غرافيك والأنيميشن 60FPS</title>
+  
+  <!-- PWA Metadata -->
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#070913">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-title" content="PsychoMotion">
+  <link rel="apple-touch-icon" href="/static/icon-192.png">
 
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind & FontAwesome & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -20,411 +27,313 @@
         extend: {
           fontFamily: {
             cairo: ['Cairo', 'sans-serif'],
-            montserrat: ['Montserrat', 'sans-serif'],
+            tajawal: ['Tajawal', 'sans-serif'],
             mono: ['Space Grotesk', 'monospace']
           },
           colors: {
-            stage: '#000000',
-            darkpanel: '#070a12',
-            darkcard: '#0d1220',
-            darkborder: '#192238',
-            accent: '#8b5cf6',
-            neon: '#facc15',
-            neongreen: '#22c55e',
-            neoncyan: '#06b6d4',
-            neonrose: '#f43f5e'
+            psycho: {
+              950: '#04060c',
+              900: '#070913',
+              850: '#0b0f20',
+              800: '#0e1224',
+              750: '#131830',
+              700: '#161d36',
+              600: '#232d4f',
+              accent: '#8b5cf6',
+              cyan: '#06b6d4',
+              rose: '#f43f5e',
+              amber: '#f59e0b',
+              emerald: '#10b981'
+            }
           }
         }
       }
     };
   </script>
 
-  <!-- Google Fonts: Cairo 900, Montserrat 900, Space Grotesk -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Montserrat:wght@800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <!-- GSAP 3 & TextPlugin CDN (Required) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
-
-  <!-- MP4-Muxer for WebCodecs Offline H.264 Encoding -->
-  <script src="vendor/mp4-muxer.min.js"></script>
-
   <style>
     body {
-      background-color: #04060b;
+      font-family: 'Cairo', 'Tajawal', sans-serif;
+      background-color: #070913;
       color: #f1f5f9;
-      font-family: 'Cairo', sans-serif;
       overflow-x: hidden;
     }
-
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: #070a12; }
-    ::-webkit-scrollbar-thumb { background: #192238; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
-
-    /* Alex Hormozi / MrBeast Viral Karaoke Typography Overlay */
-    .viral-caption-container {
-      position: absolute;
-      bottom: 16%;
-      left: 5%;
-      right: 5%;
-      z-index: 30;
-      pointer-events: none;
-      text-align: center;
-      perspective: 800px;
+    
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0e1224;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #232d4f;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8b5cf6;
     }
 
-    .karaoke-word {
-      display: inline-block;
-      font-family: 'Cairo', 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-size: 2.0rem;
-      line-height: 1.25;
-      text-transform: uppercase;
-      color: #ffffff;
-      -webkit-text-stroke: 4px #000000;
-      paint-order: stroke fill;
-      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.95);
-      transform-origin: center bottom;
-      margin: 0 4px;
-      transition: color 0.08s ease;
-      will-change: transform, color;
+    .chat-bubble-ai {
+      background: linear-gradient(135deg, rgba(22, 29, 54, 0.95), rgba(14, 18, 36, 0.95));
+      border: 1px solid rgba(139, 92, 246, 0.25);
     }
-
-    .karaoke-word.active-word {
-      color: #facc15 !important; /* Radiant Neon Yellow */
-      text-shadow: 0 0 25px rgba(250, 204, 21, 0.9), 0 4px 20px rgba(0, 0, 0, 0.95);
-    }
-
-    .karaoke-word.active-word-green {
-      color: #22c55e !important; /* Radiant Neon Green */
-      text-shadow: 0 0 25px rgba(34, 197, 94, 0.9), 0 4px 20px rgba(0, 0, 0, 0.95);
-    }
-
-    /* 9:16 Vertical Video Stage Container */
-    .video-stage-wrapper {
-      width: 340px;
-      height: 604px;
-      max-width: 100%;
-      background-color: #000000;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 30px rgba(139, 92, 246, 0.15);
-    }
-
-    @media (min-width: 640px) {
-      .video-stage-wrapper {
-        width: 360px;
-        height: 640px;
-      }
+    .chat-bubble-user {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
     }
   </style>
+  <!-- MP4-Muxer for WebCodecs H.264 offline encoding -->
+  <script src="vendor/mp4-muxer.min.js"></script>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-purple-600 selection:text-white">
+
+<body class="bg-psycho-900 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-purple-600 selection:text-white">
 
   <!-- HEADER -->
-  <header class="border-b border-darkborder/70 bg-darkpanel/90 backdrop-blur-md sticky top-0 z-50">
+  <header class="border-b border-psycho-700/60 bg-psycho-800/80 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-purple-600/30">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
           <i class="fa-solid fa-person-running text-lg animate-pulse"></i>
         </div>
         <div>
           <h1 class="text-lg font-black tracking-wide bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-300 bg-clip-text text-transparent">
-            PsychoMotion Studio <span class="text-xs bg-purple-900/60 border border-purple-500/40 text-purple-200 px-2 py-0.5 rounded-full mr-1">v3 GSAP Engine</span>
+            PsychoMotion Studio
           </h1>
-          <p class="text-xs text-slate-400 font-medium">استوديو صناعة المشاهد الذكية، الكابشن الفيروسي، والـ GSAP 3 Physics</p>
+          <p class="text-xs text-slate-400 font-medium">استوديو صناعة المشاهد مشهد بمشهد والدردشة مع الذكاء الاصطناعي</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2 sm:gap-3">
+        <!-- PWA Install Button -->
+        <button id="btnInstallPwa" class="hidden px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          <span>تثبيت التطبيق</span>
+        </button>
+
         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-sm shadow-emerald-500/10">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
           <span>Model: <strong id="headerModelBadge" class="font-bold text-white">Ok</strong></span>
         </span>
 
-        <button id="btnToggleAudio" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-darkcard hover:bg-darkborder text-slate-300 border border-darkborder transition flex items-center gap-1.5" title="تشغيل / كتم الصوت">
-          <i class="fa-solid fa-volume-high text-cyan-400" id="audioToggleIcon"></i>
-          <span class="hidden sm:inline" id="audioToggleText">مفعّل</span>
-        </button>
-
-        <button id="btnOpenSettings" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-darkcard hover:bg-purple-900/40 text-purple-300 border border-darkborder transition flex items-center gap-1.5" title="إعدادات OmniRoute API">
+                <button id="btnOpenSettings" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-psycho-700/80 hover:bg-purple-900/40 text-purple-300 border border-psycho-600 transition flex items-center gap-1.5" title="إعدادات OmniRoute API">
           <i class="fa-solid fa-gear"></i>
           <span class="hidden sm:inline">الإعدادات</span>
+        </button>
+        <button id="btnNewBlankProject" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-psycho-700/80 hover:bg-rose-900/40 text-rose-300 border border-psycho-600 transition flex items-center gap-1.5" title="مسح البدء بمشروع نظيف">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span class="hidden sm:inline">مشروع جديد</span>
         </button>
       </div>
     </div>
   </header>
-
-  <!-- MOBILE NAVIGATION TABS -->
-  <nav class="lg:hidden max-w-7xl mx-auto px-4 pt-3 pb-1 w-full" aria-label="Mobile Navigation">
-    <div class="flex items-center bg-darkpanel p-1.5 rounded-2xl border border-darkborder shadow-lg gap-1">
+  <!-- MOBILE VIEW NAVIGATION (Visible on Mobile/Tablet) -->
+  <nav id="mobileNavBar" class="lg:hidden max-w-7xl mx-auto px-4 pt-3 pb-1 w-full" aria-label="Mobile Navigation">
+    <div class="flex items-center bg-psycho-950/90 p-1.5 rounded-2xl border border-psycho-700/80 shadow-lg gap-1">
       <button id="tabBtnStudio" class="mobile-nav-btn flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30" data-view="studio">
         <i class="fa-solid fa-film"></i>
         <span>الاستوديو والعرض</span>
       </button>
       <button id="tabBtnScript" class="mobile-nav-btn flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200" data-view="script">
         <i class="fa-solid fa-file-lines"></i>
-        <span>السكريبت والمشاهد</span>
+        <span>السكريبت</span>
       </button>
-      <button id="tabBtnCode" class="mobile-nav-btn flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200" data-view="code">
-        <i class="fa-solid fa-code"></i>
-        <span>كود GSAP والتأثيرات</span>
+      <button id="tabBtnChat" class="mobile-nav-btn flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200" data-view="chat">
+        <i class="fa-solid fa-comments"></i>
+        <span>الدردشة AI</span>
       </button>
     </div>
   </nav>
 
-  <!-- MAIN LAYOUT -->
+
+  <!-- MAIN VIEW -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-    <!-- LEFT PANEL: CONTROL PANEL, SCRIPT BUILDER, CLI & CODE (7 Cols) -->
+    <!-- LEFT COLUMN: SCRIPT HUB, AI CHAT ASSISTANT & SCENE CONTROLS -->
     <div id="colLeft" class="lg:col-span-7 flex flex-col gap-4 order-2 lg:order-1">
-
-      <!-- 1. FULL SCRIPT BUILDER, DOWNLOAD & SMART SCENE SPLITTER -->
-      <div id="boxScript" class="bg-darkcard border border-darkborder rounded-2xl p-4 shadow-xl">
+      
+      <!-- 1. FULL SCRIPT GENERATOR & 1-CLICK COPY BOX -->
+      <div id="boxScript" class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
           <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
-            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
-            <span>محرر السكريبت ومقسم المشاهد الذكية (Full Script & Smart Scene Engine):</span>
+            <i class="fa-solid fa-file-lines text-amber-400"></i>
+            <span>محرر ومنطقة السكريبت (توليد، نسخ، وتعديل):</span>
           </span>
           <div class="flex items-center gap-1.5">
-            <button id="btnCopyFullScript" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-lg font-bold text-xs flex items-center gap-1 transition">
+            <button id="btnCopyFullScript" class="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-lg font-bold text-xs flex items-center gap-1.5 transition active:scale-95">
               <i class="fa-solid fa-copy"></i>
-              <span>نسخ السكريبت</span>
+              <span>نسخ السكريبت بالكامل</span>
             </button>
-            <button id="btnDownloadScriptText" class="px-2.5 py-1 bg-darkpanel hover:bg-darkborder text-slate-300 border border-darkborder rounded-lg text-xs transition" title="تحميل ملف .txt">
+            <button id="btnDownloadScriptText" class="px-2.5 py-1 bg-psycho-700 hover:bg-psycho-600 text-slate-300 border border-psycho-600 rounded-lg text-xs transition" title="تحميل ملف .txt">
               <i class="fa-solid fa-download"></i>
-              <span>.txt</span>
             </button>
           </div>
+        </div>
+
+        <div class="flex gap-2 mb-2">
+          <input 
+            type="text" 
+            id="scriptTopicInput" 
+            placeholder="اكتب موضوع السكريبت هنا، مثال: سيكولوجيا التفكير الزائد، كسر فخ التسويف..."
+            value="سيكولوجيا كسر التسويف والمماطلة"
+            class="flex-1 bg-psycho-900 border border-psycho-600 focus:border-purple-500 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-purple-500/30 transition"
+          >
+          <button 
+            id="btnGenerateScriptOnly" 
+            class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md flex items-center gap-1.5 whitespace-nowrap transition active:scale-95"
+          >
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+            <span>توليد السكريبت بـ Ok</span>
+          </button>
         </div>
 
         <textarea 
           id="fullScriptTextarea" 
           rows="4" 
-          class="w-full bg-[#04060b] border border-darkborder focus:border-purple-500 rounded-xl p-3 text-xs text-slate-100 font-sans leading-relaxed focus:outline-none resize-y"
-          placeholder="الصق نص السكريبت الكامل هنا، أو اضغط توليد سكريبت فيروسي بالذكاء الاصطناعي..."
-        >السر الذي يخفيه 99% من الأثرياء عنك الآن!
-احذر هذا الخطأ الفادح يدمر نتائجك يومياً!
-حل بسيط بكسر التسويف ومضاعفة الطاقة فوراً!
-انطلق الآن وشاهد كيف تتغير حياتك خلال 24 ساعة!</textarea>
-
-        <div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-2.5 border-t border-darkborder/60">
-          <div class="flex flex-wrap items-center gap-2">
-            <button id="btnAiGenerateFullScript" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md flex items-center gap-1.5 transition active:scale-95">
-              <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
-              <span>توليد سكريبت فيروسي بـ Ok AI</span>
-            </button>
-            <button id="btnSplitIntoSmartScenes" class="px-4 py-2 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/40 font-bold text-xs flex items-center gap-1.5 transition active:scale-95">
-              <i class="fa-solid fa-scissors"></i>
-              <span>تقسيم إلى مشاهد ذكية (≤3s)</span>
-            </button>
-          </div>
-          <span class="text-[11px] text-slate-400 font-mono" id="scriptStatsBadge">4 مشاهد مكتشفة</span>
-        </div>
+          class="w-full bg-psycho-900 border border-psycho-700 focus:border-amber-400 rounded-xl p-3 text-xs text-slate-200 font-sans leading-relaxed focus:outline-none resize-y"
+          placeholder="سيظهر السكريبت الكامل هنا لتتمكن من نسخه أو تعديله في أي وقت..."
+        ></textarea>
       </div>
 
-      <!-- 2. SMART SCENES DECK & THUMBNAILS SELECTOR -->
-      <div id="boxScenesDeck" class="bg-darkcard border border-darkborder rounded-2xl p-4 shadow-xl">
-        <div class="flex items-center justify-between pb-2 border-b border-darkborder/60 mb-2.5">
-          <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
-            <i class="fa-solid fa-layer-group text-purple-400"></i>
-            <span>مشاهد الفيديو الذكية (<span id="sceneCountText" class="text-cyan-400">4</span> مشاهد):</span>
-          </span>
+      <!-- 2. INTERACTIVE AI CHAT SCENE BUILDER (دردشة الذكاء الاصطناعي لبناء المشهد) -->
+      <div id="boxChat" class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl flex flex-col flex-1">
+        <div class="flex items-center justify-between pb-2.5 border-b border-psycho-700/60 mb-3">
           <div class="flex items-center gap-2">
-            <button id="btnPlayAllScenes" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition flex items-center gap-1">
-              <i class="fa-solid fa-play"></i>
-              <span>تشغيل كل المشاهد متتالية</span>
-            </button>
-            <button id="btnAddNewScene" class="px-2 py-1 rounded-lg bg-darkpanel hover:bg-darkborder text-purple-300 border border-darkborder text-xs font-bold transition">
-              + إضافة مشهد
-            </button>
+            <i class="fa-solid fa-comments text-cyan-400"></i>
+            <h2 class="font-bold text-xs text-slate-200">دردشة الذكاء الاصطناعي لتخصيص المشهد (OmniRoute - Ok)</h2>
+          </div>
+          <span class="text-[10px] text-slate-400 bg-psycho-900 px-2 py-0.5 rounded border border-psycho-700">تعديل فوري للمشهد والكود</span>
+        </div>
+
+        <!-- Chat Stream Window -->
+        <div id="aiChatStream" class="flex-1 min-h-[160px] max-h-[220px] overflow-y-auto space-y-2.5 p-2 bg-psycho-900/80 rounded-xl border border-psycho-700/60 mb-3 text-xs">
+          <!-- Initial Welcome Message from AI -->
+          <div class="chat-bubble-ai p-3 rounded-xl rounded-tr-none text-slate-200 leading-relaxed">
+            <span class="font-bold text-purple-400 block mb-1">🤖 مخرج الموشن غرافيك (Ok):</span>
+            مرحباً بك! أنا جاهز لبناء وتعديل مشهدك الحالي. يمكنك أن تطلب مني أي شيء:
+            "اجعل الشخصية تسير بحزن"، "أضف دوامة تفكير باللون الأحمر"، "اجعل الحركة أسرع"، أو "اكتب لي كود JS مخصص".
           </div>
         </div>
 
-        <div id="scenesListContainer" class="flex gap-2 overflow-x-auto pb-1">
-          <!-- Populated dynamically via JS -->
-        </div>
-      </div>
-
-      <!-- 3. CLI COMMAND OVERRIDE CONSOLE -->
-      <div id="boxCli" class="bg-darkcard border border-darkborder rounded-2xl p-4 shadow-xl">
-        <div class="flex items-center justify-between pb-2 border-b border-darkborder/60 mb-2">
-          <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
-            <i class="fa-solid fa-terminal text-cyan-400"></i>
-            <span>سطر الأوامر اليدوي (CLI Override Console):</span>
-          </span>
-          <span class="text-[10px] text-slate-400 font-mono">e.g. anim:squash sound:impact dur:2.5</span>
+        <!-- Fast Prompt Chips -->
+        <div class="flex flex-wrap gap-1.5 mb-2.5 text-[11px]">
+          <button class="quick-chat-chip px-2.5 py-1 rounded-lg bg-psycho-900 hover:bg-purple-900/40 text-purple-300 border border-psycho-700 transition" data-msg="أنشئ لي مشهد بداية قوي عن مواجهة النفس">🚶 شخصية تسير بمشاعر</button>
+          <button class="quick-chat-chip px-2.5 py-1 rounded-lg bg-psycho-900 hover:bg-emerald-900/40 text-emerald-300 border border-psycho-700 transition" data-msg="حول المشهد إلى وضعية التأمل والسلام الداخلي مع شعلة ذهبية">🧘 وضعية التأمل والهدوء</button>
+          <button class="quick-chat-chip px-2.5 py-1 rounded-lg bg-psycho-900 hover:bg-rose-900/40 text-rose-300 border border-psycho-700 transition" data-msg="أضف دوامة التفكير المفرط باللون الوردي والأزرق">🤯 دوامة التفكير المفرط</button>
+          <button class="quick-chat-chip px-2.5 py-1 rounded-lg bg-psycho-900 hover:bg-amber-900/40 text-amber-300 border border-psycho-700 transition" data-msg="اجعل المشهد يمثل التحرر وكسر القيود بحماس">⚡ التحرر وكسر القيود</button>
         </div>
 
+        <!-- Chat Input Form -->
         <div class="flex gap-2">
-          <div class="relative flex-1">
-            <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500 font-mono text-xs">&gt;</span>
-            <input 
-              type="text" 
-              id="cliCommandInput" 
-              dir="ltr"
-              placeholder='anim:squash sound:impact style:neon type:karaoke dur:2.5 text:"..."'
-              class="w-full bg-[#04060b] border border-darkborder focus:border-cyan-400 rounded-xl pr-7 pl-3 py-2 text-xs font-mono text-cyan-300 placeholder-slate-600 focus:outline-none transition"
-            >
-          </div>
-          <button id="btnExecuteCli" class="px-4 py-2 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/40 font-bold text-xs transition active:scale-95">
-            تنفيذ CLI
-          </button>
-        </div>
-
-        <div class="flex flex-wrap gap-1.5 mt-2 text-[10px] font-mono">
-          <button class="cli-chip px-2 py-0.5 rounded bg-darkpanel text-slate-300 border border-darkborder" data-cmd="anim:squash sound:impact">anim:squash</button>
-          <button class="cli-chip px-2 py-0.5 rounded bg-darkpanel text-slate-300 border border-darkborder" data-cmd="anim:bounce sound:pop">anim:bounce</button>
-          <button class="cli-chip px-2 py-0.5 rounded bg-darkpanel text-slate-300 border border-darkborder" data-cmd="anim:glitch sound:glitch">anim:glitch</button>
-          <button class="cli-chip px-2 py-0.5 rounded bg-darkpanel text-slate-300 border border-darkborder" data-cmd="anim:pop sound:whoosh">anim:pop</button>
-        </div>
-      </div>
-
-      <!-- 4. SMART NLP SCRIPT ANALYSIS STATUS BOX -->
-      <div id="boxAnalysis" class="bg-darkcard border border-darkborder rounded-2xl p-4 shadow-xl">
-        <div class="flex items-center justify-between pb-2 border-b border-darkborder/60 mb-2.5">
-          <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
-            <i class="fa-solid fa-brain text-purple-400"></i>
-            <span>تحليل المشهد الحالي (Smart NLP Analysis):</span>
-          </span>
-          <span id="analysisStatusBadge" class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">محلل تلقائياً</span>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-          <div class="bg-[#04060b] p-2.5 rounded-xl border border-darkborder">
-            <span class="text-[10px] text-slate-400 block mb-1">🎭 النبرة / العاطفة:</span>
-            <span id="statusEmotion" class="font-bold text-amber-300">ثروة وطموح مالي</span>
-          </div>
-          <div class="bg-[#04060b] p-2.5 rounded-xl border border-darkborder">
-            <span class="text-[10px] text-slate-400 block mb-1">🎯 المأثور البصري الإجرائي:</span>
-            <span id="statusAsset" class="font-bold text-cyan-300">Prismatic Core</span>
-          </div>
-          <div class="bg-[#04060b] p-2.5 rounded-xl border border-darkborder">
-            <span class="text-[10px] text-slate-400 block mb-1">⚡ نمط الحركة (Ease):</span>
-            <span id="statusEase" class="font-mono text-purple-300 text-[11px]">elastic.out(1.1, 0.3)</span>
-          </div>
-          <div class="bg-[#04060b] p-2.5 rounded-xl border border-darkborder">
-            <span class="text-[10px] text-slate-400 block mb-1">🔊 مؤثر الصوت:</span>
-            <span id="statusAudio" class="font-bold text-emerald-300">Sub Impact Drop</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. PURE GSAP JAVASCRIPT CODE GENERATOR & LIVE EDITOR -->
-      <div id="boxCodeStudio" class="bg-darkcard border border-darkborder rounded-2xl p-4 shadow-xl flex flex-col flex-1">
-        <div class="flex flex-wrap items-center justify-between pb-2.5 border-b border-darkborder/60 mb-3 gap-2">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-code text-cyan-400"></i>
-            <span class="font-bold text-xs text-slate-200">محرر كود GSAP 3 والتأثيرات الحركية:</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <button id="btnCopyGsapCode" class="px-2.5 py-1 bg-darkpanel hover:bg-darkborder text-slate-300 border border-darkborder rounded-lg text-xs font-bold flex items-center gap-1 transition">
-              <i class="fa-solid fa-copy"></i>
-              <span>نسخ الكود</span>
-            </button>
-            <button id="btnDownloadJsCode" class="px-2.5 py-1 bg-darkpanel hover:bg-darkborder text-slate-300 border border-darkborder rounded-lg text-xs transition" title="تحميل .js">
-              <i class="fa-solid fa-download"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Effect Injector Toolbar -->
-        <div class="flex flex-wrap gap-1.5 mb-2.5">
-          <span class="text-[11px] text-slate-400 self-center ml-1">حقن تأثيرات:</span>
-          <button id="btnFx3DFlip" class="px-2.5 py-1 rounded-lg bg-purple-900/30 hover:bg-purple-900/50 text-purple-300 border border-purple-500/30 text-xs font-bold transition">+ 3D Flip</button>
-          <button id="btnFxGlitchShake" class="px-2.5 py-1 rounded-lg bg-rose-900/30 hover:bg-rose-900/50 text-rose-300 border border-rose-500/30 text-xs font-bold transition">+ Glitch Shake</button>
-          <button id="btnFxNeonPulse" class="px-2.5 py-1 rounded-lg bg-amber-900/30 hover:bg-amber-900/50 text-amber-300 border border-amber-500/30 text-xs font-bold transition">+ Neon Pulse</button>
-          <button id="btnFxZoomPunch" class="px-2.5 py-1 rounded-lg bg-cyan-900/30 hover:bg-cyan-900/50 text-cyan-300 border border-cyan-500/30 text-xs font-bold transition">+ Zoom Punch</button>
-        </div>
-
-        <div class="relative flex-1">
-          <textarea 
-            id="gsapLiveCodeTextarea" 
-            rows="10" 
-            dir="ltr"
-            class="w-full bg-[#04060b] border border-darkborder focus:border-cyan-400 rounded-xl p-3 text-xs font-mono text-cyan-300 leading-relaxed focus:outline-none resize-y"
-            placeholder="// كود GSAP المولد والمعدل..."
-          ></textarea>
-        </div>
-
-        <div class="flex gap-2 mt-2.5 pt-2 border-t border-darkborder/60">
           <input 
             type="text" 
-            id="aiEffectPromptInput" 
-            placeholder="اطلب من الذكاء الاصطناعي إضافة تأثير مخصص، مثال: أضف دوران 360 مع وميض أزرق..."
-            class="flex-1 bg-[#04060b] border border-darkborder focus:border-purple-500 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none"
+            id="chatUserInput" 
+            placeholder="اكتب طلبك لتعديل المشهد الحالي بالذكاء الاصطناعي..."
+            class="flex-1 bg-psycho-900 border border-psycho-600 focus:border-cyan-400 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30 transition"
           >
-          <button id="btnAiApplyEffectPrompt" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs flex items-center gap-1.5 transition active:scale-95 whitespace-nowrap">
-            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
-            <span>تعديل الكود بـ Ok</span>
+          <button 
+            id="btnSendChat" 
+            class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs shadow-md flex items-center gap-1.5 transition active:scale-95"
+          >
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>إرسال</span>
           </button>
-          <button id="btnRunCustomJs" class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition active:scale-95 whitespace-nowrap shadow-md">
-            <i class="fa-solid fa-play"></i>
-            <span>تشغيل الكود</span>
+        </div>
+      </div>
+
+      <!-- 3. ACTIVE SCENE SETTINGS & CODE INSPECTOR (تحكم وتخصيص المشهد النشط) -->
+      <div id="boxActiveScene" class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-psycho-700/60">
+          <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-purple-400"></i>
+            <span>إعدادات المشهد النشط في شاشة العرض:</span>
+          </span>
+          <button id="btnOpenCodeModal" class="px-2.5 py-1 bg-psycho-700 hover:bg-cyan-600/30 text-cyan-300 rounded-lg text-xs font-mono border border-psycho-600 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-code text-[10px]"></i>
+            <span>كود JS الحركي</span>
           </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-0.5">العنوان الرئيسي (Hook Title):</label>
+            <input type="text" id="activeSceneTitle" class="w-full bg-psycho-900 border border-psycho-700 focus:border-purple-500 rounded-lg px-2.5 py-1.5 text-slate-100 font-bold focus:outline-none" value="بداية الوعي">
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-0.5">الكابشن التوضيحي (Subtitle):</label>
+            <input type="text" id="activeSceneSubtitle" class="w-full bg-psycho-900 border border-psycho-700 focus:border-purple-500 rounded-lg px-2.5 py-1.5 text-slate-300 text-xs focus:outline-none" value="كل تغيير حقيقي يبدأ بمراقبة أفكارك بصمت">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-0.5">شخصية 2D أو الرمز الحركي:</label>
+            <select id="activeSceneArchetype" class="w-full bg-psycho-900 border border-psycho-700 rounded-lg px-2.5 py-1 text-slate-200 focus:outline-none focus:border-purple-500"></select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-0.5">المؤثر الصوتي:</label>
+            <select id="activeSceneSfx" class="w-full bg-psycho-900 border border-psycho-700 rounded-lg px-2.5 py-1 text-slate-200 focus:outline-none focus:border-purple-500"></select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-0.5">لون التوهج (Accent):</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="activeSceneColor" value="#8b5cf6" class="w-8 h-7 rounded bg-transparent border-0 cursor-pointer">
+              <span id="activeSceneColorHex" class="font-mono text-[11px] text-slate-400">#8b5cf6</span>
+            </div>
+          </div>
         </div>
       </div>
 
     </div>
 
-    <!-- RIGHT PANEL: VERTICAL 9:16 VIDEO PREVIEW STAGE (5 Cols) -->
-    <div id="colRight" class="lg:col-span-5 flex flex-col items-center gap-4 order-1 lg:order-2">
-
-      <div class="bg-darkcard border border-darkborder rounded-2xl p-4 shadow-2xl flex flex-col items-center w-full max-w-[400px]">
-        <div class="w-full flex items-center justify-between pb-2 mb-3 border-b border-darkborder/60 text-xs">
+    <!-- RIGHT COLUMN: 9:16 LIVE MONITOR & INSTANT 1-CLICK EXPORT -->
+    <div id="colRight" class="lg:col-span-5 flex flex-col gap-4 order-1 lg:order-2">
+      
+      <!-- MONITOR (9:16 VERTICAL CANVAS) -->
+      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-2xl flex flex-col items-center">
+        
+        <div class="w-full flex items-center justify-between pb-3 mb-2 border-b border-psycho-700/60 text-xs">
           <div class="flex items-center gap-2 font-bold text-slate-300">
             <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
             <span>شاشة العرض المباشرة (Live 60FPS)</span>
           </div>
-          <span id="timecodeDisplay" class="font-mono bg-[#04060b] px-2 py-0.5 rounded text-cyan-300 border border-darkborder">المشهد 1/4 | 00:00 / 00:03</span>
+
+          <div class="flex items-center gap-2">
+            <span id="timecodeDisplay" class="font-mono bg-psycho-900 px-2 py-0.5 rounded text-cyan-300 border border-psycho-700">00:00 / 00:03</span>
+          </div>
         </div>
 
-        <!-- 9:16 VERTICAL STAGE STYLING (#canvasWrapper) -->
-        <div id="canvasWrapper" class="video-stage-wrapper rounded-2xl overflow-hidden relative flex flex-col justify-between border border-darkborder/80 select-none group cursor-pointer">
-          
-          <!-- CANVAS 2D PROCEDURAL LAYER -->
-          <canvas id="motionCanvas" width="720" height="1280" class="w-full h-full block absolute inset-0 z-10"></canvas>
-
-          <!-- TOP SAFE ZONE BADGE OVERLAY -->
-          <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-20 pointer-events-none">
-            <span class="bg-black/70 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/10 text-[10px] text-white/90 font-mono">
-              9:16 VERTICAL
-            </span>
-            <span id="currentSceneOverlayBadge" class="bg-purple-900/70 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-purple-500/30 text-[10px] text-purple-200 font-bold">
-              PRISMATIC CORE
-            </span>
-          </div>
-
-          <!-- ALEX HORMOZI VIRAL KARAOKE CAPTION LAYER OVERLAY (#viralCaptionLayer) -->
-          <div id="viralCaptionLayer" class="viral-caption-container">
-            <div id="karaokeContainer" class="flex flex-wrap items-center justify-center leading-relaxed">
-              <!-- Sequential word by word karaoke populated dynamically -->
-            </div>
-          </div>
+        <!-- CANVAS WRAPPER -->
+        <div id="canvasWrapper" class="relative w-full max-w-[320px] aspect-[9/16] bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-purple-500/20 flex items-center justify-center group transition-all duration-200">
+          <canvas id="motionCanvas" class="w-full h-full block cursor-pointer"></canvas>
 
           <!-- OVERLAY PLAY/PAUSE BIG ICON -->
-          <div id="stagePlayOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 z-40">
+          <div id="canvasOverlayPlay" class="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
             <div class="w-16 h-16 rounded-full bg-purple-600/90 text-white flex items-center justify-center text-2xl shadow-xl shadow-purple-600/50">
               <i class="fa-solid fa-play pr-0.5"></i>
             </div>
           </div>
 
-        </div>
+          <!-- SCENE BADGE OVERLAY -->
+          <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-[10px] text-white/90 font-mono pointer-events-none">
+            <span id="currentSceneOverlayBadge">المشهد 1/1</span>
+          </div>
 
-        <!-- TIMELINE SCRUBBER -->
-        <div class="w-full max-w-[360px] mt-3">
-          <div class="w-full bg-[#04060b] h-2 rounded-full overflow-hidden cursor-pointer relative" id="timelineBar">
-            <div id="timelineProgress" class="bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400 h-full w-0 transition-all duration-75"></div>
+          <!-- ACTIVE SCENE NAME OVERLAY -->
+          <div class="absolute top-3 left-3 bg-purple-900/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-purple-500/30 text-[10px] text-purple-200 pointer-events-none max-w-[150px] truncate">
+            <span id="currentSceneNameBadge">شخصية 2D</span>
           </div>
         </div>
 
-        <!-- PLAYER CONTROLLER BUTTONS -->
-        <div class="w-full max-w-[360px] flex items-center justify-between mt-3 px-1">
-          <button id="btnPrevScene" class="w-9 h-9 rounded-xl bg-darkpanel hover:bg-darkborder text-slate-200 flex items-center justify-center text-xs transition" title="المشهد السابق">
+        <!-- TIMELINE SCRUBBER -->
+        <div class="w-full max-w-[320px] mt-3">
+          <div class="w-full bg-psycho-900 h-2 rounded-full overflow-hidden cursor-pointer relative" id="timelineBar">
+            <div id="timelineProgress" class="bg-gradient-to-r from-purple-500 to-cyan-400 h-full w-0 transition-all duration-75"></div>
+          </div>
+        </div>
+
+        <!-- PLAYER BUTTONS -->
+        <div class="w-full max-w-[320px] flex items-center justify-between mt-3 px-1">
+          <button id="btnPrevScene" title="المشهد السابق" class="w-9 h-9 rounded-xl bg-psycho-700 hover:bg-psycho-600 text-slate-200 flex items-center justify-center text-xs transition">
             <i class="fa-solid fa-backward-step"></i>
           </button>
 
@@ -432,72 +341,191 @@
             <i class="fa-solid fa-play pr-0.5" id="playIcon"></i>
           </button>
 
-          <button id="btnNextScene" class="w-9 h-9 rounded-xl bg-darkpanel hover:bg-darkborder text-slate-200 flex items-center justify-center text-xs transition" title="المشهد التالي">
+          <button id="btnNextScene" title="المشهد التالي" class="w-9 h-9 rounded-xl bg-psycho-700 hover:bg-psycho-600 text-slate-200 flex items-center justify-center text-xs transition">
             <i class="fa-solid fa-forward-step"></i>
           </button>
 
-          <button id="btnReplay" class="w-9 h-9 rounded-xl bg-darkpanel hover:bg-darkborder text-slate-200 flex items-center justify-center text-xs transition" title="إعادة تشغيل">
+          <button id="btnRestart" title="إعادة تشغيل المشهد" class="w-9 h-9 rounded-xl bg-psycho-700 hover:bg-psycho-600 text-slate-200 flex items-center justify-center text-xs transition">
             <i class="fa-solid fa-rotate-right"></i>
           </button>
         </div>
 
-        <!-- INSTANT EXPORT & PHONE STORAGE / WEB SHARE BUTTONS -->
-        <div class="w-full max-w-[360px] mt-4 pt-3 border-t border-darkborder/60 flex flex-col gap-2">
-          <button id="btnExportActiveScene" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs shadow-lg flex items-center justify-center gap-2 transition active:scale-95">
-            <i class="fa-solid fa-film"></i>
-            <span>🎬 تصدير هذا المشهد MP4 60FPS</span>
-          </button>
+      </div>
 
-          <button id="btnExportCanvasDirect" class="w-full py-2 rounded-xl bg-darkpanel hover:bg-darkborder text-slate-300 font-bold text-xs border border-darkborder flex items-center justify-center gap-2 transition">
+      <!-- INSTANT 1-CLICK SCENE EXPORT BOX -->
+      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-4 shadow-xl space-y-3">
+        <h3 class="font-bold text-xs text-slate-200 flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-download text-cyan-400"></i>
+            <span>تصدير وتحميل هذا المشهد كفيديو جاهز:</span>
+          </span>
+          <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-500/30">MP4 60FPS</span>
+        </h3>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <label class="block text-slate-400 text-[11px] mb-1">دقة الفيديو:</label>
+            <select id="exportResolutionSelect" class="w-full bg-psycho-900 border border-psycho-600 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+              <option value="1080">1080 x 1920 (Full HD 9:16)</option>
+              <option value="720" selected>720 x 1280 (HD قياسي 9:16)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[11px] mb-1">الموسيقى الخلفية:</label>
+            <select id="exportBgmSelect" class="w-full bg-psycho-900 border border-psycho-600 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+              <option value="ambient_drone" selected>أثيري هادئ (Ambient)</option>
+              <option value="lofi_chill">لوفاي هادئ (Lo-Fi)</option>
+              <option value="synthwave_pulse">سايبر سينث (Synthwave)</option>
+              <option value="emotional_piano">بيانو عاطفي (Piano)</option>
+              <option value="none">بدون موسيقى (صامت)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button 
+            id="btnExportCanvasDirect" 
+            class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg flex items-center justify-center gap-1.5 transition active:scale-95"
+            title="يسجل ما تراه على الشاشة بالضبط بدون أي اختلاف"
+          >
             <i class="fa-solid fa-camera"></i>
             <span>⚡ تسجيل فوري من الشاشة (Canvas)</span>
           </button>
+
+          <button 
+            id="btnExportWebCodecs" 
+            class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-xs shadow-lg flex items-center justify-center gap-1.5 transition active:scale-95"
+            title="تصدير فائق الدقة MP4 60FPS عبر WebCodecs"
+          >
+            <i class="fa-solid fa-film"></i>
+            <span id="exportBtnText">🎬 تصدير MP4 (WebCodecs)</span>
+          </button>
         </div>
 
+        <div class="flex gap-2 pt-1">
+          <button id="btnSaveCurrentSceneToLibrary" class="flex-1 py-2 bg-psycho-700 hover:bg-emerald-600/30 text-emerald-300 border border-psycho-600 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-bookmark"></i>
+            <span>حفظ المشهد في مكتبتي</span>
+          </button>
+          <button id="btnAddNewSceneNext" class="flex-1 py-2 bg-psycho-700 hover:bg-purple-600/30 text-purple-300 border border-psycho-600 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-plus"></i>
+            <span>+ إنشاء مشهد تالي</span>
+          </button>
+        </div>
+
+        <!-- Progress bar -->
+        <div id="exportProgressWrapper" class="hidden space-y-1 pt-1">
+          <div class="flex justify-between text-[11px] text-slate-300">
+            <span id="exportStatusMsg">جاري تجهيز وتصدير الفيديو عبر السيرفر...</span>
+            <span id="exportPercentMsg">0%</span>
+          </div>
+          <div class="w-full bg-psycho-900 h-2 rounded-full overflow-hidden">
+            <div id="exportProgressBar" class="bg-gradient-to-r from-cyan-400 to-purple-500 h-full w-0 transition-all duration-100"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SAVED SCENES DRAWER / SELECTOR BAR -->
+      <div class="bg-psycho-800/90 border border-psycho-700/80 rounded-2xl p-3 shadow-xl w-full">
+        <div class="flex items-center justify-between text-xs font-bold text-slate-300 mb-2">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-layer-group text-purple-400"></i>
+            <span>مشاهد المشروع (<span id="sceneCountBadgeText" class="text-cyan-400">1</span>):</span>
+          </span>
+          <span class="text-[10px] text-slate-500">اضغط على أي مشهد لعرضه وتحميله</span>
+        </div>
+        <div id="sceneThumbnailsList" class="flex gap-2 overflow-x-auto pb-1">
+          <!-- Populated dynamically via JS -->
+        </div>
       </div>
 
     </div>
 
   </main>
 
-  <!-- VIDEO READY / DOWNLOAD & MOBILE SHARE MODAL -->
-  <div id="videoReadyModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-darkcard border border-purple-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl flex flex-col items-center gap-3 text-center">
-      <div class="w-full flex items-center justify-between pb-2 border-b border-darkborder/60">
-        <button id="btnBackVideoModal" class="px-2.5 py-1 rounded-lg bg-darkpanel hover:bg-darkborder text-slate-200 text-xs flex items-center gap-1.5 border border-darkborder transition" title="رجوع">
+  <!-- CODE EDITOR & AI GENERATOR MODAL -->
+  <div id="codeEditorModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0e1224] border border-cyan-500/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col gap-4 text-right">
+      <div class="flex items-center justify-between border-b border-psycho-700/80 pb-3">
+        <div class="flex items-center gap-2">
+          <button id="btnBackCodeModal" class="px-2.5 py-1.5 rounded-lg bg-psycho-700 hover:bg-psycho-600 text-slate-200 text-xs flex items-center gap-1.5 border border-psycho-600 transition" title="رجوع">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span>رجوع</span>
+          </button>
+          <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm">
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white" id="codeEditorTitle">محرر كود JavaScript للمشهد</h3>
+            <p class="text-[11px] text-slate-400">Canvas 2D / 2D Character Kinematics Function</p>
+          </div>
+        </div>
+        <button id="btnAiGenerateSceneCode" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+          <span>توليد كود بـ Ok</span>
+        </button>
+      </div>
+
+      <div class="space-y-1">
+        <label class="block text-xs font-semibold text-slate-300">دالة الرسم الحركية:</label>
+        <p class="text-[10px] text-slate-400 font-mono">المعاملات: (ctx, t, progress, w, h, color, scene)</p>
+        <textarea 
+          id="sceneCodeTextarea" 
+          rows="12" 
+          class="w-full bg-[#070913] border border-psycho-600 focus:border-cyan-400 rounded-xl p-3 text-xs font-mono text-cyan-300 focus:outline-none focus:ring-1 focus:ring-cyan-500/30 resize-y"
+          placeholder="// اكتب كود Canvas 2D هنا..."
+          dir="ltr"
+        ></textarea>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-psycho-700/60">
+        <button id="btnApplySceneCode" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs shadow-lg flex items-center gap-2">
+          <i class="fa-solid fa-check"></i>
+          <span>تطبيق الكود وتحديث شاشة العرض فوراً</span>
+        </button>
+        <button id="btnCloseCodeModal" class="px-4 py-2 rounded-xl bg-psycho-700 hover:bg-psycho-600 text-slate-300 text-xs">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO READY DOWNLOAD MODAL -->
+  <div id="videoReadyModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-psycho-800 border border-purple-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl flex flex-col items-center gap-3 text-center">
+      <div class="w-full flex items-center justify-between pb-2 border-b border-psycho-700/60">
+        <button id="btnBackVideoModal" class="px-2.5 py-1 rounded-lg bg-psycho-700 hover:bg-psycho-600 text-slate-200 text-xs flex items-center gap-1.5 border border-psycho-600 transition" title="رجوع">
           <i class="fa-solid fa-arrow-right"></i>
           <span>رجوع</span>
         </button>
         <span class="text-xs font-bold text-emerald-400 flex items-center gap-1">
           <i class="fa-solid fa-circle-check"></i>
-          <span>تم تجهيز الفيديو</span>
+          <span>جاهز للتحميل</span>
         </span>
         <div class="w-10"></div>
       </div>
-
       <div class="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl">
         <i class="fa-solid fa-circle-check"></i>
       </div>
       <div>
-        <h3 class="text-base font-bold text-white">الفيديو جاهز بجودة عالية!</h3>
-        <p class="text-xs text-slate-400 mt-0.5">جاهز للتصدير والحفظ في معرض الصور أو التحميل.</p>
+        <h3 class="text-base font-bold text-white">تم تجهيز الفيديو بنجاح!</h3>
+        <p class="text-xs text-slate-400 mt-0.5">الفيديو جاهز بجودة عالية وصوت ومؤثرات 60FPS.</p>
       </div>
 
-      <div class="w-full aspect-[9/16] max-h-[260px] bg-black rounded-xl overflow-hidden border border-darkborder">
+      <div class="w-full aspect-[9/16] max-h-[300px] bg-black rounded-xl overflow-hidden border border-psycho-700">
         <video id="modalVideoPlayer" controls playsinline class="w-full h-full object-contain"></video>
       </div>
 
       <div class="flex flex-col gap-2 w-full pt-1">
-        <!-- Web Share API 1-Tap Mobile Save Button -->
+        <!-- 1-Tap Mobile Web Share / Save Button -->
         <button id="btnModalShareMobile" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg flex items-center justify-center gap-2 transition active:scale-95">
           <i class="fa-solid fa-share-nodes"></i>
-          <span>حفظ / مشاركة في الهاتف (Camera Roll)</span>
+          <span>حفظ / مشاركة في الهاتف (Camera Roll / Downloads)</span>
         </button>
 
-        <!-- Direct Browser Download Link -->
-        <a id="btnModalDirectDownload" href="#" download class="w-full py-2 rounded-xl bg-darkpanel hover:bg-darkborder text-slate-300 border border-darkborder font-bold text-xs flex items-center justify-center gap-2">
+        <a id="btnModalDirectDownload" href="#" download class="w-full py-2 rounded-xl bg-psycho-700 hover:bg-psycho-600 text-slate-200 border border-psycho-600 font-bold text-xs flex items-center justify-center gap-2">
           <i class="fa-solid fa-download"></i>
-          <span>تحميل مباشر من المتصفح</span>
+          <span>تحميل مباشر للملف (Download)</span>
         </a>
 
         <button id="btnModalClose" class="text-xs text-slate-400 hover:text-slate-200 mt-1 py-1">
@@ -507,776 +535,33 @@
     </div>
   </div>
 
-  <!-- OMNIROUTE SETTINGS MODAL -->
-  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-darkcard border border-darkborder rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 text-right" dir="rtl">
-      <div class="flex items-center justify-between border-b border-darkborder/60 pb-3">
-        <div class="flex items-center gap-2">
-          <button id="btnBackSettingsModal" class="px-2.5 py-1 rounded-lg bg-darkpanel hover:bg-darkborder text-slate-200 text-xs flex items-center gap-1.5 border border-darkborder transition" title="رجوع">
-            <i class="fa-solid fa-arrow-right"></i>
-            <span>رجوع</span>
-          </button>
-          <div class="w-7 h-7 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center text-xs">
-            <i class="fa-solid fa-sliders"></i>
-          </div>
-          <h3 class="font-bold text-slate-100 text-sm">إعدادات الذكاء الاصطناعي (OmniRoute)</h3>
-        </div>
-        <button id="btnCloseSettingsModal" class="text-slate-400 hover:text-white transition p-1" title="إغلاق">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block text-slate-400 mb-1">OmniRoute API Endpoint:</label>
-          <input id="settingEndpoint" type="text" dir="ltr" class="w-full bg-[#04060b] border border-darkborder rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="https://omniroute-production-f9e9.up.railway.app/v1">
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1">API Key (Bearer Token):</label>
-          <input id="settingApiKey" type="password" dir="ltr" class="w-full bg-[#04060b] border border-darkborder rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="sk-bb256057cc02a0fd-8fa6d3-1ede0f29">
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1">Model Name:</label>
-          <input id="settingModel" type="text" dir="ltr" class="w-full bg-[#04060b] border border-darkborder rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="Ok">
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between pt-2 border-t border-darkborder/60">
-        <button id="btnTestAIConnection" class="px-3.5 py-2 rounded-xl bg-darkpanel hover:bg-darkborder text-cyan-300 font-bold text-xs border border-cyan-500/30 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-bolt"></i>
-          <span>اختبار الاتصال</span>
-        </button>
-        <button id="btnSaveAISettings" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5">
-          <i class="fa-solid fa-check"></i>
-          <span>حفظ الإعدادات</span>
-        </button>
-      </div>
-
-      <div id="aiTestResultMsg" class="text-center text-xs hidden"></div>
-    </div>
-  </div>
-
   <!-- TOAST NOTIFICATION -->
-  <div id="toastNotification" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-darkcard border border-purple-500/50 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl shadow-purple-900/50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-2">
+  <div id="toastNotification" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-psycho-800 border border-purple-500/50 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl shadow-purple-900/50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-2">
     <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
     <span id="toastMsg">تم التحديث بنجاح</span>
   </div>
 
-  <!-- CORE JAVASCRIPT SYSTEM ENGINE -->
+  <!-- CORE SCRIPT LOGIC -->
   <script>
-    // --- 1. ZERO-ASSET PROCEDURAL AUDIO SYNTHESIZER (Web Audio API) ---
-    class ProceduralAudioEngine {
-      constructor() {
-        this.ctx = null;
-        this.isMuted = false;
-      }
-
-      init() {
-        if (!this.ctx) {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (AudioContextClass) this.ctx = new AudioContextClass();
-        }
-        if (this.ctx && this.ctx.state === 'suspended') {
-          this.ctx.resume();
-        }
-      }
-
-      playSfx(type = 'pop') {
-        if (this.isMuted) return;
-        this.init();
-        if (!this.ctx) return;
-
-        const now = this.ctx.currentTime;
-        const dest = this.ctx.destination;
-
-        try {
-          if (type === 'impact' || type === 'sub_impact') {
-            // Low-frequency exponential drop with punchy attack for heavy squash
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(150, now);
-            osc.frequency.exponentialRampToValueAtTime(30, now + 0.38);
-            gain.gain.setValueAtTime(0.5, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-            osc.connect(gain);
-            gain.connect(dest);
-            osc.start(now);
-            osc.stop(now + 0.42);
-          } 
-          else if (type === 'pop') {
-            // Fast upward pitch slide (380Hz -> 850Hz) for word hits
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(380, now);
-            osc.frequency.exponentialRampToValueAtTime(850, now + 0.08);
-            gain.gain.setValueAtTime(0.28, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
-            osc.connect(gain);
-            gain.connect(dest);
-            osc.start(now);
-            osc.stop(now + 0.1);
-          }
-          else if (type === 'whoosh') {
-            // Frequency sweep with soft attack for smooth transitions
-            const bufferSize = this.ctx.sampleRate * 0.32;
-            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-            const noise = this.ctx.createBufferSource();
-            noise.buffer = buffer;
-            const filter = this.ctx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.setValueAtTime(200, now);
-            filter.frequency.exponentialRampToValueAtTime(1400, now + 0.16);
-            filter.frequency.exponentialRampToValueAtTime(200, now + 0.32);
-            const gain = this.ctx.createGain();
-            gain.gain.setValueAtTime(0.01, now);
-            gain.gain.linearRampToValueAtTime(0.32, now + 0.14);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
-            noise.connect(filter);
-            filter.connect(gain);
-            gain.connect(dest);
-            noise.start(now);
-          }
-          else if (type === 'glitch') {
-            // Fast noise/sawtooth blip for alerts and mistakes
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(550, now);
-            osc.frequency.setValueAtTime(120, now + 0.06);
-            gain.gain.setValueAtTime(0.32, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-            osc.connect(gain);
-            gain.connect(dest);
-            osc.start(now);
-            osc.stop(now + 0.16);
-          }
-        } catch(e) {}
-      }
-    }
-
-    const audioEngine = new ProceduralAudioEngine();
-
-    // --- 2. CANVAS 2D PROCEDURAL MASTERPIECES ENGINE & GSAP PHYSICS BRIDGE ---
-    const iconProxyState = {
-      y: 0,
-      scaleX: 1,
-      scaleY: 1,
-      opacity: 1,
-      glow: 1,
-      rotation: 0,
-      energy: 1,
-      assetType: 'prismatic_core'
-    };
-
-    function drawProceduralMasterpiece(ctx, w, h, t, state) {
-      const cx = w / 2;
-      const cy = h * 0.38 + state.y;
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(state.scaleX, state.scaleY);
-      ctx.rotate((state.rotation * Math.PI) / 180);
-      ctx.globalAlpha = state.opacity;
-
-      const asset = state.assetType || 'prismatic_core';
-
-      if (asset === 'prismatic_core') {
-        // --- 1. THE PRISMATIC QUANTUM CORE ---
-        // Dual Counter-Rotating Orbital Quantum Rings
-        ctx.save();
-        ctx.strokeStyle = 'rgba(6, 182, 212, 0.6)';
-        ctx.lineWidth = 3;
-        ctx.shadowColor = '#06b6d4';
-        ctx.shadowBlur = 15;
-        
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 110, 45, t * 1.5, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.strokeStyle = 'rgba(236, 72, 153, 0.6)';
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 110, 45, -t * 1.8, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-
-        // 3D Isometric Glass Cube with Chromatic Faces
-        const size = 52;
-        const isoX = size * Math.cos(Math.PI / 6);
-        const isoY = size * Math.sin(Math.PI / 6);
-
-        // Top Face (Radiant Cyan)
-        ctx.save();
-        ctx.fillStyle = 'rgba(6, 182, 212, 0.85)';
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2;
-        ctx.shadowColor = '#06b6d4';
-        ctx.shadowBlur = 20;
-        ctx.beginPath();
-        ctx.moveTo(0, -size);
-        ctx.lineTo(isoX, -size + isoY);
-        ctx.lineTo(0, -size + isoY * 2);
-        ctx.lineTo(-isoX, -size + isoY);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        // Left Face (Deep Violet)
-        ctx.fillStyle = 'rgba(139, 92, 246, 0.9)';
-        ctx.beginPath();
-        ctx.moveTo(-isoX, -size + isoY);
-        ctx.lineTo(0, -size + isoY * 2);
-        ctx.lineTo(0, isoY * 2);
-        ctx.lineTo(-isoX, isoY);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        // Right Face (Magenta Pink)
-        ctx.fillStyle = 'rgba(236, 72, 153, 0.85)';
-        ctx.beginPath();
-        ctx.moveTo(0, -size + isoY * 2);
-        ctx.lineTo(isoX, -size + isoY);
-        ctx.lineTo(isoX, isoY);
-        ctx.lineTo(0, isoY * 2);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        ctx.restore();
-
-        // Pulsing Energy Plasma Core + Star Flare
-        const pulse = 1 + Math.sin(t * 6) * 0.15;
-        ctx.save();
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = '#facc15';
-        ctx.shadowBlur = 35 * state.glow;
-        ctx.beginPath();
-        ctx.arc(0, 0, 16 * pulse, 0, Math.PI * 2);
-        ctx.fill();
-
-        // 8-Point Star Light Rays
-        ctx.strokeStyle = 'rgba(250, 204, 21, 0.8)';
-        ctx.lineWidth = 2;
-        for (let i = 0; i < 8; i++) {
-          const ang = (i * Math.PI) / 4 + t;
-          ctx.beginPath();
-          ctx.moveTo(Math.cos(ang) * 12, Math.sin(ang) * 12);
-          ctx.lineTo(Math.cos(ang) * (38 * pulse), Math.sin(ang) * (38 * pulse));
-          ctx.stroke();
-        }
-        ctx.restore();
-      }
-      else if (asset === 'escaping_character' || asset === 'overthinking_rig') {
-        // --- 2. THE GIANT ESCAPING CHARACTER (Overthinking Kinematic Rig) ---
-        const legPhase = Math.sin(t * 12);
-        
-        // Frantic Overthinking Scribble Cloud + Neural Lightning Arc
-        ctx.save();
-        ctx.strokeStyle = 'rgba(244, 63, 94, 0.85)';
-        ctx.lineWidth = 2.5;
-        ctx.shadowColor = '#f43f5e';
-        ctx.shadowBlur = 20;
-        ctx.beginPath();
-        for (let i = 0; i < 18; i++) {
-          const rx = (Math.random() - 0.5) * 120;
-          const ry = -120 + (Math.random() - 0.5) * 40;
-          if (i === 0) ctx.moveTo(rx, ry);
-          else ctx.lineTo(rx, ry);
-        }
-        ctx.stroke();
-        ctx.restore();
-
-        // Head (Large Expressive Skull - 38px Radius)
-        ctx.save();
-        ctx.fillStyle = '#ffffff';
-        ctx.strokeStyle = '#000000';
-        ctx.lineWidth = 4;
-        ctx.shadowColor = '#8b5cf6';
-        ctx.shadowBlur = 25;
-        ctx.beginPath();
-        ctx.arc(0, -60, 42, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        // Terrified / Frantic Pupil Eye Tracking
-        ctx.fillStyle = '#000000';
-        const eyeDx = Math.cos(t * 15) * 6;
-        ctx.beginPath();
-        ctx.arc(-14 + eyeDx, -65, 8, 0, Math.PI * 2);
-        ctx.arc(14 + eyeDx, -65, 8, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Open Screaming Mouth
-        ctx.fillStyle = '#f43f5e';
-        ctx.beginPath();
-        ctx.ellipse(0, -42, 10, 14, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        // Body Lean + Articulated Kinematic Running Limbs
-        ctx.save();
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 7;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        // Torso
-        ctx.beginPath();
-        ctx.moveTo(0, -18);
-        ctx.lineTo(0, 30);
-        ctx.stroke();
-
-        // Left Leg
-        ctx.beginPath();
-        ctx.moveTo(0, 30);
-        ctx.lineTo(-25 * legPhase, 60);
-        ctx.lineTo(-38 * legPhase, 90);
-        ctx.stroke();
-
-        // Right Leg
-        ctx.beginPath();
-        ctx.moveTo(0, 30);
-        ctx.lineTo(25 * legPhase, 60);
-        ctx.lineTo(38 * legPhase, 90);
-        ctx.stroke();
-        ctx.restore();
-      }
-      else if (asset === 'money_matrix') {
-        // --- 3. KINETIC 3D GOLD COIN & RADIAL EXPANDING RINGS ---
-        ctx.save();
-        ctx.fillStyle = '#facc15';
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 4;
-        ctx.shadowColor = '#facc15';
-        ctx.shadowBlur = 30 * state.glow;
-        
-        ctx.beginPath();
-        ctx.arc(0, 0, 58, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        // Inner Dollar Symbol
-        ctx.fillStyle = '#000000';
-        ctx.font = '900 56px Montserrat, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('$', 0, 2);
-
-        // Radial Wave Rings
-        ctx.strokeStyle = 'rgba(250, 204, 21, 0.5)';
-        ctx.lineWidth = 2;
-        const rWave = (t * 100) % 120;
-        ctx.beginPath();
-        ctx.arc(0, 0, 58 + rWave, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-      }
-      else if (asset === 'warning_glitch') {
-        // --- 4. SHATTERED HAZARD WARNING TRIANGLE ---
-        ctx.save();
-        ctx.fillStyle = '#f43f5e';
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 5;
-        ctx.shadowColor = '#f43f5e';
-        ctx.shadowBlur = 30;
-
-        ctx.beginPath();
-        ctx.moveTo(0, -65);
-        ctx.lineTo(65, 50);
-        ctx.lineTo(-65, 50);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        // Exclamation Sign
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '900 52px Cairo, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('!', 0, 8);
-        ctx.restore();
-      }
-      else {
-        // --- 5. HYPERSONIC ROCKET LAUNCH ---
-        ctx.save();
-        ctx.fillStyle = '#06b6d4';
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 4;
-        ctx.shadowColor = '#06b6d4';
-        ctx.shadowBlur = 25;
-
-        ctx.font = '900 75px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('🚀', 0, 0);
-        ctx.restore();
-      }
-
-      ctx.restore();
-    }
-
-    // --- 3. SMART NLP SCRIPT ANALYZER & CATEGORIZER ---
-    function analyzeScriptText(text) {
-      const lower = (text || '').toLowerCase();
-      
-      if (/فلوس|ربح|ثروة|بزنس|دولار|كاش|أرباح|غني|money|profit|rich|dollar|crypto|cash|revenue/.test(lower)) {
-        return {
-          emotion: 'ثروة وطموح مالي (Wealth / Ambition)',
-          assetType: 'prismatic_core',
-          anim: 'squash',
-          ease: 'elastic.out(1.1, 0.3)',
-          sound: 'impact',
-          style: 'viral',
-          highlightColor: '#facc15'
-        };
-      }
-      if (/خطر|خطأ|تحذير|فخ|خسارة|احذر|كوارث|danger|mistake|warning|trap|risk|lose|alert/.test(lower)) {
-        return {
-          emotion: 'تحذير عاجل وفخ (Urgent Warning)',
-          assetType: 'escaping_character',
-          anim: 'glitch',
-          ease: 'power3.inOut',
-          sound: 'glitch',
-          style: 'viral',
-          highlightColor: '#f43f5e'
-        };
-      }
-      if (/انطلاق|صاروخ|سرعة|نمو|طيران|rocket|launch|speed|fast|scale|boost|growth/.test(lower)) {
-        return {
-          emotion: 'انطلاق ونمو متسارع (Speed / Growth)',
-          assetType: 'rocket_thrust',
-          anim: 'pop',
-          ease: 'back.out(2)',
-          sound: 'whoosh',
-          style: 'viral',
-          highlightColor: '#06b6d4'
-        };
-      }
-      if (/فكرة|سر|عقل|ذكاء|سيكولوجيا|نفس|تفكير|idea|secret|brain|mind|smart|psychology/.test(lower)) {
-        return {
-          emotion: 'فكرة ملهمة وسر عصبوي (Insight / Secret)',
-          assetType: 'brain_synapse',
-          anim: 'bounce',
-          ease: 'bounce.out',
-          sound: 'pop',
-          style: 'viral',
-          highlightColor: '#22c55e'
-        };
-      }
-      
-      return {
-        emotion: 'حماس وهوك قوي (Viral Energy)',
-        assetType: 'prismatic_core',
-        anim: 'squash',
-        ease: 'elastic.out(1.2, 0.3)',
-        sound: 'impact',
-        style: 'viral',
-        highlightColor: '#facc15'
-      };
-    }
-
-    // --- 4. SMART SCENE SPLITTER & MANAGER ---
     const STATE = {
-      fullScript: "",
+      durationPerScene: 3.0,
       scenes: [],
       activeSceneIndex: 0,
-      isPlayingAll: false,
-      currentTime: 0,
-      fps: 60,
+      savedLibraryScenes: [],
+      chatHistory: [],
+      currentTime: 0.0,
+      isPlaying: false,
+      isExporting: false,
+      voiceLang: 'ar',
+      bgTheme: 'deep_purple',
+      particleType: 'neurons',
+      enableAmbientMusic: true,
+      enableSfx: true,
       canvasWidth: 720,
-      canvasHeight: 1280
+      canvasHeight: 1280,
+      fps: 60
     };
 
-    function splitScriptIntoSmartScenes(fullText) {
-      const rawLines = fullText.split(/\n+/).map(l => l.trim()).filter(l => l.length > 0);
-      let lines = rawLines;
-
-      if (lines.length === 0) {
-        lines = ["السر الذي يخفيه 99% من الأثرياء عنك الآن!"];
-      }
-
-      const generatedScenes = lines.map((line, idx) => {
-        const analysis = analyzeScriptText(line);
-        return {
-          id: idx + 1,
-          name: `المشهد ${idx + 1}`,
-          text: line,
-          duration: 3.0, // Strict maximum 3.0s per scene
-          ...analysis,
-          customGsapCode: null
-        };
-      });
-
-      STATE.fullScript = fullText;
-      STATE.scenes = generatedScenes;
-      STATE.activeSceneIndex = 0;
-      renderScenesDeck();
-      selectScene(0);
-      showToast(`✨ تم تقسيم السكريبت إلى ${generatedScenes.length} مشاهد ذكية (≤3s)!`);
-    }
-
-    function renderScenesDeck() {
-      const container = document.getElementById('scenesListContainer');
-      if (!container) return;
-      container.innerHTML = '';
-      document.getElementById('sceneCountText').innerText = STATE.scenes.length;
-      document.getElementById('scriptStatsBadge').innerText = `${STATE.scenes.length} مشاهد مكتشفة`;
-
-      STATE.scenes.forEach((sc, i) => {
-        const btn = document.createElement('button');
-        const isActive = i === STATE.activeSceneIndex;
-        btn.className = `px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-2 border ${
-          isActive 
-            ? 'bg-purple-600 text-white border-purple-400 shadow-md shadow-purple-600/30' 
-            : 'bg-darkpanel text-slate-300 border-darkborder hover:bg-darkborder'
-        }`;
-        
-        const iconEmoji = sc.assetType === 'prismatic_core' ? '💎' : (sc.assetType === 'escaping_character' ? '🚶' : (sc.assetType === 'warning_glitch' ? '⚠️' : '🚀'));
-        btn.innerHTML = `<span class="w-4 h-4 rounded-full bg-black/40 text-[10px] flex items-center justify-center">${i + 1}</span> <span>${iconEmoji} ${sc.text.substring(0, 18)}...</span>`;
-        btn.onclick = () => selectScene(i);
-        container.appendChild(btn);
-      });
-    }
-
-    function selectScene(index) {
-      if (index < 0 || index >= STATE.scenes.length) return;
-      STATE.activeSceneIndex = index;
-      renderScenesDeck();
-
-      const sc = STATE.scenes[index];
-      updateAnalysisBox(sc);
-      buildAndPlayScene(sc);
-    }
-
-    // --- 5. SEQUENTIAL VIRAL KARAOKE & GSAP ENGINE ---
-    let currentMasterTl = null;
-    let animFrameId = null;
-
-    function buildAndPlayScene(sc) {
-      const { text, anim, sound, duration = 3.0, assetType = 'prismatic_core', highlightColor = '#facc15' } = sc;
-
-      // Reset GSAP Timeline & physics proxy
-      if (currentMasterTl) currentMasterTl.kill();
-      gsap.killTweensOf(iconProxyState);
-
-      iconProxyState.y = 0;
-      iconProxyState.scaleX = 1;
-      iconProxyState.scaleY = 1;
-      iconProxyState.opacity = 1;
-      iconProxyState.glow = 1;
-      iconProxyState.rotation = 0;
-      iconProxyState.assetType = assetType;
-
-      const karaokeBox = document.getElementById('karaokeContainer');
-      const timecodeDisplay = document.getElementById('timecodeDisplay');
-      const progressBar = document.getElementById('timelineProgress');
-      const stageStyleBadge = document.getElementById('stageStyleBadge');
-
-      stageStyleBadge.innerText = (assetType || 'VIRAL').toUpperCase().replace('_', ' ');
-      document.getElementById('currentSceneOverlayBadge').innerText = (sc.name || `المشهد ${sc.id}`).toUpperCase();
-
-      karaokeBox.innerHTML = '';
-      const words = (text || '').trim().split(/\s+/);
-      const wordElements = [];
-
-      words.forEach((w, idx) => {
-        const span = document.createElement('span');
-        span.className = 'karaoke-word';
-        span.innerText = w;
-        karaokeBox.appendChild(span);
-        wordElements.push(span);
-      });
-
-      // Master Timeline
-      const masterTl = gsap.timeline({
-        onUpdate: () => {
-          const progress = masterTl.progress();
-          const curTime = (masterTl.time()).toFixed(1);
-          const totalTime = (masterTl.duration()).toFixed(1);
-          timecodeDisplay.innerText = `المشهد ${STATE.activeSceneIndex + 1}/${STATE.scenes.length} | 00:0${Math.floor(curTime)} / 00:0${Math.ceil(totalTime)}`;
-          progressBar.style.width = `${progress * 100}%`;
-        },
-        onComplete: () => {
-          document.getElementById('playIcon').className = 'fa-solid fa-rotate-right';
-          if (STATE.isPlayingAll) {
-            if (STATE.activeSceneIndex + 1 < STATE.scenes.length) {
-              selectScene(STATE.activeSceneIndex + 1);
-            } else {
-              STATE.isPlayingAll = false;
-              showToast("تم الانتهاء من عرض كل المشاهد!");
-            }
-          }
-        }
-      });
-
-      // 1. Kinetic Asset Physics Animation via GSAP Proxy
-      if (anim === 'squash') {
-        gsap.set(iconProxyState, { y: -180, opacity: 0, scaleX: 0.8, scaleY: 1.2 });
-        masterTl.to(iconProxyState, {
-          y: 0,
-          opacity: 1,
-          duration: 0.45,
-          ease: 'power2.in',
-          onStart: () => audioEngine.playSfx(sound || 'impact')
-        })
-        .to(iconProxyState, {
-          scaleX: 1.45,
-          scaleY: 0.65,
-          duration: 0.12,
-          ease: 'power1.out'
-        })
-        .to(iconProxyState, {
-          scaleX: 1,
-          scaleY: 1,
-          duration: 0.7,
-          ease: 'elastic.out(1.2, 0.3)'
-        });
-      }
-      else if (anim === 'bounce') {
-        gsap.set(iconProxyState, { y: -220, opacity: 0, scaleX: 0.5, scaleY: 0.5 });
-        masterTl.to(iconProxyState, {
-          y: 0,
-          opacity: 1,
-          scaleX: 1,
-          scaleY: 1,
-          duration: 0.85,
-          ease: 'bounce.out',
-          onStart: () => audioEngine.playSfx(sound || 'pop')
-        });
-      }
-      else if (anim === 'glitch') {
-        masterTl.add(() => audioEngine.playSfx(sound || 'glitch'))
-          .to(iconProxyState, { y: -10, scaleX: 1.1, opacity: 0.7, duration: 0.05 })
-          .to(iconProxyState, { y: 10, scaleX: 0.9, opacity: 1, duration: 0.05 })
-          .to(iconProxyState, { y: 0, scaleX: 1, opacity: 1, duration: 0.1 });
-      }
-      else {
-        gsap.set(iconProxyState, { scaleX: 0, scaleY: 0, opacity: 0 });
-        masterTl.to(iconProxyState, {
-          scaleX: 1,
-          scaleY: 1,
-          opacity: 1,
-          duration: 0.6,
-          ease: 'back.out(2)',
-          onStart: () => audioEngine.playSfx(sound || 'whoosh')
-        });
-      }
-
-      // 2. Alex Hormozi Karaoke Micro-Pop Word-by-Word Timeline
-      const wordCount = wordElements.length;
-      const wordInterval = Math.max(0.18, (duration - 0.6) / Math.max(1, wordCount));
-
-      gsap.set(wordElements, { opacity: 0.2, scale: 0.95 });
-
-      wordElements.forEach((el, idx) => {
-        const wordStart = 0.4 + idx * wordInterval;
-        masterTl.to(el, {
-          opacity: 1,
-          scale: 1.22,
-          color: highlightColor,
-          duration: 0.12,
-          ease: 'back.out(1.8)',
-          onStart: () => {
-            el.classList.add('active-word');
-            audioEngine.playSfx('pop');
-          }
-        }, wordStart)
-        .to(el, {
-          scale: 1.0,
-          color: '#ffffff',
-          duration: 0.18,
-          ease: 'power2.out',
-          onComplete: () => el.classList.remove('active-word')
-        }, wordStart + wordInterval * 0.85);
-      });
-
-      currentMasterTl = masterTl;
-      document.getElementById('playIcon').className = 'fa-solid fa-pause';
-
-      // Update GSAP Live Code Textarea
-      updateGsapCodeOutput(sc, wordCount, wordInterval);
-    }
-
-    // --- 6. MAIN CANVAS 2D RENDER LOOP ---
-    function startCanvasRenderLoop() {
-      const canvas = document.getElementById('motionCanvas');
-      const ctx = canvas.getContext('2d');
-
-      function render(timestamp) {
-        const t = timestamp / 1000;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw Pitch Black Stage Background (#000000)
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Draw Procedural Masterpiece Assets
-        drawProceduralMasterpiece(ctx, canvas.width, canvas.height, t, iconProxyState);
-
-        animFrameId = requestAnimationFrame(render);
-      }
-
-      if (animFrameId) cancelAnimationFrame(animFrameId);
-      animFrameId = requestAnimationFrame(render);
-    }
-
-    function updateGsapCodeOutput(sc, wordCount, wordInterval) {
-      const codeOutput = `// Pure Executable GSAP 3 Motion & Kinetic Physics Code
-const masterTl = gsap.timeline();
-
-// 1. Kinetic Asset: ${sc.assetType || "prismatic_core"} (${sc.anim})
-gsap.set(iconProxyState, { y: -180, opacity: 0, scaleX: 0.8, scaleY: 1.2 });
-masterTl.to(iconProxyState, {
-  y: 0,
-  opacity: 1,
-  duration: 0.45,
-  ease: '${sc.ease || "power2.in"}',
-  onStart: () => AudioEngine.playSfx('${sc.sound || "impact"}')
-})
-.to(iconProxyState, { scaleX: 1.45, scaleY: 0.65, duration: 0.12 })
-.to(iconProxyState, { scaleX: 1, scaleY: 1, duration: 0.7, ease: 'elastic.out(1.2, 0.3)' });
-
-// 2. Sequential Alex Hormozi Karaoke Captions
-const wordInterval = ${wordInterval.toFixed(2)};
-document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
-  const wordStart = 0.4 + idx * wordInterval;
-  masterTl.to(wordEl, {
-    opacity: 1,
-    scale: 1.22,
-    color: '${sc.highlightColor || "#facc15"}',
-    duration: 0.12,
-    ease: 'back.out(1.8)',
-    onStart: () => AudioEngine.playSfx('pop')
-  }, wordStart)
-  .to(wordEl, { scale: 1.0, color: '#ffffff', duration: 0.18 }, wordStart + wordInterval * 0.85);
-});`;
-
-      document.getElementById('gsapLiveCodeTextarea').value = codeOutput;
-    }
-
-    // --- 7. CLI COMMAND PARSER ---
-    function parseCliCommand(cliStr) {
-      const result = {};
-      const tokens = cliStr.match(/(?:[^\s"]+|"[^"]*")+/g) || [];
-
-      for (const token of tokens) {
-        if (token.startsWith('anim:')) result.anim = token.split(':')[1];
-        else if (token.startsWith('sound:')) result.sound = token.split(':')[1];
-        else if (token.startsWith('style:')) result.style = token.split(':')[1];
-        else if (token.startsWith('type:')) result.type = token.split(':')[1];
-        else if (token.startsWith('dur:')) result.duration = parseFloat(token.split(':')[1]);
-        else if (token.startsWith('asset:')) result.assetType = token.split(':')[1];
-        else if (token.startsWith('text:')) {
-          result.text = token.substring(5).replace(/^"|"$/g, '');
-        }
-      }
-      return result;
-    }
-
-    // --- 8. OMNIROUTE DIRECT AI API INTEGRATION ---
     const DEFAULT_AI_CONFIG = {
       endpoint: 'https://omniroute-production-f9e9.up.railway.app/v1',
       apiKey: 'sk-bb256057cc02a0fd-8fa6d3-1ede0f29',
@@ -1288,133 +573,1463 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
       const savedConfig = localStorage.getItem('psychomotion_ai_config');
       if (savedConfig) {
         const parsed = JSON.parse(savedConfig);
-        if (parsed.endpoint && !parsed.endpoint.includes('trycloudflare') && parsed.apiKey && !parsed.apiKey.includes('reda')) {
+        // Clean out any stale/expired Cloudflare tunnels or localhost urls
+        if (!parsed.endpoint || parsed.endpoint.includes('trycloudflare.com') || parsed.endpoint.includes('localhost:20128') || !parsed.apiKey || parsed.apiKey.includes('reda')) {
+          AI_CONFIG = { ...DEFAULT_AI_CONFIG };
+          localStorage.setItem('psychomotion_ai_config', JSON.stringify(AI_CONFIG));
+        } else {
           AI_CONFIG = Object.assign(AI_CONFIG, parsed);
         }
       }
     } catch(e) {}
 
+    // OmniRoute direct API client
     async function callOmniRouteAI(messages, temperature = 0.7) {
       const url = `${AI_CONFIG.endpoint.replace(/\/+$/, '')}/chat/completions`;
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      if (AI_CONFIG.apiKey) {
+        headers['Authorization'] = `Bearer ${AI_CONFIG.apiKey}`;
+      }
+      const payload = {
+        model: AI_CONFIG.model || 'Ok',
+        messages: messages,
+        temperature: temperature
+      };
+
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${AI_CONFIG.apiKey}`
-        },
-        body: JSON.stringify({
-          model: AI_CONFIG.model || 'Ok',
-          messages: messages,
-          temperature: temperature
-        })
+        headers: headers,
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
         const errText = await response.text();
-        throw new Error(`OmniRoute Error (${response.status}): ${errText}`);
+        let errDetail = response.statusText;
+        try {
+          const errJson = JSON.parse(errText);
+          errDetail = errJson.error?.message || errJson.detail || errText;
+        } catch(e) {
+          errDetail = errText;
+        }
+        throw new Error(`OmniRoute Error (${response.status}): ${errDetail}`);
       }
+
       const data = await response.json();
-      return data.choices[0].message.content.trim();
+      const choice = data.choices && data.choices[0];
+      if (!choice || !choice.message) {
+        throw new Error('لم يتم استلام نص من نموذج الذكاء الاصطناعي');
+      }
+      return choice.message.content.trim();
     }
 
-    // --- 9. MOBILE EXPORT & WEB SHARE API PIPELINE (CRITICAL FIX) ---
-    let currentRecordedBlob = null;
+    function extractJsonFromAiResponse(text) {
+      let clean = text.trim();
+      if (clean.startsWith('```')) {
+        const lines = clean.split('\n');
+        if (lines[0].startsWith('```')) lines.shift();
+        if (lines.length > 0 && lines[lines.length - 1].startsWith('```')) lines.pop();
+        clean = lines.join('\n').trim();
+      }
+      try {
+        return JSON.parse(clean);
+      } catch (e) {
+        const match = clean.match(/\{[\s\S]*\}/);
+        if (match) return JSON.parse(match[0]);
+        throw new Error('تعذر تحليل مخرجات JSON من الذكاء الاصطناعي');
+      }
+    }
 
-    async function saveVideoToPhone(blob, filename = 'motion_scene.mp4') {
-      currentRecordedBlob = blob;
+    // --- 2D CHARACTERS & PROCEDURAL METAPHORS LIST ---
+    const ARCHETYPES = [
+      { id: 'character_walking', name: '🚶 شخصية تسير مع أفكار عائمة' },
+      { id: 'character_meditating', name: '🧘 شخصية في وضعية التأمل والشاكرات' },
+      { id: 'character_overthinking', name: '🤯 شخصية وسط دوامة التفكير المفرط' },
+      { id: 'character_breakthrough', name: '⚡ شخصية تكسر القيود وتتحرر' },
+      { id: 'character_digital_trap', name: '📱 شخصية مأسورة في فخ الشاشة' },
+      { id: 'character_reaching_star', name: '✨ شخصية تسعى نحو الهدف والنور' },
+      { id: 'floating_brain', name: '🧠 الدماغ النبضي والسيالات العصبية' },
+      { id: 'dopamine_gauge', name: '⏱️ عداد الدوبامين والهوس الرقمي' },
+      { id: 'dual_mask', name: '🎭 قناع الشخصية (الأنا والظل)' },
+      { id: 'eye_perception', name: '👁️ عين الإدراك البؤري والليزر' },
+      { id: 'maze_thought', name: '🌀 متاهة التفكير المفرط والشك' },
+      { id: 'hourglass_time', name: '⏳ ساعة الرمل وتسريب الوقت' },
+      { id: 'iceberg_theory', name: '🏔️ جبل الجليد النفسي واللاوعي' },
+      { id: 'magnetic_heart', name: '🧲 القلب الكهرومغناطيسي والجذب' },
+      { id: 'concentric_rings', name: '🪐 المدارات العصبية المتوسعة' },
+      { id: 'radial_breath', name: '☀️ النبض الإشعاعي والتنفس العميق' },
+      { id: 'noise_ripple', name: '🌊 تموجات التشويش والضوضاء' },
+      { id: 'mandala', name: '❄️ هندسة الماندالا والتناغم' },
+      { id: 'battery_depletion', name: '🔋 عداد استنزاف الطاقة' },
+      { id: 'neural_network_nodes', name: '🕸️ شبكة العقد والروابط' },
+      { id: 'fractured_barrier', name: '🛡️ تصدع الحواجز والتحرر' },
+      { id: 'oscillating_pendulum', name: '🕰️ بندول الساعة والتنويم' },
+      { id: 'custom_code', name: '💻 كود JavaScript مخصص' }
+    ];
 
+    const SFX_TYPES = [
+      { id: 'whoosh', name: 'اندفاع هوائي (Whoosh)' },
+      { id: 'sub_impact', name: 'صدمة باس (Sub Impact)' },
+      { id: 'glitch', name: 'وميض جليتش (Glitch Zap)' },
+      { id: 'heartbeat', name: 'نبضة قلب (Heartbeat)' },
+      { id: 'mystery', name: 'جرس غموض (Mystery Bell)' }
+    ];
+
+    // --- POPULATE DROPDOWNS ---
+    function populateDropdowns() {
+      const archSel = document.getElementById('activeSceneArchetype');
+      archSel.innerHTML = ARCHETYPES.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+
+      const sfxSel = document.getElementById('activeSceneSfx');
+      sfxSel.innerHTML = SFX_TYPES.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    }
+
+    // --- AUDIO SYNTHESIZER ---
+    class PsychoAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.ambientGain = null;
+        this.ambientOsc1 = null;
+        this.ambientOsc2 = null;
+        this.filter = null;
+        this.isSynthRunning = false;
+      }
+
+      initContext() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+      }
+
+      startAmbientDrone() {
+        if (!STATE.enableAmbientMusic || this.isSynthRunning) return;
+        try {
+          this.initContext();
+          const now = this.ctx.currentTime;
+          this.ambientGain = this.ctx.createGain();
+          this.ambientGain.gain.setValueAtTime(0.001, now);
+          this.ambientGain.gain.exponentialRampToValueAtTime(0.08, now + 1.5);
+          this.filter = this.ctx.createBiquadFilter();
+          this.filter.type = 'lowpass';
+          this.filter.frequency.setValueAtTime(320, now);
+
+          this.ambientOsc1 = this.ctx.createOscillator();
+          this.ambientOsc1.type = 'sine';
+          this.ambientOsc1.frequency.setValueAtTime(54, now);
+
+          this.ambientOsc2 = this.ctx.createOscillator();
+          this.ambientOsc2.type = 'triangle';
+          this.ambientOsc2.frequency.setValueAtTime(108.5, now);
+
+          this.ambientOsc1.connect(this.filter);
+          this.ambientOsc2.connect(this.filter);
+          this.filter.connect(this.ambientGain);
+          this.ambientGain.connect(this.ctx.destination);
+
+          this.ambientOsc1.start(now);
+          this.ambientOsc2.start(now);
+          this.isSynthRunning = true;
+        } catch (e) {}
+      }
+
+      stopAmbientDrone() {
+        if (!this.isSynthRunning || !this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          this.ambientGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+          setTimeout(() => {
+            if (this.ambientOsc1) { try { this.ambientOsc1.stop(); this.ambientOsc1.disconnect(); } catch(e){} }
+            if (this.ambientOsc2) { try { this.ambientOsc2.stop(); this.ambientOsc2.disconnect(); } catch(e){} }
+            this.isSynthRunning = false;
+          }, 550);
+        } catch (e) { this.isSynthRunning = false; }
+      }
+
+      playSfx(type = 'whoosh') {
+        if (!STATE.enableSfx) return;
+        try {
+          this.initContext();
+          const now = this.ctx.currentTime;
+          const dest = this.ctx.destination;
+
+          if (type === 'sub_impact') {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.exponentialRampToValueAtTime(32, now + 0.35);
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.4);
+          } else if (type === 'glitch') {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(450, now);
+            osc.frequency.setValueAtTime(180, now + 0.05);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.2);
+          } else if (type === 'mystery') {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(520, now);
+            osc.frequency.exponentialRampToValueAtTime(390, now + 0.5);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.6);
+          } else {
+            const bufferSize = this.ctx.sampleRate * 0.35;
+            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+            const noise = this.ctx.createBufferSource();
+            noise.buffer = buffer;
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(240, now);
+            filter.frequency.exponentialRampToValueAtTime(1800, now + 0.18);
+            filter.frequency.exponentialRampToValueAtTime(180, now + 0.35);
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.linearRampToValueAtTime(0.28, now + 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(dest);
+            noise.start(now);
+          }
+        } catch (e) {}
+      }
+          // --- OFFLINE AUDIO SYNTHESIS FOR WEBM / MP4 EXPORT ---
+      async renderOfflineAudio(duration, sfxType = 'whoosh') {
+        const sampleRate = 44100;
+        const length = Math.ceil(sampleRate * duration);
+        const OfflineCtxClass = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        if (!OfflineCtxClass) return null;
+        const offlineCtx = new OfflineCtxClass(2, length, sampleRate);
+
+        // 1. Synthesize Ambient Drone
+        if (STATE.enableAmbientMusic) {
+          try {
+            const ambientGain = offlineCtx.createGain();
+            ambientGain.gain.setValueAtTime(0.001, 0);
+            ambientGain.gain.exponentialRampToValueAtTime(0.08, 1.0);
+            if (duration > 1.2) {
+              ambientGain.gain.setValueAtTime(0.08, duration - 0.4);
+              ambientGain.gain.exponentialRampToValueAtTime(0.001, duration);
+            }
+
+            const filter = offlineCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(320, 0);
+
+            const osc1 = offlineCtx.createOscillator();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(54, 0);
+
+            const osc2 = offlineCtx.createOscillator();
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(108.5, 0);
+
+            osc1.connect(filter);
+            osc2.connect(filter);
+            filter.connect(ambientGain);
+            ambientGain.connect(offlineCtx.destination);
+
+            osc1.start(0);
+            osc2.start(0);
+            osc1.stop(duration);
+            osc2.stop(duration);
+          } catch(e) {}
+        }
+
+        // 2. Synthesize SFX Cue (at t = 0.05s)
+        if (STATE.enableSfx && sfxType) {
+          try {
+            const now = 0.05;
+            const dest = offlineCtx.destination;
+
+            if (sfxType === 'sub_impact') {
+              const osc = offlineCtx.createOscillator();
+              const gain = offlineCtx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(140, now);
+              osc.frequency.exponentialRampToValueAtTime(32, now + 0.35);
+              gain.gain.setValueAtTime(0.4, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+              osc.connect(gain);
+              gain.connect(dest);
+              osc.start(now);
+              osc.stop(now + 0.4);
+            } else if (sfxType === 'glitch') {
+              const osc = offlineCtx.createOscillator();
+              const gain = offlineCtx.createGain();
+              osc.type = 'sawtooth';
+              osc.frequency.setValueAtTime(450, now);
+              osc.frequency.setValueAtTime(180, now + 0.05);
+              gain.gain.setValueAtTime(0.25, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+              osc.connect(gain);
+              gain.connect(dest);
+              osc.start(now);
+              osc.stop(now + 0.2);
+            } else if (sfxType === 'mystery') {
+              const osc = offlineCtx.createOscillator();
+              const gain = offlineCtx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(520, now);
+              osc.frequency.exponentialRampToValueAtTime(390, now + 0.5);
+              gain.gain.setValueAtTime(0.3, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+              osc.connect(gain);
+              gain.connect(dest);
+              osc.start(now);
+              osc.stop(now + 0.6);
+            } else { // whoosh
+              const bufferSize = Math.floor(sampleRate * 0.35);
+              const noiseBuffer = offlineCtx.createBuffer(1, bufferSize, sampleRate);
+              const data = noiseBuffer.getChannelData(0);
+              for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+              const noise = offlineCtx.createBufferSource();
+              noise.buffer = noiseBuffer;
+              const filter = offlineCtx.createBiquadFilter();
+              filter.type = 'bandpass';
+              filter.frequency.setValueAtTime(240, now);
+              filter.frequency.exponentialRampToValueAtTime(1800, now + 0.18);
+              filter.frequency.exponentialRampToValueAtTime(180, now + 0.35);
+              const gain = offlineCtx.createGain();
+              gain.gain.setValueAtTime(0.01, now);
+              gain.gain.linearRampToValueAtTime(0.28, now + 0.15);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+              noise.connect(filter);
+              filter.connect(gain);
+              gain.connect(dest);
+              noise.start(now);
+              noise.stop(now + 0.35);
+            }
+          } catch(e) {}
+        }
+
+        try {
+          return await offlineCtx.startRendering();
+        } catch(e) {
+          return null;
+        }
+      }
+    }
+
+    const audioEngine = new PsychoAudioEngine();
+    const canvas = document.getElementById('motionCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 720;
+    canvas.height = 1280;
+
+    let backgroundParticles = [];
+    function initParticles(count = 45) {
+      backgroundParticles = [];
+      for (let i = 0; i < count; i++) {
+        backgroundParticles.push({
+          x: Math.random() * 720,
+          y: Math.random() * 1280,
+          radius: Math.random() * 2.5 + 1.2,
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: (Math.random() - 0.5) * 0.6,
+          alpha: Math.random() * 0.7 + 0.2
+        });
+      }
+    }
+    initParticles();
+
+    // --- 2D CHARACTER & PROCEDURAL VISUAL METAPHORS ENGINE ---
+    const CanvasVisuals = {
+      character_walking(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+        const legAngle = Math.sin(t * 8) * 0.5;
+        const armAngle = -legAngle * 0.6;
+        const bobY = Math.abs(Math.sin(t * 8)) * 6;
+
+        ctx.strokeStyle = color;
+        ctx.fillStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+
+        ctx.beginPath();
+        ctx.arc(0, -95 + bobY, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(0, -75 + bobY);
+        ctx.lineTo(0, -15 + bobY);
+        ctx.moveTo(0, -65 + bobY);
+        ctx.lineTo(Math.sin(armAngle) * 35, -30 + Math.cos(armAngle) * 35 + bobY);
+        ctx.moveTo(0, -65 + bobY);
+        ctx.lineTo(Math.sin(-armAngle) * 35, -30 + Math.cos(-armAngle) * 35 + bobY);
+        ctx.moveTo(0, -15 + bobY);
+        ctx.lineTo(Math.sin(legAngle) * 50, 45 + Math.cos(legAngle) * 10);
+        ctx.moveTo(0, -15 + bobY);
+        ctx.lineTo(Math.sin(-legAngle) * 50, 45 + Math.cos(-legAngle) * 10);
+        ctx.stroke();
+
+        for (let i = 0; i < 3; i++) {
+          const by = -120 - i * 22 + Math.sin(t * 4 + i) * 6;
+          const bx = Math.sin(t * 3 + i) * 20;
+          ctx.fillStyle = i === 2 ? color : '#38bdf8';
+          ctx.beginPath();
+          ctx.arc(bx, by, 6 + i * 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      },
+
+      character_meditating(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+        const breath = 1 + Math.sin(t * 3) * 0.06;
+        ctx.scale(breath, breath);
+
+        for (let i = 1; i <= 3; i++) {
+          const r = 80 + i * 35 + Math.sin(t * 4 + i) * 10;
+          ctx.strokeStyle = color;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 25;
+          ctx.lineWidth = 2;
+          ctx.globalAlpha = Math.max(0, 1 - (r / 200));
+          ctx.beginPath();
+          ctx.arc(0, -25, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1.0;
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.fillStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+
+        ctx.beginPath();
+        ctx.arc(0, -75, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(0, -55);
+        ctx.lineTo(0, 0);
+        ctx.arc(0, 5, 45, Math.PI * 0.1, Math.PI * 0.9);
+        ctx.stroke();
+
+        const chakraColors = ['#f43f5e', '#f59e0b', '#10b981', '#06b6d4', '#8b5cf6'];
+        for (let i = 0; i < chakraColors.length; i++) {
+          ctx.fillStyle = chakraColors[i];
+          ctx.shadowColor = chakraColors[i];
+          ctx.shadowBlur = 15;
+          ctx.beginPath();
+          ctx.arc(0, -65 + i * 16, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      },
+
+      character_overthinking(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.fillStyle = '#cbd5e1';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.arc(0, -35, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(0, -15);
+        ctx.lineTo(0, 45);
+        ctx.moveTo(0, -5);
+        ctx.lineTo(-28, -25);
+        ctx.lineTo(-15, -40);
+        ctx.moveTo(0, -5);
+        ctx.lineTo(28, -25);
+        ctx.lineTo(15, -40);
+        ctx.stroke();
+
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 25;
+        ctx.lineWidth = 3;
+        for (let i = 0; i < 4; i++) {
+          ctx.beginPath();
+          for (let a = 0; a < Math.PI * 4; a += 0.2) {
+            const r = a * 12 + Math.sin(t * 6 + a) * 8;
+            const x = Math.cos(a + t * 4 + i) * r;
+            const y = -100 + Math.sin(a + t * 4 + i) * (r * 0.45);
+            if (a === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        ctx.restore();
+      },
+
+      character_breakthrough(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+        const burst = progress * 60;
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 30;
+        ctx.lineWidth = 5;
+
+        for (let i = 0; i < 12; i++) {
+          const a = (i / 12) * Math.PI * 2;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(a) * 30, Math.sin(a) * 30);
+          ctx.lineTo(Math.cos(a) * (110 + burst), Math.sin(a) * (110 + burst));
+          ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.fillStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(0, -75, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(0, -55);
+        ctx.lineTo(0, 10);
+        ctx.moveTo(0, -45);
+        ctx.lineTo(-45, -95);
+        ctx.moveTo(0, -45);
+        ctx.lineTo(45, -95);
+        ctx.moveTo(0, 10);
+        ctx.lineTo(-35, 60);
+        ctx.moveTo(0, 10);
+        ctx.lineTo(35, 60);
+        ctx.stroke();
+        ctx.restore();
+      },
+
+      character_digital_trap(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.strokeStyle = '#64748b';
+        ctx.fillStyle = '#64748b';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.arc(-10, -55, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(-10, -35);
+        ctx.lineTo(-10, 35);
+        ctx.moveTo(-10, -25);
+        ctx.lineTo(25, -10);
+        ctx.stroke();
+
+        ctx.fillStyle = '#06b6d4';
+        ctx.shadowColor = '#06b6d4';
+        ctx.shadowBlur = 30;
+        ctx.fillRect(25, -25, 16, 28);
+
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+        ctx.lineWidth = 2.5;
+        for (let i = 0; i < 3; i++) {
+          const offset = Math.sin(t * 8 + i) * 6;
+          ctx.beginPath();
+          ctx.moveTo(30, -15 + offset);
+          ctx.lineTo(-5, -55);
+          ctx.stroke();
+        }
+        ctx.restore();
+      },
+
+      character_reaching_star(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.44;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.strokeStyle = '#ffffff';
+        ctx.fillStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.arc(-15, -45, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(-15, -25);
+        ctx.lineTo(-5, 45);
+        ctx.moveTo(-15, -15);
+        ctx.lineTo(25, -85);
+        ctx.stroke();
+
+        const starY = -115 + Math.sin(t * 4) * 8;
+        ctx.fillStyle = '#f59e0b';
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 30;
+        ctx.beginPath();
+        ctx.arc(38, starY, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      },
+
+      floating_brain(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.42;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.scale(1 + Math.sin(t * 4) * 0.04, 1 + Math.sin(t * 4) * 0.04);
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.arc(-45, -20, 55, Math.PI * 0.5, Math.PI * 1.6);
+        ctx.bezierCurveTo(-110, -50, -110, 50, -50, 70);
+        ctx.bezierCurveTo(-30, 80, -15, 60, -10, 30);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(45, -20, 55, Math.PI * 1.4, Math.PI * 0.5);
+        ctx.bezierCurveTo(110, -50, 110, 50, 50, 70);
+        ctx.bezierCurveTo(30, 80, 15, 60, 10, 30);
+        ctx.stroke();
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(0, 0, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      },
+
+      dopamine_gauge(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.42, radius = 130;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.lineWidth = 18;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, Math.PI * 0.8, Math.PI * 2.2);
+        ctx.stroke();
+        const targetPercent = Math.min(0.92, 0.2 + (progress * 0.8) + Math.sin(t * 10) * 0.05);
+        const startA = Math.PI * 0.8;
+        const endA = startA + targetPercent * (Math.PI * 1.4);
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 25;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, startA, endA);
+        ctx.stroke();
+        ctx.font = "900 38px 'Space Grotesk', sans-serif";
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${Math.floor(targetPercent * 100)}%`, 0, 20);
+        ctx.restore();
+      },
+
+      eye_perception(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.42;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = '#ffffff';
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.moveTo(-130, 0);
+        ctx.quadraticCurveTo(0, -90, 130, 0);
+        ctx.quadraticCurveTo(0, 90, -130, 0);
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(0, 0, 48, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#000000';
+        ctx.beginPath();
+        ctx.arc(0, 0, 18 + Math.sin(t * 6) * 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      },
+
+      concentric_rings(ctx, t, progress, w, h, color) {
+        const cx = w / 2, cy = h * 0.42;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.lineWidth = 3.5;
+        for (let i = 1; i <= 5; i++) {
+          const r = (t * 40 + i * 28) % 150;
+          ctx.strokeStyle = color;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 15;
+          ctx.globalAlpha = Math.max(0, 1 - r / 150);
+          ctx.beginPath();
+          ctx.arc(0, 0, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    };
+
+    function drawDynamicBackground(ctx, w, h, theme, t) {
+      const grad = ctx.createRadialGradient(w / 2, h * 0.45, 80, w / 2, h / 2, h * 0.85);
+      grad.addColorStop(0, '#221544');
+      grad.addColorStop(0.5, '#0e0b1d');
+      grad.addColorStop(1, '#05040a');
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.save();
+      for (let p of backgroundParticles) {
+        p.x = (p.x + p.vx + w) % w;
+        p.y = (p.y + p.vy + h) % h;
+        ctx.fillStyle = `rgba(168, 85, 247, ${p.alpha * 0.8})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // --- RENDER FRAME DISPATCHER ---
+    function renderFrame(timeInSeconds) {
+      if (STATE.scenes.length === 0) {
+        drawDynamicBackground(ctx, 720, 1280, STATE.bgTheme, timeInSeconds);
+        ctx.font = "700 24px 'Cairo', sans-serif";
+        ctx.fillStyle = "#64748b";
+        ctx.textAlign = "center";
+        ctx.fillText("استوديو جاهز. اكتب سكريبت أو ابدأ بمشهد بالذكاء الاصطناعي", 360, 640);
+        return;
+      }
+
+      const activeScene = STATE.scenes[STATE.activeSceneIndex] || STATE.scenes[0];
+      const dur = activeScene.duration || STATE.durationPerScene;
+      const progress = (timeInSeconds % dur) / dur;
+
+      const w = 720, h = 1280;
+      drawDynamicBackground(ctx, w, h, STATE.bgTheme, timeInSeconds);
+
+      ctx.save();
+      // Draw procedural or custom code visual
+      let drawer = null;
+      if (activeScene.customCode) {
+        try {
+          if (!activeScene.compiledFn) {
+            let codeStr = activeScene.customCode.trim();
+            if (!codeStr.startsWith('function') && !codeStr.startsWith('(')) {
+              codeStr = `function(ctx, t, progress, w, h, color, scene) { ${codeStr} }`;
+            }
+            activeScene.compiledFn = eval(`(${codeStr})`);
+          }
+          drawer = activeScene.compiledFn;
+        } catch (e) {
+          drawer = CanvasVisuals[activeScene.archetype] || CanvasVisuals.character_walking;
+        }
+      } else {
+        drawer = CanvasVisuals[activeScene.archetype] || CanvasVisuals.character_walking;
+      }
+
+      try {
+        drawer(ctx, timeInSeconds, progress, w, h, activeScene.accentColor || '#8b5cf6', activeScene);
+      } catch (e) {
+        CanvasVisuals.character_walking(ctx, timeInSeconds, progress, w, h, activeScene.accentColor || '#8b5cf6');
+      }
+
+      // Draw bottom progress bar
+      const barY = h * 0.94;
+      const barW = w * 0.65;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.beginPath();
+      ctx.roundRect((w - barW) / 2, barY, barW, 6, 3);
+      ctx.fill();
+
+      const activeW = barW * progress;
+      ctx.fillStyle = activeScene.accentColor || '#8b5cf6';
+      ctx.shadowColor = activeScene.accentColor || '#8b5cf6';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.roundRect((w - barW) / 2, barY, activeW, 6, 3);
+      ctx.fill();
+
+      ctx.restore();
+
+      // Update Timecode
+      const curS = Math.floor(timeInSeconds % dur).toString().padStart(2, '0');
+      const totS = Math.floor(dur).toString().padStart(2, '0');
+      document.getElementById('timecodeDisplay').innerText = `00:${curS} / 00:${totS}`;
+      document.getElementById('timelineProgress').style.width = `${progress * 100}%`;
+    }
+
+    let lastTimestamp = 0;
+    function gameLoop(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const deltaTime = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      if (STATE.isPlaying && STATE.scenes.length > 0) {
+        STATE.currentTime += deltaTime;
+        const curDur = (STATE.scenes[STATE.activeSceneIndex] || {}).duration || STATE.durationPerScene;
+        if (STATE.currentTime >= curDur) {
+          STATE.currentTime = 0;
+          const sc = STATE.scenes[STATE.activeSceneIndex];
+          if (sc) audioEngine.playSfx(sc.sfxType || 'whoosh');
+        }
+      }
+
+      renderFrame(STATE.currentTime);
+      requestAnimationFrame(gameLoop);
+    }
+
+    function togglePlayPause() {
+      if (STATE.scenes.length === 0) return;
+      STATE.isPlaying = !STATE.isPlaying;
+      const playIcon = document.getElementById('playIcon');
+      const canvasOverlay = document.getElementById('canvasOverlayPlay');
+
+      if (STATE.isPlaying) {
+        playIcon.classList.remove('fa-play');
+        playIcon.classList.add('fa-pause');
+        canvasOverlay.classList.remove('opacity-100');
+        canvasOverlay.classList.add('opacity-0');
+        audioEngine.startAmbientDrone();
+        const sc = STATE.scenes[STATE.activeSceneIndex];
+        if (sc) audioEngine.playSfx(sc.sfxType || 'whoosh');
+      } else {
+        playIcon.classList.remove('fa-pause');
+        playIcon.classList.add('fa-play');
+        canvasOverlay.classList.remove('opacity-0');
+        canvasOverlay.classList.add('opacity-100');
+        audioEngine.stopAmbientDrone();
+      }
+    }
+
+    function selectScene(index) {
+      if (index >= 0 && index < STATE.scenes.length) {
+        STATE.activeSceneIndex = index;
+        STATE.currentTime = 0;
+        const scene = STATE.scenes[index];
+
+        document.getElementById('activeSceneTitle').value = scene.title || '';
+        document.getElementById('activeSceneSubtitle').value = scene.subtitle || '';
+        document.getElementById('activeSceneArchetype').value = scene.archetype || 'character_walking';
+        document.getElementById('activeSceneSfx').value = scene.sfxType || 'whoosh';
+        document.getElementById('activeSceneColor').value = scene.accentColor || '#8b5cf6';
+        document.getElementById('activeSceneColorHex').innerText = scene.accentColor || '#8b5cf6';
+        document.getElementById('currentSceneOverlayBadge').innerText = `المشهد ${index + 1} / ${STATE.scenes.length}`;
+        document.getElementById('currentSceneNameBadge').innerText = scene.name || scene.title || 'مشهد حركي';
+
+        audioEngine.playSfx(scene.sfxType || 'whoosh');
+        renderThumbnails();
+        renderFrame(0);
+      }
+    }
+
+    function renderThumbnails() {
+      const container = document.getElementById('sceneThumbnailsList');
+      container.innerHTML = '';
+      document.getElementById('sceneCountBadgeText').innerText = STATE.scenes.length;
+
+      STATE.scenes.forEach((s, i) => {
+        const btn = document.createElement('button');
+        const isActive = i === STATE.activeSceneIndex;
+        btn.className = `px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 border ${
+          isActive 
+            ? 'bg-purple-600 text-white border-purple-400 shadow-md shadow-purple-600/30' 
+            : 'bg-psycho-900 text-slate-300 border-psycho-700 hover:bg-psycho-750'
+        }`;
+        btn.innerHTML = `<span class="w-4 h-4 rounded-full bg-black/40 text-[10px] flex items-center justify-center">${i + 1}</span> <span>${s.name || s.title}</span>`;
+        btn.onclick = () => selectScene(i);
+        container.appendChild(btn);
+      });
+    }
+
+    // --- AI CHAT ASSISTANT DISPATCHER ---
+    async function sendChatRequest(userMessage) {
+      if (!userMessage.trim()) return;
+
+      const chatStream = document.getElementById('aiChatStream');
+      const sendBtn = document.getElementById('btnSendChat');
+      const userInput = document.getElementById('chatUserInput');
+
+      // Append User message to stream
+      chatStream.innerHTML += `
+        <div class="chat-bubble-user p-2.5 rounded-xl rounded-tl-none text-white text-xs max-w-[85%] self-end mr-auto">
+          ${userMessage}
+        </div>
+      `;
+      chatStream.scrollTop = chatStream.scrollHeight;
+      userInput.value = '';
+
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+
+      const currentScene = STATE.scenes[STATE.activeSceneIndex] || null;
+      const topic = document.getElementById('scriptTopicInput').value.trim() || 'علم النفس';
+
+      const systemMsg = `You are an interactive AI Motion Graphics Director.
+The user is chatting with you to build, customize, or refine ONE single motion graphics scene at a time.
+You can adjust:
+- title: Short punchy hook title (3-5 words)
+- subtitle: Caption explanation (6-10 words)
+- archetype: "character_walking" | "character_meditating" | "character_overthinking" | "character_breakthrough" | "character_digital_trap" | "character_reaching_star" | "floating_brain" | "dopamine_gauge" | "dual_mask" | "eye_perception" | "maze_thought" | "hourglass_time" | "iceberg_theory" | "magnetic_heart" | "concentric_rings" | "radial_breath" | "noise_ripple" | "mandala" | "battery_depletion" | "neural_network_nodes" | "fractured_barrier" | "oscillating_pendulum"
+- accentColor: Hex color (e.g. #8b5cf6, #06b6d4, #f43f5e, #10b981, #f59e0b)
+- sfxType: "whoosh" | "sub_impact" | "glitch" | "heartbeat" | "mystery"
+- customCode: Optional custom JavaScript Canvas 2D drawing function expression if requested.
+
+You must return a valid JSON object:
+{
+  "reply": "رسالة رد قصيرة وودية بالعربية تشرح التعديل الذي قمت به...",
+  "scene": {
+    "id": 1,
+    "name": "اسم المشهد",
+    "title": "العنوان الرئيسي",
+    "subtitle": "الكابشن التوضيحي",
+    "archetype": "character_overthinking",
+    "accentColor": "#8b5cf6",
+    "sfxType": "whoosh",
+    "duration": 3.0,
+    "customCode": null
+  }
+}
+Output raw JSON only.`;
+
+      const messages = [{ role: 'system', content: systemMsg }];
+      if (STATE.chatHistory && STATE.chatHistory.length > 0) {
+        for (const msg of STATE.chatHistory.slice(-6)) {
+          messages.push({ role: msg.role || 'user', content: msg.content || '' });
+        }
+      }
+
+      messages.push({
+        role: 'user',
+        content: `Current Topic: "${topic}"\nCurrent Scene: ${JSON.stringify(currentScene || {})}\nUser Request: "${userMessage}"\n\nGenerate or update the scene according to the user request. Output JSON only.`
+      });
+
+      try {
+        const rawContent = await callOmniRouteAI(messages);
+        const data = extractJsonFromAiResponse(rawContent);
+        
+        chatStream.innerHTML += `
+          <div class="chat-bubble-ai p-3 rounded-xl rounded-tr-none text-slate-200 text-xs leading-relaxed">
+            <span class="font-bold text-purple-400 block mb-1">🤖 مخرج الموشن (OmniRoute):</span>
+            ${data.reply || 'تم تحديث وتخصيص المشهد بنجاح!'}
+          </div>
+        `;
+        chatStream.scrollTop = chatStream.scrollHeight;
+
+        if (data.scene) {
+          if (STATE.scenes.length === 0) {
+            STATE.scenes.push(data.scene);
+            STATE.activeSceneIndex = 0;
+          } else {
+            STATE.scenes[STATE.activeSceneIndex] = {
+              ...STATE.scenes[STATE.activeSceneIndex],
+              ...data.scene
+            };
+          }
+          selectScene(STATE.activeSceneIndex);
+          showToast("✨ تم تحديث المشهد في الكانفاس مباشرة!");
+        }
+      } catch (err) {
+        chatStream.innerHTML += `
+          <div class="chat-bubble-ai p-2.5 rounded-xl text-rose-300 text-xs">
+            ⚠️ تعذر الاتصال بالذكاء الاصطناعي: ${err.message}
+          </div>
+        `;
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>إرسال</span>`;
+      }
+    }
+
+    // --- SCRIPT GENERATOR DISPATCHER ---
+    async function generateScriptOnly() {
+      const topic = document.getElementById('scriptTopicInput').value.trim();
+      if (!topic) {
+        showToast("الرجاء إدخال فكرة أو موضوع أولاً!");
+        return;
+      }
+
+      const btn = document.getElementById('btnGenerateScriptOnly');
+      const origText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التوليد من OmniRoute...</span>`;
+
+      const systemMsg = `You are an elite short-form video scriptwriter specializing in psychology and personal growth Reels / Shorts.
+Write an engaging, insightful script divided into 5-8 punchy scenes.
+Return a valid JSON object:
+{
+  "topic": "الموضوع",
+  "title": "عنوان السكريبت",
+  "full_text": "النص الكامل المنسق والجاهز للنسخ والقراءة المباشرة...",
+  "scenes": [
+    {
+      "id": 1,
+      "title": "عنوان المشهد (3-5 كلمات)",
+      "subtitle": "الكابشن المركز (6-10 كلمات)",
+      "archetype": "character_overthinking" | "character_walking" | "character_meditating" | "character_breakthrough" | "character_digital_trap" | "character_reaching_star" | "floating_brain" | "dopamine_gauge" | "dual_mask" | "eye_perception" | "maze_thought" | "hourglass_time" | "iceberg_theory" | "magnetic_heart",
+      "accentColor": "#8b5cf6",
+      "sfxType": "whoosh" | "sub_impact" | "glitch" | "heartbeat" | "mystery"
+    }
+  ]
+}
+Output raw JSON only.`;
+
+      try {
+        const rawContent = await callOmniRouteAI([
+          { role: 'system', content: systemMsg },
+          { role: 'user', content: `Topic: ${topic}\nLanguage: Arabic (العربية الفصحى الجذابة المؤثرة)` }
+        ]);
+        const script = extractJsonFromAiResponse(rawContent);
+        if (script) {
+          document.getElementById('fullScriptTextarea').value = script.full_text || '';
+          if (Array.isArray(script.scenes) && script.scenes.length > 0) {
+            STATE.scenes = script.scenes.map((s, i) => ({
+              id: i + 1,
+              name: s.title || `مشهد ${i+1}`,
+              title: s.title || `مشهد ${i+1}`,
+              subtitle: s.subtitle || '',
+              archetype: s.archetype || 'character_walking',
+              accentColor: s.accentColor || '#8b5cf6',
+              sfxType: s.sfxType || 'whoosh',
+              duration: 3.0,
+              customCode: null,
+              compiledFn: null
+            }));
+            selectScene(0);
+            showToast(`✨ تم توليد السكريبت وبناء ${STATE.scenes.length} مشاهد بنجاح!`);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+        showToast("خطأ في توليد السكريبت: " + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origText;
+      }
+    }
+
+        // --- MOBILE VIDEO EXPORT & WEB SHARE PIPELINE ---
+    function setupVideoReadyModal(blob, filename) {
       const modal = document.getElementById('videoReadyModal');
       const videoPlayer = document.getElementById('modalVideoPlayer');
       const dlLink = document.getElementById('btnModalDirectDownload');
       const shareBtn = document.getElementById('btnModalShareMobile');
 
-      const fileUrl = URL.createObjectURL(blob);
-      videoPlayer.src = fileUrl;
+      const url = URL.createObjectURL(blob);
+      videoPlayer.src = url;
       videoPlayer.load();
-      dlLink.href = fileUrl;
+      dlLink.href = url;
       dlLink.download = filename;
 
-      openModal('videoReadyModal');
-
-      // Bind Web Share API to 1-Tap Mobile Button
-      shareBtn.onclick = async () => {
-        try {
-          const file = new File([blob], filename, { type: blob.type || 'video/mp4' });
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-              title: filename,
-              text: 'فيديو الموشن جرافيك جاهز من PsychoMotion Studio',
-              files: [file]
-            });
-            showToast("✅ تم حفظ المشاركة في الهاتف بنجاح!");
-            return;
-          }
-        } catch(err) {
-          console.warn("Web Share API not supported or cancelled:", err);
-        }
-
-        // Try Capacitor Native Filesystem plugin
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem) {
+      if (shareBtn) {
+        shareBtn.onclick = async () => {
+          // 1. Try Web Share API (Level 2 with File object)
           try {
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onloadend = async () => {
-              const base64Data = reader.result.split(',')[1];
-              await window.Capacitor.Plugins.Filesystem.writeFile({
-                path: `Download/${filename}`,
-                data: base64Data,
-                directory: 'EXTERNAL_STORAGE',
-                recursive: true
+            const file = new File([blob], filename, { type: blob.type || 'video/mp4' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                title: filename,
+                text: 'فيديو الموشن جرافيك من PsychoMotion Studio',
+                files: [file]
               });
-              showToast("✅ تم حفظ الفيديو في مجلد Downloads في الهاتف!");
-            };
-            return;
-          } catch(err) {}
-        }
+              showToast("✅ تم حفظ ومشاركة الفيديو في الهاتف بنجاح!");
+              return;
+            }
+          } catch (err) {
+            console.warn("Web Share API:", err);
+          }
 
-        // Standard browser fallback download
-        dlLink.click();
-        showToast("✅ تم بدء التحميل المباشر!");
-      };
+          // 2. Try Capacitor Native Filesystem Plugin
+          if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem) {
+            try {
+              const reader = new FileReader();
+              reader.readAsDataURL(blob);
+              reader.onloadend = async () => {
+                const base64Data = reader.result.split(',')[1];
+                await window.Capacitor.Plugins.Filesystem.writeFile({
+                  path: `Download/${filename}`,
+                  data: base64Data,
+                  directory: 'EXTERNAL_STORAGE',
+                  recursive: true
+                });
+                showToast("✅ تم حفظ الفيديو مباشرة في مجلد Downloads في الهاتف!");
+              };
+              return;
+            } catch (err) {
+              console.warn("Capacitor Filesystem:", err);
+            }
+          }
+
+          // 3. Browser fallback
+          dlLink.click();
+          showToast("✅ جاري تحميل الفيديو في الهاتف!");
+        };
+      }
+
+      openModal('videoReadyModal');
     }
 
+    // --- INSTANT CLIENT-SIDE CANVAS 60FPS RECORDING ---
     async function recordCanvasDirectly() {
-      if (STATE.scenes.length === 0) return showToast("إنشاء مشهد أولاً!");
-      const sc = STATE.scenes[STATE.activeSceneIndex];
-      const dur = (sc.duration || 3.0) * 1000;
-      const canvas = document.getElementById('motionCanvas');
+      if (STATE.scenes.length === 0) {
+        showToast("الرجاء إنشاء مشهد أولاً!");
+        return;
+      }
+      if (STATE.isExporting) return;
+      STATE.isExporting = true;
 
-      showToast("🎬 جاري تسجيل الشاشة وحفظ الفيديو...");
+      const scene = STATE.scenes[STATE.activeSceneIndex];
+      const dur = (scene.duration || 3.0) * 1000;
+      const exportBtn = document.getElementById('btnExportCanvasDirect');
+      const progressWrapper = document.getElementById('exportProgressWrapper');
+      const progressBar = document.getElementById('exportProgressBar');
+      const exportPercentMsg = document.getElementById('exportPercentMsg');
+
+      exportBtn.disabled = true;
+      progressWrapper.classList.remove('hidden');
+      progressBar.style.width = '20%';
+      exportPercentMsg.innerText = '20%';
 
       try {
-        const stream = canvas.captureStream(30); // 30 FPS for stable mobile recording
-        const mimeType = MediaRecorder.isTypeSupported('video/mp4;codecs=avc1.42E01E,mp4a.40.2')
-          ? 'video/mp4;codecs=avc1.42E01E,mp4a.40.2'
-          : (MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : 'video/webm');
+        STATE.currentTime = 0;
+        STATE.isPlaying = true;
+        audioEngine.startAmbientDrone();
+        audioEngine.playSfx(scene.sfxType || 'whoosh');
 
-        const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 6000000 });
+        const stream = canvas.captureStream(60);
+        if (audioEngine.ctx) {
+          try {
+            const dest = audioEngine.ctx.createMediaStreamDestination();
+            if (audioEngine.ambientGain) audioEngine.ambientGain.connect(dest);
+            const audioTrack = dest.stream.getAudioTracks()[0];
+            if (audioTrack) stream.addTrack(audioTrack);
+          } catch(e){}
+        }
+
+        const mimeType = MediaRecorder.isTypeSupported('video/mp4;codecs=avc1') ? 'video/mp4' : (MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm');
+        const recorder = new MediaRecorder(stream, { mimeType: mimeType, videoBitsPerSecond: 8000000 });
         const chunks = [];
 
-        recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-        recorder.onstop = () => {
-          const blob = new Blob(chunks, { type: mimeType });
-          const filename = `${sc.name.replace(/\s+/g, '_')}_60fps.mp4`;
-          saveVideoToPhone(blob, filename);
+        recorder.ondataavailable = e => {
+          if (e.data.size > 0) chunks.push(e.data);
         };
 
-        buildAndPlayScene(sc);
+        recorder.onstop = () => {
+          const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+          const blob = new Blob(chunks, { type: mimeType });
+          const filename = `scene_${STATE.activeSceneIndex + 1}_canvas.${ext}`;
+          const url = URL.createObjectURL(blob);
+
+          setupVideoReadyModal(blob, filename);
+          progressBar.style.width = '100%';
+          exportPercentMsg.innerText = '100%';
+          exportBtn.disabled = false;
+          progressWrapper.classList.add('hidden');
+          STATE.isExporting = false;
+          showToast("تم تسجيل المشهد من الشاشة مباشرة وتجهيز التحميل!");
+        };
+
         recorder.start(100);
+        let elapsed = 0;
+        const interval = setInterval(() => {
+          elapsed += 200;
+          const pct = Math.min(95, Math.floor((elapsed / dur) * 100));
+          progressBar.style.width = `${pct}%`;
+          exportPercentMsg.innerText = `${pct}%`;
+          if (elapsed >= dur) {
+            clearInterval(interval);
+            recorder.stop();
+            STATE.isPlaying = false;
+            audioEngine.stopAmbientDrone();
+          }
+        }, 200);
 
-        setTimeout(() => {
-          recorder.stop();
-        }, dur + 200);
-
-      } catch(err) {
-        showToast("خطأ في تسجيل الشاشة: " + err.message);
+      } catch(e) {
+        showToast("خطأ في تسجيل الشاشة: " + e.message);
+        exportBtn.disabled = false;
+        progressWrapper.classList.add('hidden');
+        STATE.isExporting = false;
       }
     }
 
-    // --- 10. MODAL & BACK NAVIGATION STACK ---
+    // --- SINGLE SCENE DIRECT MP4 EXPORT ---
+        // --- FRAME-BY-FRAME ZERO-DROP WEBCODECS & MP4-MUXER EXPORT ENGINE ---
+    async function renderFrameToContext(targetCtx, w, h, activeScene, timeInSeconds, progress) {
+      drawDynamicBackground(targetCtx, w, h, STATE.bgTheme, timeInSeconds);
+
+      targetCtx.save();
+      let drawer = null;
+      if (activeScene.customCode) {
+        try {
+          if (!activeScene.compiledFn) {
+            let codeStr = activeScene.customCode.trim();
+            if (!codeStr.startsWith('function') && !codeStr.startsWith('(')) {
+              codeStr = `function(ctx, t, progress, w, h, color, scene) { ${codeStr} }`;
+            }
+            activeScene.compiledFn = eval(`(${codeStr})`);
+          }
+          drawer = activeScene.compiledFn;
+        } catch (e) {
+          drawer = CanvasVisuals[activeScene.archetype] || CanvasVisuals.character_walking;
+        }
+      } else {
+        drawer = CanvasVisuals[activeScene.archetype] || CanvasVisuals.character_walking;
+      }
+
+      try {
+        drawer(targetCtx, timeInSeconds, progress, w, h, activeScene.accentColor || '#8b5cf6', activeScene);
+      } catch (e) {
+        CanvasVisuals.character_walking(targetCtx, timeInSeconds, progress, w, h, activeScene.accentColor || '#8b5cf6');
+      }
+
+      // Draw bottom progress bar
+      const barY = h * 0.94;
+      const barW = w * 0.65;
+      targetCtx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      targetCtx.beginPath();
+      targetCtx.roundRect((w - barW) / 2, barY, barW, 6, 3);
+      targetCtx.fill();
+
+      const activeW = barW * progress;
+      targetCtx.fillStyle = activeScene.accentColor || '#8b5cf6';
+      targetCtx.shadowColor = activeScene.accentColor || '#8b5cf6';
+      targetCtx.shadowBlur = 10;
+      targetCtx.beginPath();
+      targetCtx.roundRect((w - barW) / 2, barY, activeW, 6, 3);
+      targetCtx.fill();
+
+      targetCtx.restore();
+    }
+
+    async function exportActiveSceneWithWebCodecs() {
+      if (STATE.scenes.length === 0) {
+        showToast("الرجاء إنشاء مشهد أولاً!");
+        return;
+      }
+      if (STATE.isExporting) return;
+      STATE.isExporting = true;
+
+      const scene = STATE.scenes[STATE.activeSceneIndex];
+      const duration = scene.duration || 3.0;
+      const fps = 60;
+      const totalFrames = Math.round(duration * fps);
+
+      const resSelect = document.getElementById('exportResolutionSelect').value;
+      const targetW = resSelect === '1080' ? 1080 : 720;
+      const targetH = resSelect === '1080' ? 1920 : 1280;
+
+      const exportBtn = document.getElementById('btnExportWebCodecs');
+      const progressWrapper = document.getElementById('exportProgressWrapper');
+      const progressBar = document.getElementById('exportProgressBar');
+      const exportPercentMsg = document.getElementById('exportPercentMsg');
+      const exportStatusMsg = document.getElementById('exportStatusMsg');
+
+      exportBtn.disabled = true;
+      progressWrapper.classList.remove('hidden');
+      progressBar.style.width = '5%';
+      exportPercentMsg.innerText = '5%';
+      exportStatusMsg.innerText = 'تهيئة ترميز الفيديو H.264...';
+
+      // Check if WebCodecs VideoEncoder and Mp4Muxer are available
+      if (typeof VideoEncoder === 'undefined' || typeof Mp4Muxer === 'undefined') {
+        console.warn('WebCodecs VideoEncoder or Mp4Muxer not available, switching to MediaRecorder fallback.');
+        showToast('المتصفح لا يدعم WebCodecs بالكامل، جاري التبديل للمسجل المباشر...');
+        STATE.isExporting = false;
+        exportBtn.disabled = false;
+        recordCanvasDirectly();
+        return;
+      }
+
+      try {
+        // 1. Offscreen Canvas for rendering at crisp native resolution
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = targetW;
+        offCanvas.height = targetH;
+        const offCtx = offCanvas.getContext('2d');
+
+        // 2. Synthesize Audio offline from PsychoAudioEngine
+        exportStatusMsg.innerText = 'توليد مسارات الصوت (BGM & SFX)...';
+        let audioBuffer = null;
+        try {
+          audioBuffer = await audioEngine.renderOfflineAudio(duration, scene.sfxType || 'whoosh');
+        } catch(e) {
+          console.warn('Offline audio render failed:', e);
+        }
+
+        const hasAudio = audioBuffer && typeof AudioEncoder !== 'undefined';
+
+        // 3. Initialize Mp4Muxer
+        const muxer = new Mp4Muxer.Muxer({
+          target: new Mp4Muxer.ArrayBufferTarget(),
+          video: {
+            codec: 'avc',
+            width: targetW,
+            height: targetH
+          },
+          audio: hasAudio ? {
+            codec: 'aac',
+            numberOfChannels: 2,
+            sampleRate: 44100
+          } : undefined,
+          fastStart: 'in-memory',
+          firstTimestampBehavior: 'offset'
+        });
+
+        // 4. VideoEncoder
+        const videoEncoder = new VideoEncoder({
+          output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+          error: (e) => console.error('VideoEncoder error:', e)
+        });
+
+        const videoConfig = {
+          codec: 'avc1.42001f', // H.264 Baseline Level 3.1
+          width: targetW,
+          height: targetH,
+          bitrate: targetW >= 1080 ? 12_000_000 : 7_000_000,
+          framerate: fps,
+          hardwareAcceleration: 'prefer-hardware'
+        };
+
+        const support = await VideoEncoder.isConfigSupported(videoConfig);
+        if (!support.supported) {
+          videoConfig.codec = 'avc1.4d002a'; // Main Profile
+        }
+        videoEncoder.configure(videoConfig);
+
+        // 5. AudioEncoder (if supported)
+        let audioEncoder = null;
+        if (hasAudio) {
+          try {
+            audioEncoder = new AudioEncoder({
+              output: (chunk, meta) => muxer.addAudioChunk(chunk, meta),
+              error: (e) => console.error('AudioEncoder error:', e)
+            });
+            audioEncoder.configure({
+              codec: 'mp4a.40.2', // AAC-LC
+              numberOfChannels: 2,
+              sampleRate: 44100,
+              bitrate: 128000
+            });
+
+            const ch0 = audioBuffer.getChannelData(0);
+            const ch1 = audioBuffer.getChannelData(1);
+            const planarData = new Float32Array(ch0.length + ch1.length);
+            planarData.set(ch0, 0);
+            planarData.set(ch1, ch0.length);
+
+            const audioData = new AudioData({
+              format: 'f32-planar',
+              sampleRate: 44100,
+              numberOfFrames: audioBuffer.length,
+              numberOfChannels: 2,
+              timestamp: 0,
+              data: planarData
+            });
+            audioEncoder.encode(audioData);
+            audioData.close();
+          } catch (err) {
+            console.warn('AudioEncoder not available or failed:', err);
+            audioEncoder = null;
+          }
+        }
+
+        // 6. Offline frame-by-frame rendering loop (ZERO dropped frames)
+        exportStatusMsg.innerText = 'جاري رسم وتشفير الإطارات بدقة 60FPS...';
+        for (let i = 0; i < totalFrames; i++) {
+          const t = i / fps;
+          const progress = (t % duration) / duration;
+
+          await renderFrameToContext(offCtx, targetW, targetH, scene, t, progress);
+
+          const frameTimestampUs = Math.round(i * (1_000_000 / fps));
+          const videoFrame = new VideoFrame(offCanvas, {
+            timestamp: frameTimestampUs,
+            duration: Math.round(1_000_000 / fps)
+          });
+
+          const isKeyFrame = (i % (fps * 2)) === 0;
+          videoEncoder.encode(videoFrame, { keyFrame: isKeyFrame });
+          videoFrame.close();
+
+          const pct = Math.min(92, Math.floor((i / totalFrames) * 90) + 5);
+          progressBar.style.width = `${pct}%`;
+          exportPercentMsg.innerText = `${pct}%`;
+
+          // Yield every 5 frames to avoid freezing UI
+          if (i % 5 === 0) {
+            await new Promise(r => setTimeout(r, 0));
+          }
+        }
+
+        exportStatusMsg.innerText = 'إنهاء تشفير الفيديو والدمج (Muxing)...';
+        progressBar.style.width = '95%';
+        exportPercentMsg.innerText = '95%';
+
+        await videoEncoder.flush();
+        videoEncoder.close();
+
+        if (audioEncoder) {
+          try {
+            await audioEncoder.flush();
+            audioEncoder.close();
+          } catch(e) {}
+        }
+
+        muxer.finalize();
+        const mp4Buffer = muxer.target.buffer;
+        const blob = new Blob([mp4Buffer], { type: 'video/mp4' });
+        const url = URL.createObjectURL(blob);
+        const filename = `${scene.title ? scene.title.replace(/\s+/g, '_') : 'scene'}_${targetW}p.mp4`;
+
+        // Show download modal
+        setupVideoReadyModal(blob, filename);
+        progressBar.style.width = '100%';
+        exportPercentMsg.innerText = '100%';
+        exportStatusMsg.innerText = 'اكتمل التصدير بنجاح!';
+        exportBtn.disabled = false;
+        progressWrapper.classList.add('hidden');
+        STATE.isExporting = false;
+        showToast('✨ تم تصدير فيديو MP4 عالي الجودة بنجاح بدون سيرفر!');
+
+      } catch(err) {
+        console.error('WebCodecs export failed:', err);
+        showToast('خطأ أثناء تصدير WebCodecs: ' + err.message);
+        exportBtn.disabled = false;
+        progressWrapper.classList.add('hidden');
+        STATE.isExporting = false;
+      }
+    }
+
+
+
+    // --- MODAL & BACK NAVIGATION STACK MANAGER ---
     const modalStack = [];
     let currentMobileView = 'studio';
 
@@ -1422,11 +2037,14 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
       const modal = document.getElementById(modalId);
       if (!modal) return;
       modal.classList.remove('hidden');
-      if (!modalStack.includes(modalId)) modalStack.push(modalId);
-      history.pushState({ modalId: modalId }, '');
+      if (!modalStack.includes(modalId)) {
+        modalStack.push(modalId);
+      }
+      // Push history state so Android hardware/gesture back or browser back cleanly closes modal
+      history.pushState({ modalId: modalId, stackLength: modalStack.length }, '');
     }
 
-    function closeModal(modalId, fromPopState = false) {
+    function closeModal(modalId, triggeredFromPopState = false) {
       const modal = document.getElementById(modalId);
       if (modal) {
         modal.classList.add('hidden');
@@ -1437,9 +2055,27 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
       }
       const idx = modalStack.lastIndexOf(modalId);
       if (idx !== -1) modalStack.splice(idx, 1);
-      if (!fromPopState && history.state && history.state.modalId === modalId) {
+
+      if (!triggeredFromPopState && history.state && history.state.modalId === modalId) {
         history.back();
       }
+    }
+
+    function closeTopModal(triggeredFromPopState = false) {
+      if (modalStack.length === 0) return false;
+      const topModalId = modalStack.pop();
+      const modal = document.getElementById(topModalId);
+      if (modal) {
+        modal.classList.add('hidden');
+        if (topModalId === 'videoReadyModal') {
+          const v = document.getElementById('modalVideoPlayer');
+          if (v) v.pause();
+        }
+      }
+      if (!triggeredFromPopState && history.state?.modalId === topModalId) {
+        history.back();
+      }
+      return true;
     }
 
     function switchMobileView(viewName, pushHistory = true) {
@@ -1447,10 +2083,8 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
       const colLeft = document.getElementById('colLeft');
       const colRight = document.getElementById('colRight');
       const boxScript = document.getElementById('boxScript');
-      const boxScenes = document.getElementById('boxScenesDeck');
-      const boxCli = document.getElementById('boxCli');
-      const boxAnalysis = document.getElementById('boxAnalysis');
-      const boxCode = document.getElementById('boxCodeStudio');
+      const boxChat = document.getElementById('boxChat');
+      const boxActiveScene = document.getElementById('boxActiveScene');
       const navBtns = document.querySelectorAll('.mobile-nav-btn');
 
       navBtns.forEach(btn => {
@@ -1464,33 +2098,30 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
 
       if (window.innerWidth < 1024) {
         if (viewName === 'studio') {
-          colRight.classList.remove('hidden');
-          colLeft.classList.add('hidden');
+          if (colRight) colRight.classList.remove('hidden');
+          if (colLeft) colLeft.classList.remove('hidden');
+          if (boxScript) boxScript.classList.add('hidden');
+          if (boxChat) boxChat.classList.add('hidden');
+          if (boxActiveScene) boxActiveScene.classList.remove('hidden');
         } else if (viewName === 'script') {
-          colRight.classList.add('hidden');
-          colLeft.classList.remove('hidden');
-          boxScript.classList.remove('hidden');
-          boxScenes.classList.remove('hidden');
-          boxCli.classList.remove('hidden');
-          boxAnalysis.classList.remove('hidden');
-          boxCode.classList.add('hidden');
-        } else if (viewName === 'code') {
-          colRight.classList.add('hidden');
-          colLeft.classList.remove('hidden');
-          boxScript.classList.add('hidden');
-          boxScenes.classList.add('hidden');
-          boxCli.classList.add('hidden');
-          boxAnalysis.classList.add('hidden');
-          boxCode.classList.remove('hidden');
+          if (colRight) colRight.classList.add('hidden');
+          if (colLeft) colLeft.classList.remove('hidden');
+          if (boxScript) boxScript.classList.remove('hidden');
+          if (boxChat) boxChat.classList.add('hidden');
+          if (boxActiveScene) boxActiveScene.classList.add('hidden');
+        } else if (viewName === 'chat') {
+          if (colRight) colRight.classList.add('hidden');
+          if (colLeft) colLeft.classList.remove('hidden');
+          if (boxScript) boxScript.classList.add('hidden');
+          if (boxChat) boxChat.classList.remove('hidden');
+          if (boxActiveScene) boxActiveScene.classList.add('hidden');
         }
       } else {
-        colRight.classList.remove('hidden');
-        colLeft.classList.remove('hidden');
-        boxScript.classList.remove('hidden');
-        boxScenes.classList.remove('hidden');
-        boxCli.classList.remove('hidden');
-        boxAnalysis.classList.remove('hidden');
-        boxCode.classList.remove('hidden');
+        if (colRight) colRight.classList.remove('hidden');
+        if (colLeft) colLeft.classList.remove('hidden');
+        if (boxScript) boxScript.classList.remove('hidden');
+        if (boxChat) boxChat.classList.remove('hidden');
+        if (boxActiveScene) boxActiveScene.classList.remove('hidden');
       }
 
       if (pushHistory && viewName !== 'studio') {
@@ -1498,21 +2129,64 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
       }
     }
 
-    window.addEventListener('popstate', () => {
+    // Window popstate handler (Hardware Back, Swipe Gesture Back, Browser Back)
+    window.addEventListener('popstate', (e) => {
       if (modalStack.length > 0) {
-        closeModal(modalStack[modalStack.length - 1], true);
+        closeTopModal(true);
         return;
       }
-      if (currentMobileView !== 'studio') switchMobileView('studio', false);
+      if (currentMobileView !== 'studio') {
+        switchMobileView('studio', false);
+        return;
+      }
     });
 
+    // Capacitor Native Android Back Button Listener
     if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
       window.Capacitor.Plugins.App.addListener('backButton', ({ canGoBack }) => {
-        if (modalStack.length > 0) closeModal(modalStack[modalStack.length - 1], false);
-        else if (currentMobileView !== 'studio') switchMobileView('studio', false);
-        else if (canGoBack) window.history.back();
-        else window.Capacitor.Plugins.App.exitApp();
+        if (modalStack.length > 0) {
+          closeTopModal(false);
+        } else if (currentMobileView !== 'studio') {
+          switchMobileView('studio', false);
+        } else {
+          if (canGoBack) {
+            window.history.back();
+          } else {
+            window.Capacitor.Plugins.App.exitApp();
+          }
+        }
       });
+    }
+
+    // --- CODE MODAL ---
+    function openCodeModal() {
+      const scene = STATE.scenes[STATE.activeSceneIndex];
+      if (!scene) return;
+      document.getElementById('codeEditorTitle').innerText = `كود JavaScript للمشهد: ${scene.name || scene.title}`;
+      document.getElementById('sceneCodeTextarea').value = scene.customCode || `// كود JavaScript الحركي للمشهد
+function(ctx, t, progress, w, h, color, scene) {
+  const cx = w / 2, cy = h * 0.42;
+  ctx.save();
+  ctx.translate(cx, cy);
+  const pulse = 1 + Math.sin(t * 5) * 0.08;
+  ctx.scale(pulse, pulse);
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 25;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 4;
+  for (let i = 1; i <= 4; i++) {
+    const r = i * 28 + Math.sin(t * 3 + i) * 8;
+    ctx.beginPath();
+    ctx.arc(0, 0, r, t * 0.4 + i * 0.5, t * 0.4 + i * 0.5 + Math.PI * 1.5);
+    ctx.stroke();
+  }
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(0, 0, 14, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}`;
+      openModal('codeEditorModal');
     }
 
     function showToast(msg) {
@@ -1526,124 +2200,58 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
       }, 3000);
     }
 
-    function updateAnalysisBox(sc) {
-      document.getElementById('statusEmotion').innerText = sc.emotion || 'حماس / طموح';
-      document.getElementById('statusAsset').innerText = sc.assetType === 'prismatic_core' ? 'Prismatic Core' : (sc.assetType === 'escaping_character' ? 'Escaping Rig' : sc.assetType);
-      document.getElementById('statusEase').innerText = sc.ease || 'elastic.out(1.1, 0.3)';
-      document.getElementById('statusAudio').innerText = sc.sound || 'impact';
-    }
-
-    // --- 11. INITIALIZATION & EVENT BINDINGS ---
+    // --- INITIALIZATION ---
     window.onload = function() {
-      // Audio unlock on first touch
+      populateDropdowns();
+
+      // Start with ONE initial scene ready for customization
+      STATE.scenes = [
+        {
+          id: 1,
+          name: "المشهد 1: نقطة الانطلاق",
+          title: "بداية الوعي",
+          subtitle: "كل تغيير حقيقي يبدأ بمراقبة أفكارك بصمت",
+          archetype: "character_walking",
+          accentColor: "#8b5cf6",
+          sfxType: "whoosh",
+          duration: 3.0,
+          customCode: null,
+          compiledFn: null
+        }
+      ];
+
+      selectScene(0);
+      requestAnimationFrame(gameLoop);
+
+      // Initialize UI Model Badge
+      const modelBadge = document.getElementById('headerModelBadge');
+      if (modelBadge) modelBadge.innerText = AI_CONFIG.model || 'Ok';
+
+      // Mobile Navigation Switcher
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const view = btn.getAttribute('data-view');
+          switchMobileView(view, true);
+        });
+      });
+      window.addEventListener('resize', () => {
+        switchMobileView(currentMobileView, false);
+      });
+      switchMobileView('studio', false);
+
       const unlockAudio = () => {
-        audioEngine.init();
+        audioEngine.initContext();
         document.removeEventListener('touchstart', unlockAudio);
         document.removeEventListener('click', unlockAudio);
       };
       document.addEventListener('touchstart', unlockAudio, { once: true });
       document.addEventListener('click', unlockAudio, { once: true });
 
-      // Start Canvas 2D Loop
-      startCanvasRenderLoop();
-
-      // Initial script split & scenes build
-      const initialScript = document.getElementById('fullScriptTextarea').value;
-      splitScriptIntoSmartScenes(initialScript);
-
-      // Mobile Nav
-      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
-        btn.addEventListener('click', () => switchMobileView(btn.getAttribute('data-view'), true));
-      });
-      window.addEventListener('resize', () => switchMobileView(currentMobileView, false));
-
-      // Script Split Button
-      document.getElementById('btnSplitIntoSmartScenes').addEventListener('click', () => {
-        const txt = document.getElementById('fullScriptTextarea').value;
-        splitScriptIntoSmartScenes(txt);
-      });
-
-      // AI Generate Full Script
-      document.getElementById('btnAiGenerateFullScript').addEventListener('click', async () => {
-        const btn = document.getElementById('btnAiGenerateFullScript');
-        btn.disabled = true;
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التوليد...</span>`;
-        try {
-          const res = await callOmniRouteAI([
-            { role: 'system', content: 'You are an elite short-form video scriptwriter (TikTok/Reels/Shorts). Write a 4-line viral script in Arabic (1. Hook, 2. Danger/Mistake, 3. Solution/Secret, 4. Call To Action). Return 4 lines separated by newlines.' },
-            { role: 'user', content: 'Write a high-retention viral video script in Arabic.' }
-          ]);
-          document.getElementById('fullScriptTextarea').value = res;
-          splitScriptIntoSmartScenes(res);
-          showToast("✨ تم توليد سكريبت كامل بالذكاء الاصطناعي وتقسيمه لـ 4 مشاهد!");
-        } catch(e) {
-          showToast("خطأ في التوليد: " + e.message);
-        } finally {
-          btn.disabled = false;
-          btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> <span>توليد سكريبت فيروسي بـ Ok AI</span>`;
-        }
-      });
-
-      // Copy & Download Script
-      document.getElementById('btnCopyFullScript').addEventListener('click', () => {
-        const txt = document.getElementById('fullScriptTextarea').value;
-        navigator.clipboard.writeText(txt).then(() => showToast("تم نسخ السكريبت كاملاً!"));
-      });
-
-      document.getElementById('btnDownloadScriptText').addEventListener('click', () => {
-        const txt = document.getElementById('fullScriptTextarea').value;
-        const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
-        saveVideoToPhone(blob, 'psychology_script.txt');
-      });
-
-      // Play All Scenes
-      document.getElementById('btnPlayAllScenes').addEventListener('click', () => {
-        STATE.isPlayingAll = true;
-        selectScene(0);
-        showToast("▶️ جاري تشغيل كل المشاهد متتالية...");
-      });
-
-      document.getElementById('btnAddNewScene').addEventListener('click', () => {
-        const nextId = STATE.scenes.length + 1;
-        STATE.scenes.push({
-          id: nextId,
-          name: `المشهد ${nextId}`,
-          text: `مشهد جديد رقم ${nextId}: فكرة ورمز حركي جديد`,
-          duration: 3.0,
-          emotion: "حماس وطموح",
-          assetType: "prismatic_core",
-          anim: "bounce",
-          ease: "bounce.out",
-          sound: "pop",
-          style: "viral",
-          highlightColor: "#facc15"
-        });
-        renderScenesDeck();
-        selectScene(STATE.scenes.length - 1);
-        showToast(`تم إنشاء المشهد ${nextId}!`);
-      });
-
-      // Player Controls
-      document.getElementById('btnPlayPause').addEventListener('click', () => {
-        if (!currentMasterTl) return;
-        if (currentMasterTl.isActive()) {
-          currentMasterTl.pause();
-          document.getElementById('playIcon').className = 'fa-solid fa-play';
-        } else {
-          currentMasterTl.play();
-          document.getElementById('playIcon').className = 'fa-solid fa-pause';
-        }
-      });
-
-      document.getElementById('canvasWrapper').addEventListener('click', () => {
-        document.getElementById('btnPlayPause').click();
-      });
-
-      document.getElementById('btnReplay').addEventListener('click', () => {
-        if (currentMasterTl) {
-          currentMasterTl.restart();
-          document.getElementById('playIcon').className = 'fa-solid fa-pause';
-        }
+      document.getElementById('btnPlayPause').addEventListener('click', togglePlayPause);
+      document.getElementById('motionCanvas').addEventListener('click', togglePlayPause);
+      document.getElementById('btnRestart').addEventListener('click', () => {
+        STATE.currentTime = 0;
+        renderFrame(0);
       });
 
       document.getElementById('btnPrevScene').addEventListener('click', () => {
@@ -1653,149 +2261,238 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
         selectScene(Math.min(STATE.scenes.length - 1, STATE.activeSceneIndex + 1));
       });
 
-      // Audio Mute Toggle
-      document.getElementById('btnToggleAudio').addEventListener('click', () => {
-        audioEngine.isMuted = !audioEngine.isMuted;
-        const icon = document.getElementById('audioToggleIcon');
-        const txt = document.getElementById('audioToggleText');
-        if (audioEngine.isMuted) {
-          icon.className = "fa-solid fa-volume-xmark text-rose-400";
-          txt.innerText = "مكتوم";
-        } else {
-          icon.className = "fa-solid fa-volume-high text-cyan-400";
-          txt.innerText = "مفعّل";
+      // Active scene field bindings
+      document.getElementById('activeSceneTitle').addEventListener('input', (e) => {
+        if (STATE.scenes[STATE.activeSceneIndex]) {
+          STATE.scenes[STATE.activeSceneIndex].title = e.target.value;
+          renderFrame(STATE.currentTime);
+        }
+      });
+      document.getElementById('activeSceneSubtitle').addEventListener('input', (e) => {
+        if (STATE.scenes[STATE.activeSceneIndex]) {
+          STATE.scenes[STATE.activeSceneIndex].subtitle = e.target.value;
+          renderFrame(STATE.currentTime);
+        }
+      });
+      document.getElementById('activeSceneArchetype').addEventListener('change', (e) => {
+        if (STATE.scenes[STATE.activeSceneIndex]) {
+          STATE.scenes[STATE.activeSceneIndex].archetype = e.target.value;
+          STATE.scenes[STATE.activeSceneIndex].customCode = null;
+          STATE.scenes[STATE.activeSceneIndex].compiledFn = null;
+          renderFrame(STATE.currentTime);
+          showToast("تم تحديث نمط المشهد");
+        }
+      });
+      document.getElementById('activeSceneSfx').addEventListener('change', (e) => {
+        if (STATE.scenes[STATE.activeSceneIndex]) {
+          STATE.scenes[STATE.activeSceneIndex].sfxType = e.target.value;
+          audioEngine.playSfx(e.target.value);
+        }
+      });
+      document.getElementById('activeSceneColor').addEventListener('input', (e) => {
+        if (STATE.scenes[STATE.activeSceneIndex]) {
+          STATE.scenes[STATE.activeSceneIndex].accentColor = e.target.value;
+          document.getElementById('activeSceneColorHex').innerText = e.target.value;
+          renderFrame(STATE.currentTime);
         }
       });
 
-      // CLI Command Override Execution
-      document.getElementById('btnExecuteCli').addEventListener('click', () => {
-        const cliVal = document.getElementById('cliCommandInput').value.trim();
-        if (!cliVal) return;
-        const parsed = parseCliCommand(cliVal);
-        const curSc = STATE.scenes[STATE.activeSceneIndex] || {};
-        const finalSc = Object.assign(curSc, parsed);
-        STATE.scenes[STATE.activeSceneIndex] = finalSc;
-        updateAnalysisBox(finalSc);
-        buildAndPlayScene(finalSc);
-        showToast("⚡ تم تطبيق أمر الـ CLI على المشهد الحالي!");
+      // AI Chat Events
+      document.getElementById('btnSendChat').addEventListener('click', () => {
+        sendChatRequest(document.getElementById('chatUserInput').value);
       });
-
-      document.querySelectorAll('.cli-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          const cmd = chip.getAttribute('data-cmd');
-          document.getElementById('cliCommandInput').value = `${cmd} text:"${STATE.scenes[STATE.activeSceneIndex]?.text || ''}"`;
+      document.getElementById('chatUserInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendChatRequest(e.target.value);
+      });
+      document.querySelectorAll('.quick-chat-chip').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          sendChatRequest(e.currentTarget.dataset.msg);
         });
       });
 
-      // Effect Injector Toolbar
-      document.getElementById('btnFx3DFlip').addEventListener('click', () => {
-        const ta = document.getElementById('gsapLiveCodeTextarea');
-        ta.value += `\n\n// Added Effect: 3D Flip\ngsap.to(iconProxyState, { rotation: 360, duration: 0.8, ease: 'power2.inOut' });`;
-        showToast("✨ تمت إضافة تأثير 3D Flip إلى الكود!");
+      // Script buttons
+      document.getElementById('btnGenerateScriptOnly').addEventListener('click', generateScriptOnly);
+      document.getElementById('btnCopyFullScript').addEventListener('click', () => {
+        const text = document.getElementById('fullScriptTextarea').value;
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(() => {
+          showToast("تم نسخ السكريبت كاملاً إلى الحافظة بنجاح!");
+        });
+      });
+      document.getElementById('btnDownloadScriptText').addEventListener('click', () => {
+        const text = document.getElementById('fullScriptTextarea').value;
+        if (!text) return;
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'psychology_script.txt';
+        a.click();
+        showToast("تم تنزيل ملف السكريبت .txt");
       });
 
-      document.getElementById('btnFxGlitchShake').addEventListener('click', () => {
-        const ta = document.getElementById('gsapLiveCodeTextarea');
-        ta.value += `\n\n// Added Effect: Glitch Shake\ngsap.to(iconProxyState, { y: -12, scaleX: 1.15, duration: 0.05, repeat: 3, yoyo: true });`;
-        showToast("✨ تمت إضافة تأثير Glitch Shake إلى الكود!");
+      // Add New Scene
+      document.getElementById('btnAddNewSceneNext').addEventListener('click', () => {
+        const nextId = STATE.scenes.length + 1;
+        STATE.scenes.push({
+          id: nextId,
+          name: `المشهد ${nextId}`,
+          title: `مشهد ${nextId}: عنوان فريد`,
+          subtitle: "اكتب هنا الكابشن والنص التوضيحي",
+          archetype: "character_meditating",
+          accentColor: "#06b6d4",
+          sfxType: "mystery",
+          duration: 3.0,
+          customCode: null,
+          compiledFn: null
+        });
+        selectScene(STATE.scenes.length - 1);
+        showToast(`تم إنشاء مشهد جديد رقم ${nextId}!`);
       });
 
-      document.getElementById('btnFxNeonPulse').addEventListener('click', () => {
-        const ta = document.getElementById('gsapLiveCodeTextarea');
-        ta.value += `\n\n// Added Effect: Neon Glow Pulse\ngsap.to(iconProxyState, { glow: 2.5, duration: 0.3, repeat: 3, yoyo: true });`;
-        showToast("✨ تمت إضافة تأثير Neon Glow Pulse إلى الكود!");
-      });
-
-      document.getElementById('btnFxZoomPunch').addEventListener('click', () => {
-        const ta = document.getElementById('gsapLiveCodeTextarea');
-        ta.value += `\n\n// Added Effect: Camera Zoom Punch\ngsap.fromTo('#canvasWrapper', { scale: 1 }, { scale: 1.05, duration: 0.15, yoyo: true, repeat: 1 });`;
-        showToast("✨ تمت إضافة تأثير Zoom Punch إلى الكود!");
-      });
-
-      // Custom JS Execution
-      document.getElementById('btnRunCustomJs').addEventListener('click', () => {
-        const customCode = document.getElementById('gsapLiveCodeTextarea').value;
-        try {
-          const AudioEngine = audioEngine;
-          const fn = new Function('gsap', 'AudioEngine', 'iconProxyState', customCode);
-          fn(gsap, AudioEngine, iconProxyState);
-          showToast("⚡ تم تشغيل كود GSAP المخصص بنجاح!");
-        } catch(e) {
-          showToast("❌ خطأ في الكود: " + e.message);
+      // Save to Library
+      document.getElementById('btnSaveCurrentSceneToLibrary').addEventListener('click', () => {
+        const sc = STATE.scenes[STATE.activeSceneIndex];
+        if (sc) {
+          STATE.savedLibraryScenes.push(JSON.parse(JSON.stringify(sc)));
+          showToast(`تم حفظ المشهد "${sc.name || sc.title}" في مكتبتك الخاصة!`);
         }
       });
 
-      // AI Modify Code
-      document.getElementById('btnAiApplyEffectPrompt').addEventListener('click', async () => {
-        const promptText = document.getElementById('aiEffectPromptInput').value.trim();
-        if (!promptText) return showToast("اكتب طلب التأثير أولاً!");
-        const btn = document.getElementById('btnAiApplyEffectPrompt');
+      // Clear & Blank project
+      document.getElementById('btnNewBlankProject').addEventListener('click', () => {
+        if (confirm("هل تريد بدء مشروع فارغ ونظيف؟")) {
+          STATE.scenes = [
+            {
+              id: 1,
+              name: "المشهد 1",
+              title: "مشهد البداية",
+              subtitle: "اكتب الفكرة أو اطلب من الذكاء الاصطناعي تخصيصها",
+              archetype: "character_walking",
+              accentColor: "#8b5cf6",
+              sfxType: "whoosh",
+              duration: 3.0,
+              customCode: null,
+              compiledFn: null
+            }
+          ];
+          selectScene(0);
+          showToast("تم تجهيز مشروع جديد ونظيف");
+        }
+      });
+
+      // Code Modal Events & Back navigation
+      document.getElementById('btnOpenCodeModal').addEventListener('click', openCodeModal);
+      const closeCodeModalBtn = document.getElementById('btnCloseCodeModal');
+      if (closeCodeModalBtn) closeCodeModalBtn.addEventListener('click', () => closeModal('codeEditorModal'));
+      const backCodeModalBtn = document.getElementById('btnBackCodeModal');
+      if (backCodeModalBtn) backCodeModalBtn.addEventListener('click', () => closeModal('codeEditorModal'));
+
+      document.getElementById('btnApplySceneCode').addEventListener('click', () => {
+        const sc = STATE.scenes[STATE.activeSceneIndex];
+        if (sc) {
+          sc.customCode = document.getElementById('sceneCodeTextarea').value;
+          sc.compiledFn = null;
+          sc.archetype = 'custom_code';
+          renderFrame(0);
+          closeModal('codeEditorModal');
+          showToast("تم تطبيق الكود وتحديث شاشة العرض مباشرة!");
+        }
+      });
+
+      document.getElementById('btnAiGenerateSceneCode').addEventListener('click', async () => {
+        const sc = STATE.scenes[STATE.activeSceneIndex];
+        if (!sc) return;
+        const btn = document.getElementById('btnAiGenerateSceneCode');
         btn.disabled = true;
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التعديل...</span>`;
-        const currentCode = document.getElementById('gsapLiveCodeTextarea').value;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التوليد...</span>`;
+
+        const prompt = `You are an expert Creative Coder and Motion Graphics Developer using HTML5 Canvas 2D.
+Write a JavaScript drawing function body for this specific motion graphics scene:
+Topic: "${document.getElementById('scriptTopicInput').value.trim() || 'علم النفس'}"
+Scene Title: "${sc.title || ''}"
+Scene Description: "${sc.subtitle || ''}"
+Visual Metaphor: "${sc.archetype || 'custom'}"
+
+You must output a single valid JavaScript function expression:
+function(ctx, t, progress, w, h, color, scene) {
+  // Custom mathematical curves, geometric symbols, particle arrays, or visual metaphors
+  // cx = w / 2, cy = h * 0.42
+}
+
+Rules:
+1. Draw using \`ctx\` (Canvas 2D context).
+2. Use \`progress\` (0.0 to 1.0) and \`t\` (seconds) to create smooth, organic motion graphics.
+3. Use \`color\` (hex color) and glowing shadows (\`ctx.shadowColor = color; ctx.shadowBlur = 25;\`).
+4. Output RAW JAVASCRIPT ONLY. No markdown fences, no explanations.`;
 
         try {
-          const res = await callOmniRouteAI([
-            { role: 'system', content: 'You are an expert Creative Coder using GSAP 3. Modify or add the requested motion effect to the provided GSAP code snippet. Output RAW JAVASCRIPT ONLY without markdown fences.' },
-            { role: 'user', content: `Current GSAP Code:\n${currentCode}\n\nUser Request: ${promptText}` }
+          const rawContent = await callOmniRouteAI([
+            { role: 'system', content: 'You are a JavaScript Creative Coding expert for Canvas 2D and Three.js.' },
+            { role: 'user', content: prompt }
           ]);
-          let cleanCode = res.trim();
+          let cleanCode = rawContent.trim();
           if (cleanCode.startsWith('```')) {
             const lines = cleanCode.split('\n');
             if (lines[0].startsWith('```')) lines.shift();
             if (lines.length > 0 && lines[lines.length - 1].startsWith('```')) lines.pop();
             cleanCode = lines.join('\n').trim();
           }
-          document.getElementById('gsapLiveCodeTextarea').value = cleanCode;
-          showToast("✨ تم تعديل كود GSAP بالذكاء الاصطناعي!");
-        } catch(e) {
-          showToast("خطأ: " + e.message);
+          document.getElementById('sceneCodeTextarea').value = cleanCode;
+          showToast("✨ تم توليد كود JS حركي للمشهد بنجاح!");
+        } catch (e) {
+          showToast("خطأ في توليد الكود: " + e.message);
         } finally {
           btn.disabled = false;
-          btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> <span>تعديل الكود بـ Ok</span>`;
+          btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> <span>توليد كود بـ Ok</span>`;
         }
       });
 
-      // Copy & Download GSAP Code
-      document.getElementById('btnCopyGsapCode').addEventListener('click', () => {
-        const code = document.getElementById('gsapLiveCodeTextarea').value;
-        navigator.clipboard.writeText(code).then(() => showToast("تم نسخ كود GSAP!"));
-      });
+      // Export Active Scene Video Event Listeners (Canvas Direct & WebCodecs)
+      const btnDirect = document.getElementById('btnExportCanvasDirect');
+      if (btnDirect) btnDirect.addEventListener('click', recordCanvasDirectly);
 
-      document.getElementById('btnDownloadJsCode').addEventListener('click', () => {
-        const code = document.getElementById('gsapLiveCodeTextarea').value;
-        const blob = new Blob([code], { type: 'text/javascript' });
-        saveVideoToPhone(blob, 'kinetic_scene_gsap.js');
-      });
+      const btnWebCodecs = document.getElementById('btnExportWebCodecs');
+      if (btnWebCodecs) btnWebCodecs.addEventListener('click', exportActiveSceneWithWebCodecs);
 
-      // Export Buttons
-      document.getElementById('btnExportCanvasDirect').addEventListener('click', recordCanvasDirectly);
-      document.getElementById('btnExportActiveScene').addEventListener('click', recordCanvasDirectly);
+      // Video Ready Modal Close & Back Events
+      const btnModalClose = document.getElementById('btnModalClose');
+      if (btnModalClose) btnModalClose.addEventListener('click', () => closeModal('videoReadyModal'));
+      const btnBackVideoModal = document.getElementById('btnBackVideoModal');
+      if (btnBackVideoModal) btnBackVideoModal.addEventListener('click', () => closeModal('videoReadyModal'));
 
-      // Video Ready Modal & Back Navigation
-      document.getElementById('btnBackVideoModal').addEventListener('click', () => closeModal('videoReadyModal'));
-      document.getElementById('btnModalClose').addEventListener('click', () => closeModal('videoReadyModal'));
-
-      // Settings Modal Handlers
+      // OmniRoute Settings Modal Handlers & Back Events
       const settingEndpointInp = document.getElementById('settingEndpoint');
       const settingApiKeyInp = document.getElementById('settingApiKey');
       const settingModelInp = document.getElementById('settingModel');
       const aiTestResultMsg = document.getElementById('aiTestResultMsg');
 
-      settingEndpointInp.value = AI_CONFIG.endpoint;
-      settingApiKeyInp.value = AI_CONFIG.apiKey;
-      settingModelInp.value = AI_CONFIG.model;
+      if (settingEndpointInp) settingEndpointInp.value = AI_CONFIG.endpoint;
+      if (settingApiKeyInp) settingApiKeyInp.value = AI_CONFIG.apiKey;
+      if (settingModelInp) settingModelInp.value = AI_CONFIG.model;
 
       document.getElementById('btnOpenSettings').addEventListener('click', () => {
-        settingEndpointInp.value = AI_CONFIG.endpoint;
-        settingApiKeyInp.value = AI_CONFIG.apiKey;
-        settingModelInp.value = AI_CONFIG.model;
-        aiTestResultMsg.classList.add('hidden');
+        if (settingEndpointInp) settingEndpointInp.value = AI_CONFIG.endpoint;
+        if (settingApiKeyInp) settingApiKeyInp.value = AI_CONFIG.apiKey;
+        if (settingModelInp) settingModelInp.value = AI_CONFIG.model;
+        if (aiTestResultMsg) aiTestResultMsg.classList.add('hidden');
         openModal('settingsModal');
       });
 
-      document.getElementById('btnCloseSettingsModal').addEventListener('click', () => closeModal('settingsModal'));
-      document.getElementById('btnBackSettingsModal').addEventListener('click', () => closeModal('settingsModal'));
+      const btnCloseSettings = document.getElementById('btnCloseSettingsModal');
+      if (btnCloseSettings) btnCloseSettings.addEventListener('click', () => closeModal('settingsModal'));
+      const btnBackSettings = document.getElementById('btnBackSettingsModal');
+      if (btnBackSettings) btnBackSettings.addEventListener('click', () => closeModal('settingsModal'));
+
+      // Backdrop modal close handlers
+      ['settingsModal', 'codeEditorModal', 'videoReadyModal'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('click', (e) => {
+            if (e.target === el) closeModal(id);
+          });
+        }
+      });
 
       document.getElementById('btnSaveAISettings').addEventListener('click', () => {
         AI_CONFIG.endpoint = settingEndpointInp.value.trim();
@@ -1804,7 +2501,8 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
         try {
           localStorage.setItem('psychomotion_ai_config', JSON.stringify(AI_CONFIG));
         } catch(e) {}
-        document.getElementById('headerModelBadge').innerText = AI_CONFIG.model;
+        const badge = document.getElementById('headerModelBadge');
+        if (badge) badge.innerText = AI_CONFIG.model;
         closeModal('settingsModal');
         showToast("✨ تم حفظ إعدادات OmniRoute بنجاح!");
       });
@@ -1815,7 +2513,7 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
         btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الاختبار...</span>`;
         aiTestResultMsg.classList.remove('hidden');
         aiTestResultMsg.className = "text-center text-xs text-amber-300 py-1.5 bg-amber-500/10 rounded-lg border border-amber-500/20";
-        aiTestResultMsg.innerHTML = '<i class="fa-solid fa-satellite-dish animate-pulse"></i> جاري الاتصال بالخادم...';
+        aiTestResultMsg.innerHTML = '<i class="fa-solid fa-satellite-dish animate-pulse"></i> جاري الاتصال بالخادم وقياس الاستجابة...';
 
         const startTime = Date.now();
         try {
@@ -1838,12 +2536,18 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
 
           if (!res.ok) {
             const errText = await res.text();
-            throw new Error(`HTTP ${res.status}: ${errText}`);
+            let errDetail = res.statusText;
+            try {
+              const errJson = JSON.parse(errText);
+              errDetail = errJson.error?.message || errJson.detail || errText;
+            } catch(e) { errDetail = errText; }
+            throw new Error(`HTTP ${res.status}: ${errDetail}`);
           }
+          const data = await res.json();
           const latency = Date.now() - startTime;
           aiTestResultMsg.className = "text-center text-xs text-emerald-400 font-bold py-1.5 bg-emerald-500/10 rounded-lg border border-emerald-500/30";
-          aiTestResultMsg.innerHTML = `<i class="fa-solid fa-circle-check"></i> الاتصال ناجح (${latency}ms) - النموذج: ${testModel}`;
-        } catch(e) {
+          aiTestResultMsg.innerHTML = `<i class="fa-solid fa-circle-check"></i> الاتصال ناجح ومستقر (${latency}ms) - النموذج: ${testModel}`;
+        } catch (e) {
           aiTestResultMsg.className = "text-center text-xs text-rose-400 font-bold py-1.5 bg-rose-500/10 rounded-lg border border-rose-500/30";
           aiTestResultMsg.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> فشل الاتصال: ${e.message}`;
         } finally {
@@ -1853,5 +2557,53 @@ document.querySelectorAll('.karaoke-word').forEach((wordEl, idx) => {
       });
     };
   </script>
+
+
+  <!-- OMNIROUTE SETTINGS MODAL -->
+  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-psycho-900 border border-psycho-600/80 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 text-right" dir="rtl">
+      <div class="flex items-center justify-between border-b border-psycho-700/60 pb-3">
+        <div class="flex items-center gap-2">
+          <button id="btnBackSettingsModal" class="px-2.5 py-1 rounded-lg bg-psycho-800 hover:bg-psycho-700 text-slate-200 text-xs flex items-center gap-1.5 border border-psycho-700 transition" title="رجوع">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span>رجوع</span>
+          </button>
+          <div class="w-7 h-7 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <h3 class="font-bold text-slate-100 text-sm">إعدادات مزود الذكاء الاصطناعي (OmniRoute)</h3>
+        </div>
+        <button id="btnCloseSettingsModal" class="text-slate-400 hover:text-white transition p-1" title="إغلاق">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">OmniRoute API Endpoint:</label>
+          <input id="settingEndpoint" type="text" dir="ltr" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="https://omniroute-production-f9e9.up.railway.app/v1">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">API Key (Bearer Token):</label>
+          <input id="settingApiKey" type="password" dir="ltr" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="sk-bb256057cc02a0fd-8fa6d3-1ede0f29">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Model Name:</label>
+          <input id="settingModel" type="text" dir="ltr" class="w-full bg-psycho-800 border border-psycho-700 rounded-lg px-3 py-2 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none" value="Ok">
+        </div>
+      </div>
+      <div class="flex items-center justify-between pt-2 border-t border-psycho-700/60">
+        <button id="btnTestAIConnection" class="px-3.5 py-2 rounded-xl bg-psycho-800 hover:bg-psycho-700 text-cyan-300 font-bold text-xs border border-cyan-500/30 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-bolt"></i>
+          <span>اختبار الاتصال</span>
+        </button>
+        <button id="btnSaveAISettings" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5">
+          <i class="fa-solid fa-check"></i>
+          <span>حفظ الإعدادات</span>
+        </button>
+      </div>
+      <div id="aiTestResultMsg" class="text-center text-xs hidden"></div>
+    </div>
+  </div>
+
 </body>
 </html>
